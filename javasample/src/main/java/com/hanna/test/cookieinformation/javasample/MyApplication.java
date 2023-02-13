@@ -50,7 +50,8 @@ public class MyApplication extends Application implements Consentable {
     public MobileConsentSdk provideConsentSdk() {
         return MobileConsentSdk.Builder(this)
             .setClientCredentials(provideCredentials())
-            .setMobileConsentCustomUI(new MobileConsentCustomUI(Color.parseColor("any hexcode color string")))
+            .setMobileConsentCustomUI(new MobileConsentCustomUI(Color.parseColor("#ff0000")))
+            .setLanguage("da")
             .build();
     }
 
