@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.PorterDuff
 import android.util.AttributeSet
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -16,7 +17,6 @@ import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.R
 import com.cookieinformation.mobileconsents.ui.PrivacyFragmentView.IntentListener
 import com.cookieinformation.mobileconsents.util.setTextFromHtml
-import com.google.android.material.button.MaterialButton
 import java.util.UUID
 
 /**
@@ -117,14 +117,14 @@ public class PrivacyFragmentView @JvmOverloads constructor(
       }
     }
 
-    findViewById<MaterialButton>(R.id.mobileconsents_privacy_accept_selected_button).apply {
+    findViewById<Button>(R.id.mobileconsents_privacy_accept_selected_button).apply {
       parsedColorToInt?.let {
         setBackgroundColor(it)
       }
       setOnClickListener { onAcceptSelectedClicked() }
     }
 
-    findViewById<MaterialButton>(R.id.mobileconsents_privacy_accept_all_button).apply {
+    findViewById<Button>(R.id.mobileconsents_privacy_accept_all_button).apply {
       parsedColorToInt?.let {
         setBackgroundColor(it)
       }
@@ -190,11 +190,11 @@ public class PrivacyFragmentView @JvmOverloads constructor(
       text = data.privacyReadMoreText
     }
 
-    findViewById<MaterialButton>(R.id.mobileconsents_privacy_accept_selected_button).apply {
+    findViewById<Button>(R.id.mobileconsents_privacy_accept_selected_button).apply {
       text = data.acceptSelectedButtonText
       isEnabled = data.acceptSelectedButtonEnabled
     }
-    findViewById<MaterialButton>(R.id.mobileconsents_privacy_accept_all_button).apply {
+    findViewById<Button>(R.id.mobileconsents_privacy_accept_all_button).apply {
       text = data.acceptAllButtonText
     }
     contentView.findViewById<TextView>(R.id.powered_by_label).apply {

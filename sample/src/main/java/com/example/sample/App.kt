@@ -16,6 +16,7 @@ class App : Application(), Consentable {
   override fun provideConsentSdk() = MobileConsentSdk.Builder(this)
     .setClientCredentials(provideCredentials())
     .setMobileConsentCustomUI(MobileConsentCustomUI(Color.parseColor("#ff0000")))
+    .setLanguage("da")
     .build()
 
   override fun provideCredentials(): MobileConsentCredentials {

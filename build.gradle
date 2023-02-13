@@ -11,15 +11,21 @@ buildscript {
     classpath 'com.android.tools.build:gradle:7.3.1'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
+    classpath 'io.github.gradle-nexus:publish-plugin:1.1.0'
   }
 }
 
-//apply plugin: "com.vanniktech.maven.publish"
+apply plugin: 'io.github.gradle-nexus.publish-plugin'
+apply from: "${rootDir}/scripts/publish-root.gradle"
+
 
 allprojects {
+
+  group = 'com.cookieinformation'
   repositories {
     mavenCentral()
     google()
+    maven { url 'https://jitpack.io' }
   }
 }
 

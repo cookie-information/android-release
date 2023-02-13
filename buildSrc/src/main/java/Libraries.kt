@@ -112,8 +112,6 @@ object Libraries {
 
   object MavenPublish {
     const val PluginId = "com.vanniktech.maven.publish"
-
-//    const val GradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.13.0"
   }
 
   @Suppress("ClassNaming")

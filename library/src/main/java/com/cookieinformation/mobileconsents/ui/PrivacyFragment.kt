@@ -1,7 +1,6 @@
 package com.cookieinformation.mobileconsents.ui
 
 import android.content.pm.ActivityInfo
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -42,9 +41,9 @@ internal class PrivacyFragment : Fragment(), ConsentSolutionListener {
   private fun bindConsentSolution(builder: ConsentSolutionBinder.Builder): ConsentSolutionBinder {
     val app = requireContext().applicationContext as Consentable
     val mobileConsentSdk = app.sdk
-
     return builder
       .setMobileConsentSdk(mobileConsentSdk.getMobileConsentSdk())
+      .setLocaleProvider(mobileConsentSdk.getMobileConsentSdk().uiLanguageProvider())
       .create()
   }
 

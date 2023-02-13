@@ -15,6 +15,7 @@ import com.cookieinformation.mobileconsents.networking.response.TokenResponseJso
 import com.cookieinformation.mobileconsents.networking.response.toDomain
 import com.cookieinformation.mobileconsents.storage.ConsentStorage
 import com.cookieinformation.mobileconsents.system.ApplicationProperties
+import com.cookieinformation.mobileconsents.ui.LocaleProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.withContext
@@ -38,13 +39,15 @@ public class MobileConsentSdk internal constructor(
   private val applicationProperties: ApplicationProperties,
   private val dispatcher: CoroutineDispatcher,
   public val saveConsentsFlow: SharedFlow<Map<Type, Boolean>>,
-  private val uiComponentColor: MobileConsentCustomUI?
+  private val uiComponentColor: MobileConsentCustomUI?,
+  private val uiLanguageCode: LocaleProvider
 ) {
 
   public fun getClientId(): String = consentClient.clientId
   public fun getSecretId(): String = consentClient.clientSecret
   public fun getConsentSolutionId(): String = consentClient.consentSolutionId.toString()
   public fun getUiComponentColor(): MobileConsentCustomUI? = uiComponentColor
+  public fun uiLanguageProvider(): LocaleProvider = uiLanguageCode
 
   /**
    * Obtain [TokenResponse] from authentication server.
