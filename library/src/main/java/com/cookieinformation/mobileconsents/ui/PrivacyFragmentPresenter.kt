@@ -2,7 +2,6 @@ package com.cookieinformation.mobileconsents.ui
 
 import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.ConsentItem.Type.Info
-import com.cookieinformation.mobileconsents.ConsentItem.Type.Setting
 import com.cookieinformation.mobileconsents.ConsentSolution
 import com.cookieinformation.mobileconsents.UiTexts
 import com.cookieinformation.mobileconsents.ui.PrivacyFragmentView.IntentListener

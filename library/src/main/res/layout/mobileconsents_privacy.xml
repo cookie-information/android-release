@@ -79,7 +79,7 @@
     android:padding="@dimen/mobileconsents_privacy_padding"
     app:layout_constraintBottom_toTopOf="@id/powered_by_label">
 
-    <com.google.android.material.button.MaterialButton
+    <Button
       android:id="@+id/mobileconsents_privacy_accept_selected_button"
       style="@style/MobileConsents_PrivacyButtons"
       android:layout_width="0dp"
@@ -92,7 +92,7 @@
       app:layout_constraintTop_toTopOf="parent" />
 
 
-    <com.google.android.material.button.MaterialButton
+    <Button
       android:id="@+id/mobileconsents_privacy_accept_all_button"
       style="@style/MobileConsents_PrivacyButtons"
       android:layout_width="0dp"

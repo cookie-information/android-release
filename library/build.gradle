@@ -2,6 +2,9 @@ plugins {
   id "com.android.library"
   id 'kotlin-android'
   id 'kotlin-kapt'
+  //Add maven-publish and signing plugins
+  id 'maven-publish'
+  id 'signing'
 }
 
 android {
@@ -12,13 +15,13 @@ android {
     minSdk 21
     targetSdk 33
     versionCode 1
-    versionName "0.0.1"
+    versionName "1.0.0"
   }
 
   buildTypes {
     release {
       debuggable false
-      minifyEnabled true
+      minifyEnabled false
       buildConfigField("String", "BASE_URL_TOKEN", "\"https://consent-api.app.cookieinformation.com/oauth2/token\"")
       buildConfigField("String", "BASE_URL_CONSENT_SOLUTION", "\"https://cdnapi-prod.azureedge.net/v1/\"")
       buildConfigField("String", "BASE_URL_CONSENT", "\"https://consent-api.app.cookieinformation.com/v1\"")
@@ -82,3 +85,25 @@ dependencies {
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
   implementation 'com.google.android.material:material:1.7.0'
 }
+
+ext {
+  PUBLISH_GROUP_ID = 'com.cookieinformation'
+  PUBLISH_VERSION = '1.0.0'
+  PUBLISH_ARTIFACT_ID = 'mobileconsents'
+  PUBLISH_DESCRIPTION = 'SDK for easy user consent managment.'
+  PUBLISH_URL = 'https://github.com/cookie-information/android-release'
+  PUBLISH_LICENSE_NAME = 'The Apache Software License, Version 2.0'
+  PUBLISH_LICENSE_URL =
+      'https://www.apache.org/licenses/LICENSE-2.0.txt'
+  PUBLISH_DEVELOPER_ID = 'HannaCookieInformation'
+  PUBLISH_DEVELOPER_NAME = 'Hanna Shulman'
+  PUBLISH_DEVELOPER_EMAIL = 'hsc@cookieinformation.com'
+  PUBLISH_SCM_CONNECTION =
+      'scm:git:github.com/cookie-information/android-release.git'
+  PUBLISH_SCM_DEVELOPER_CONNECTION =
+      'scm:git:github.com/cookie-information/android-release.git'
+  PUBLISH_SCM_URL =
+      'https://github.com/cookie-information/android-releas/tree/master'
+}
+
+apply from: "${rootProject.projectDir}/scripts/publish-module.gradle"

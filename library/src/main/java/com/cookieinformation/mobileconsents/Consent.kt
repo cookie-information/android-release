@@ -28,7 +28,7 @@ internal fun Consent.toRequest(
   userId = userId,
   consentSolutionId = consentSolutionId,
   consentSolutionVersionId = consentSolutionVersionId,
-  timestamp = timestamp,
+//  timestamp = timestamp,
   processingPurposes = processingPurposes.map(ProcessingPurpose::toRequest),
   customData = customData.map { CustomDataRequest(it.key, it.value) },
   applicationProperties = applicationProperties.toRequest()
