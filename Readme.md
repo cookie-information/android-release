@@ -15,6 +15,12 @@ You will then receive credentials, that will need to be provided for initializin
 This library is provided to you, to integrate mobile consents in an easy way.
 Lets get started.
 
+#Here are the update for release: 0.2.6:
+-Enable resetting consents, either all or by Type.
+-Support multiple language, and enforce selecting at least one language. Please note, these languages must be 
+    synchronized with the consents dashboard.
+-Consent List UI, has updated to a clearer separation of required and optional consents.
+
 #Here are the main objects you should be familiar with:
 ```kotlin
 class MobileConsentSdk
