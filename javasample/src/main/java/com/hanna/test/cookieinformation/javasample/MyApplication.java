@@ -15,6 +15,9 @@ import com.cookieinformation.mobileconsents.models.MobileConsentCredentials;
 import com.cookieinformation.mobileconsents.models.MobileConsentCustomUI;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import kotlin.coroutines.Continuation;
@@ -48,10 +51,13 @@ public class MyApplication extends Application implements Consentable {
     @NonNull
     @Override
     public MobileConsentSdk provideConsentSdk() {
+        List<Locale> localList = new ArrayList();
+        localList.add(new Locale("da"));
+        localList.add(Locale.FRENCH);
         return MobileConsentSdk.Builder(this)
             .setClientCredentials(provideCredentials())
             .setMobileConsentCustomUI(new MobileConsentCustomUI(Color.parseColor("#ff0000")))
-            .setLanguage("da")
+            .setLanguages(localList)
             .build();
     }
 
