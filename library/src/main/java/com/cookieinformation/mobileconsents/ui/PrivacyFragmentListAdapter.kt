@@ -35,7 +35,6 @@ internal class PrivacyFragmentListAdapter(
     ItemViewHolder(itemView) {
 
     private val preferencesAdapter = PrivacyPreferencesListAdapter(
-      R.layout.mobileconsents_privacy_item_preferences_item,
       onConsentItemChoiceToggle, sdkColor
     )
 
@@ -46,8 +45,21 @@ internal class PrivacyFragmentListAdapter(
     }
 
     override fun bind(item: PrivacyFragmentPreferencesItem) {
-      val sort = item.items.sortedBy { !it.required }
-      preferencesAdapter.submitList(sort)
+      val groups = item.items.groupBy { it.required }
+      val finalList = mutableListOf<ItemizedPreference>().apply {
+        groups[true]?.let {
+          add(
+            0,
+            PrivacyPreferencesItemHeader(itemView.context.getString(R.string.mobileconsents_required_privacy_consents_title))
+          )
+          addAll(it)
+        }
+        groups[false]?.let {
+          add(PrivacyPreferencesItemHeader(itemView.context.getString(R.string.mobileconsents_optional_privacy_consents_title)))
+          addAll(it)
+        }
+      }
+      preferencesAdapter.submitList(finalList)
     }
   }
 
@@ -57,6 +69,6 @@ internal class PrivacyFragmentListAdapter(
       oldItem.id == newItem.id
 
     override fun areContentsTheSame(oldItem: PrivacyFragmentPreferencesItem, newItem: PrivacyFragmentPreferencesItem) =
-      oldItem == newItem
+      oldItem.items == newItem.items
   }
 }

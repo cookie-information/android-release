@@ -1,10 +1,8 @@
 package com.hanna.test.cookieinformation.javasample;
 
-import android.view.View;
-import android.widget.Button;
+import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import com.cookieinformation.mobileconsents.GetConsents;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,11 +16,8 @@ public class MainActivity extends AppCompatActivity {
 
     });
 
-    ((Button) findViewById(R.id.display_always)).setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        ((MyApplication) getApplication()).getSdk().displayConsents(listener);
-      }
-    });
+    findViewById(R.id.display_always).setOnClickListener(v -> ((MyApplication) getApplication()).getSdk().displayConsents(listener));
+
+    findViewById(R.id.display_if_needed).setOnClickListener(v -> ((MyApplication) getApplication()).getSdk().displayConsentsIfNeeded(listener));
   }
 }

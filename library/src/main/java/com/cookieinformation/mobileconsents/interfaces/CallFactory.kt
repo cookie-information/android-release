@@ -11,6 +11,6 @@ import java.util.Locale
 public interface CallFactory {
   public fun setClientCredentials(credentials: MobileConsentCredentials): CallFactory
   public fun setMobileConsentCustomUI(customUI: MobileConsentCustomUI): CallFactory
-  public fun setLanguage(uiLanguageCode: String = Locale.getDefault().language): CallFactory
+  public fun setLanguages(locales: List<Locale> = listOf( Locale.getDefault())): CallFactory
   public fun build(): MobileConsentSdk
 }

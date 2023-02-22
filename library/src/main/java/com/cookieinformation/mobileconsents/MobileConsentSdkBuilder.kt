@@ -53,12 +53,10 @@ internal class MobileConsentSdkBuilder constructor(
     return this
   }
 
-  override fun setLanguage(uiLanguageCode: String): CallFactory {
+  override fun setLanguages(locales: List<Locale>): CallFactory {
     sdkLocale = object : LocaleProvider {
       override fun getLocales(): List<Locale> {
-        return listOf(Locale.getAvailableLocales().toList().firstOrNull {
-              it.equals(Locale(uiLanguageCode.substring(0, maxOf(uiLanguageCode.indexOf("-"), uiLanguageCode.length))))
-            } ?: Locale.getDefault())
+        return locales
       }
     }
     return this
@@ -76,6 +74,9 @@ internal class MobileConsentSdkBuilder constructor(
     }
     if (clientSecret == null || clientSecret.orEmpty().isEmpty()) {
       throw java.lang.Exception("Please set a client secret id")
+    }
+    if (sdkLocale == null || sdkLocale?.getLocales().orEmpty().isEmpty()) {
+      throw java.lang.Exception("Please provide the list of languages you want to provide")
     }
 
     val factory = getOkHttpClient(context)//OkHttpClient()

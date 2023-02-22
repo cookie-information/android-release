@@ -7,10 +7,12 @@ import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.MainThread
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.cookieinformation.mobileconsents.ConsentItem.Type
@@ -94,15 +96,11 @@ public class PrivacyFragmentView @JvmOverloads constructor(
       adapter = consentListAdapter
     }
 
-    contentView.findViewById<Toolbar>(R.id.mobileconsents_privacy_toolbar).apply {
-      parsedColorToInt?.let {
-        setBackgroundColor(it)
-      }
-      setNavigationOnClickListener {
-        onDismissRequest()
+    findViewById<LinearLayout>(R.id.mobileconsents_privacy_info_read_more_container).apply {
+      setOnClickListener {
+        onReadMoreClicked()
       }
     }
-
     findViewById<TextView>(R.id.mobileconsents_privacy_info_read_more).apply {
       parsedColorToInt?.let {
         setTextColor(it)
