@@ -52,7 +52,7 @@ class App : Application(), Consentable {
   override fun provideConsentSdk() = MobileConsentSdk.Builder(this)
     .setClientCredentials(provideCredentials())
     .setMobileConsentCustomUI(MobileConsentCustomUI(Color.parseColor("any hexcode color string")))
-    .setLanguage("A list of locales that the consents support.") //please ensure your consents are set to have the the corresponding translation on the dashboard.
+    .setLanguages("A list of locales that the consents support.") //please ensure your consents are set to have the the corresponding translation on the dashboard.
     .build()
 
   override fun provideCredentials(): MobileConsentCredentials {
@@ -96,7 +96,7 @@ public class MyApplication extends Application implements Consentable {
     return MobileConsentSdk.Builder(this)
         .setClientCredentials(provideCredentials())
         .setMobileConsentCustomUI(MobileConsentCustomUI(Color.parseColor("any hexcode color string")))
-        .setLanguage("A string that represent the language, wanted") //please ensure your consents are set to have the the corresponding translation on the dashboard.
+        .setLanguages("A list of locales that the consents support.") //please ensure your consents are set to have the the corresponding translation on the dashboard.
         .build();
   }
 
