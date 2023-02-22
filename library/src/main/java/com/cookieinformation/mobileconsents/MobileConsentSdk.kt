@@ -95,6 +95,19 @@ public class MobileConsentSdk internal constructor(
   }
 
   /**
+   * Reset past consent choices stored on device memory.
+   */
+  public suspend fun resetAllConsentChoices(): Unit = withContext(dispatcher) {
+    consentStorage.resetAllConsentChoices()
+  }
+  /**
+   * Reset past consent choices stored on device memory.
+   */
+  public suspend fun resetConsentChoice(choice: ConsentItem.Type): Unit = withContext(dispatcher) {
+    consentStorage.resetAllConsentChoices(choice)
+  }
+
+  /**
    * Obtain specific Consent choice stored on device memory.
    * @return a value of user choice. If choice is not stored in memory, this will return `false`.
    * @throws [IOException] in case of any error.

@@ -44,10 +44,16 @@ public data class TextTranslation(
         }
         if (translation != null) break
       }
-      if (translation == null) translation =
-        translations.firstOrNull {
-          Locale(it.languageCode).language.equals(DefaultLocale.language, ignoreCase = true)
+      if (translation == null) {
+        translation =
+          translations.firstOrNull {
+            Locale(it.languageCode).language.equals(DefaultLocale.language, ignoreCase = true)
+          }
+
+        if (translation == null && BuildConfig.DEBUG){
+          throw Exception("You must make sure the sdk language supports the same languages that the consentns are in")
         }
+      }
       return translation ?: TextTranslation("", "")
     }
   }

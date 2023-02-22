@@ -154,8 +154,20 @@ public class MobileConsents constructor(
     }
   }
 
-  private suspend fun shouldDisplayConsents(): Boolean {
+  public suspend fun shouldDisplayConsents(): Boolean {
     return !getMobileConsentSdk().getSavedConsents().containsValue(true)
+  }
+
+  public suspend fun haveConsentsBeenAccepted(): Boolean{
+    return !getMobileConsentSdk().getSavedConsents().containsValue(true)
+  }
+
+  public suspend fun resetAllConsentChoices() {
+    return getMobileConsentSdk().resetAllConsentChoices()
+  }
+
+  public suspend fun resetConsentChoice(consentKey: ConsentItem.Type) {
+    return getMobileConsentSdk().resetConsentChoice(consentKey)
   }
 }
 

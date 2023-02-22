@@ -10,10 +10,20 @@ internal class ConsentPreferences(private val applicationContext: Context) {
     return applicationContext.getSharedPreferences(CONSENT_PREFERENCES, Context.MODE_PRIVATE)
   }
 
-  fun getAllConsentChoices(): Map<Type, Boolean>{
+  fun getAllConsentChoices(): Map<Type, Boolean> {
     return sharedPreferences().all.mapKeys {
       Type.findTypeByValue(it.key)
     }.mapValues { it.value as? Boolean ?: false }
+  }
+
+  fun resetAllConsentChoices() {
+    getAllConsentChoices().forEach {
+      sharedPreferences().edit().putBoolean(it.key.name, false).apply()
+    }
+  }
+
+  fun resetConsentChoice(consentType: Type) {
+    sharedPreferences().edit().putBoolean(consentType.name, false).apply()
   }
 
   companion object {

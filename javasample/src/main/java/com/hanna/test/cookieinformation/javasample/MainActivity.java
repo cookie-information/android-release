@@ -1,11 +1,14 @@
 package com.hanna.test.cookieinformation.javasample;
 
-import android.view.View;
-import android.widget.Button;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import com.cookieinformation.mobileconsents.ConsentItem;
 import com.cookieinformation.mobileconsents.GetConsents;
+import kotlin.Unit;
+import kotlin.coroutines.Continuation;
+import kotlin.coroutines.CoroutineContext;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,11 +21,37 @@ public class MainActivity extends AppCompatActivity {
 
     });
 
-    ((Button) findViewById(R.id.display_always)).setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        ((MyApplication) getApplication()).getSdk().displayConsents(listener);
-      }
-    });
+    findViewById(R.id.display_always).setOnClickListener(v -> ((MyApplication) getApplication()).getSdk()
+        .displayConsents(listener));
+
+    findViewById(R.id.display_if_needed).setOnClickListener(v -> ((MyApplication) getApplication()).getSdk()
+        .displayConsentsIfNeeded(listener));
+
+    findViewById(R.id.reset_all_consents).setOnClickListener(v -> ((MyApplication) getApplication()).getSdk()
+        .resetAllConsentChoices(
+            new Continuation<Unit>() {
+              @NonNull @Override public CoroutineContext getContext() {
+                return null;
+              }
+
+              @Override public void resumeWith(@NonNull Object o) {
+
+              }
+            }));
+
+    findViewById(R.id.reset_all_consents).setOnClickListener(v ->
+        ((MyApplication) getApplication()).getSdk().resetConsentChoice(
+            ConsentItem.Type.Companion.findTypeByValue(""),
+            new Continuation<Unit>() {
+              @NonNull @Override public CoroutineContext getContext() {
+                return null;
+              }
+
+              @Override public void resumeWith(@NonNull Object o) {
+
+              }
+            }
+        )
+    );
   }
 }

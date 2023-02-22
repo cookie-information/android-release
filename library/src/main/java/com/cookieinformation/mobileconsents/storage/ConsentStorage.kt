@@ -91,6 +91,16 @@ internal class ConsentStorage(
   fun getAllConsentChoices(): Map<Type, Boolean> = consentPreferences.getAllConsentChoices()
 
   /**
+   * Reset all consents to default value.
+   */
+  public fun resetAllConsentChoices() = consentPreferences.resetAllConsentChoices()
+
+  /**
+   * Resets a consent by having .
+   */
+  public fun resetAllConsentChoices(choice: Type) = consentPreferences.resetConsentChoice(choice)
+
+  /**
    * Maps key and value read from file to consents map
    */
   private fun Map<String, String>.toConsents(): Map<Type, Boolean> =

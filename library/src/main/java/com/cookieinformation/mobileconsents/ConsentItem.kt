@@ -41,7 +41,7 @@ public data class ConsentItem(
       override val isSetting: Boolean = false
     }
 
-    public class Setting(public val customValue: String) : Type(customValue) {
+    public class Setting(private val customValue: String) : Type(customValue) {
       override val isSetting: Boolean = true
     }
 

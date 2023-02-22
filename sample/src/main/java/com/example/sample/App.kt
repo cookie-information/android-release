@@ -7,6 +7,7 @@ import com.cookieinformation.mobileconsents.MobileConsents
 import com.cookieinformation.mobileconsents.MobileConsentSdk
 import com.cookieinformation.mobileconsents.models.MobileConsentCredentials
 import com.cookieinformation.mobileconsents.models.MobileConsentCustomUI
+import java.util.Locale
 
 class App : Application(), Consentable {
 
@@ -16,7 +17,7 @@ class App : Application(), Consentable {
   override fun provideConsentSdk() = MobileConsentSdk.Builder(this)
     .setClientCredentials(provideCredentials())
     .setMobileConsentCustomUI(MobileConsentCustomUI(Color.parseColor("#ff0000")))
-    .setLanguage("da")
+    .setLanguages(listOf(Locale.FRANCE, Locale("da")))
     .build()
 
   override fun provideCredentials(): MobileConsentCredentials {
