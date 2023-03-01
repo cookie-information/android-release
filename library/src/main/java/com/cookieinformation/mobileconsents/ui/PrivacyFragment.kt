@@ -13,6 +13,7 @@ import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.ConsentSolution
 import com.cookieinformation.mobileconsents.Consentable
 import com.cookieinformation.mobileconsents.R
+import com.cookieinformation.mobileconsents.models.SdkTextStyle
 import com.cookieinformation.mobileconsents.ui.ConsentSolutionViewModel.Event
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -53,12 +54,18 @@ internal class PrivacyFragment : Fragment(), ConsentSolutionListener {
     return mobileConsentSdk.getMobileConsentSdk().getUiComponentColor()?.primaryColor
   }
 
+  fun getCustomSetFont(): SdkTextStyle? {
+    val app = requireContext().applicationContext as Consentable
+    val mobileConsentSdk = app.sdk
+    return mobileConsentSdk.getMobileConsentSdk().getUiComponentColor()?.sdkTextStyle
+  }
+
   /**
    * If method is overridden, the super must be called.
    */
   @CallSuper
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-    PrivacyFragmentView(requireContext(), sdkColor =  getSdkSetColor()).also {
+    PrivacyFragmentView(requireContext(), sdkColor =  getSdkSetColor(), sdkTextStyle = getCustomSetFont()).also {
       it.onReadMore = ::onReadMore
     }
 

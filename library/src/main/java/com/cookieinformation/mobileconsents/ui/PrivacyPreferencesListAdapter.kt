@@ -13,14 +13,16 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.R
-import com.cookieinformation.mobileconsents.util.setTextFromHtml
+import com.cookieinformation.mobileconsents.models.SdkTextStyle
+import com.cookieinformation.mobileconsents.models.SubtitleStyle
 
 /**
  * The RecyclerView's adapter for [PrivacyPreferencesItem] item model.
  */
 internal class PrivacyPreferencesListAdapter(
   private val onConsentItemChoiceChanged: (Type, Boolean) -> Unit,
-  private val sdkColor: Int?
+  private val sdkColor: Int?,
+  private val sdkTextStyle: SdkTextStyle?
 ) :
   ListAdapter<ItemizedPreference, BindableViewHolder<ItemizedPreference>>(AdapterConsentItemDiffCallback()) {
 
@@ -42,17 +44,19 @@ internal class PrivacyPreferencesListAdapter(
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindableViewHolder<ItemizedPreference> {
     return when (viewType) {
       PREFERENCE_TYPE_HEADER -> HeaderItemViewHolder(
-        parent.inflate(R.layout.mobileconsents_privacy_item_preferences_item_header)
+        parent.inflate(R.layout.mobileconsents_privacy_item_preferences_item_header),
+        sdkTextStyle?.subtitleStyle
       ) as BindableViewHolder<ItemizedPreference>
       PREFERENCE_ITEM -> PreferenceItemViewHolder(
         parent.inflate(R.layout.mobileconsents_privacy_item_preferences_item),
         sdkColor,
-        onConsentItemChoiceChanged
+        onConsentItemChoiceChanged, sdkTextStyle
       ) as BindableViewHolder<ItemizedPreference>
       else -> PreferenceItemViewHolder(
         parent.inflate(R.layout.mobileconsents_privacy_item_preferences_item),
         sdkColor,
-        onConsentItemChoiceChanged
+        onConsentItemChoiceChanged,
+        sdkTextStyle
       ) as BindableViewHolder<ItemizedPreference>
     }
   }
@@ -89,7 +93,8 @@ public abstract class BindableViewHolder<T>(itemView: View) : ViewHolder(itemVie
 public class PreferenceItemViewHolder(
   itemView: View,
   private val sdkColor: Int?,
-  public val onConsentItemChanged: (Type, Boolean) -> Unit
+  public val onConsentItemChanged: (Type, Boolean) -> Unit,
+  public val sdkTextStyle: SdkTextStyle?
 ) : BindableViewHolder<PrivacyPreferencesItem>(itemView) {
 
   @SuppressLint("UseSwitchCompatOrMaterialCode")
@@ -118,9 +123,10 @@ public class PreferenceItemViewHolder(
     data: PrivacyPreferencesItem,
   ) {
     consentText.apply {
-      setTextFromHtml(
-        data.text,
-      )
+      text = data.text
+      sdkTextStyle?.subtitleStyle?.let {
+        typeface = it.typeface
+      }
     }
     consentSwitch.apply {
       isChecked = data.accepted || data.required
@@ -136,13 +142,16 @@ public class PreferenceItemViewHolder(
       }
     }
     consentDetails?.apply {
-      setTextFromHtml(data.details)
+      text = data.details
+      sdkTextStyle?.bodyStyle?.let {
+        typeface = it.typeface
+      }
       visibility = if (data.details.isBlank()) View.GONE else View.VISIBLE
     }
   }
 }
 
-public class HeaderItemViewHolder(itemView: View) :
+public class HeaderItemViewHolder(itemView: View, private val style: SubtitleStyle?) :
   BindableViewHolder<PrivacyPreferencesItemHeader>(itemView) {
 
   private val header =
@@ -153,6 +162,9 @@ public class HeaderItemViewHolder(itemView: View) :
   ) {
     header.apply {
       text = data.title
+      style?.typeface?.let {
+        typeface = it
+      }
     }
   }
 }
