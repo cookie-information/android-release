@@ -50,6 +50,14 @@ internal class ConsentStorage(
   }
 
   /**
+   * Store the current version of consents
+   */
+
+  fun saveConsentId(consentId: UUID) {
+    consentPreferences.saveLatestStoredConsentVersion(consentId)
+  }
+
+  /**
    * Store list of consent choices ([ProcessingPurpose]) as Map of Types and Booleans.
    */
   suspend fun storeConsentChoices(purposes: List<ProcessingPurpose>) {
@@ -83,6 +91,15 @@ internal class ConsentStorage(
 
   fun getConsentChoice(type: Type): Boolean {
     return consentPreferences.sharedPreferences().getBoolean(type.name, false)
+  }
+
+  /**
+   * Get the latest stored consent version id.
+   */
+  fun getLatestStoredConsentVersion(): UUID = try {
+    UUID.fromString(consentPreferences.getLatestStoredConsentVersion())
+  } catch (e: java.lang.Exception) {
+    UUID.randomUUID()
   }
 
   /**

@@ -1,5 +1,6 @@
 package com.cookieinformation.mobileconsents.networking.response
 
+import android.util.Log
 import com.cookieinformation.mobileconsents.ConsentSolution
 import com.cookieinformation.mobileconsents.UiTexts
 import com.squareup.moshi.Json
@@ -31,10 +32,12 @@ internal fun ConsentSolutionResponse.toDomainUiTexts() =
     consentPreferencesLabel = templateTexts.consentPreferencesLabel.map(TextTranslationResponse::toDomain),
   )
 
-internal fun ConsentSolutionResponse.toDomain(): ConsentSolution =
-  ConsentSolution(
+internal fun ConsentSolutionResponse.toDomain(): ConsentSolution {
+  return ConsentSolution(
     consentItems = consentItems.map(ItemResponse::toDomain),
     consentSolutionId = consentSolutionId,
     consentSolutionVersionId = consentSolutionVersionId,
     uiTexts = toDomainUiTexts()
   )
+}
+

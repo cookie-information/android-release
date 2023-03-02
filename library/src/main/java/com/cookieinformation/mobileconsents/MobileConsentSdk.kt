@@ -1,6 +1,7 @@
 package com.cookieinformation.mobileconsents
 
 import android.content.Context
+import android.util.Log
 import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.adapter.extension.parseFromResponseBody
 import com.cookieinformation.mobileconsents.adapter.moshi
@@ -70,7 +71,9 @@ public class MobileConsentSdk internal constructor(
     val call = consentClient.getConsentSolution()
     val responseBody = call.enqueueSuspending()
     val adapter = ConsentSolutionResponseJsonAdapter(moshi)
-    adapter.parseFromResponseBody(responseBody).toDomain()
+    adapter.parseFromResponseBody(responseBody).toDomain().also {
+      consentStorage.saveConsentId(it.consentSolutionVersionId)
+    }
   }
 
   /**
@@ -83,6 +86,11 @@ public class MobileConsentSdk internal constructor(
     val call = consentClient.postConsent(consent, userId, applicationProperties)
     call.enqueueSuspending().closeQuietly()
     consentStorage.storeConsentChoices(consent.processingPurposes)
+    consentStorage.saveConsentId(consent.consentSolutionVersionId)
+  }
+
+  public fun getLatestStoredConsentVersion(): UUID {
+    return consentStorage.getLatestStoredConsentVersion()
   }
 
   /**
@@ -100,6 +108,7 @@ public class MobileConsentSdk internal constructor(
   public suspend fun resetAllConsentChoices(): Unit = withContext(dispatcher) {
     consentStorage.resetAllConsentChoices()
   }
+
   /**
    * Reset past consent choices stored on device memory.
    */
