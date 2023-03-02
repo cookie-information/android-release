@@ -27,6 +27,10 @@ Lets get started.
 class MobileConsentSdk
 class MobileConsentCredentials
 class MobileConsentCustomUI
+class SdkTextStyle  
+class TitleStyle
+class SubtitleStyle
+class BodyStyle
 ```
 
 The above objects are required in order to initialize the sdk.
@@ -36,6 +40,11 @@ MobileConsentSdk - is the object that handles all the consents info, and state. 
 MobileConsentCredentials - The object that contains all credentials required for fetching the relevant data for your company/application.
 
 MobileConsentCustomUI - The color theme used for various components that are included in the library.
+
+SdkTextStyle - The object that wraps the text styling of the app.  
+TitleStyle - The typeface of titles.
+SubtitleStyle - The typeface of secondary titles
+BodyStyle - The typeface of sdks body
 
 Steps to implement:
 -Extend the application class. (Dont forget to add to manifest)
