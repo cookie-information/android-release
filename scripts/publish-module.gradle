@@ -25,7 +25,7 @@ afterEvaluate {
                 // we'll set up later
                 groupId 'com.cookieinformation'
                 artifactId 'mobileconsents'
-                version '0.2.7'
+                version '0.2.6'
 
                 // Two artifacts, the `aar` (or `jar`) and the sources
                 if (project.plugins.findPlugin("com.android.library")) {
