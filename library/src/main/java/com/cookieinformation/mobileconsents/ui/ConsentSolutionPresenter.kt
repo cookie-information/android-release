@@ -220,13 +220,16 @@ internal abstract class ConsentSolutionPresenter<ViewType, ViewDataType, ViewInt
    */
   fun authenticate() {
     // First check that client id, secret key and solution id are present
-    if (consentSdk.getClientId().isBlank() || consentSdk.getSecretId().isBlank() || consentSdk.getConsentSolutionId().isBlank()) {
+    if (consentSdk.getClientId().isBlank() || consentSdk.getSecretId().isBlank() || consentSdk.getConsentSolutionId()
+        .isBlank()
+    ) {
       throw RuntimeException("\nMobileConsentSdk.Builder is missing client id and/or client secret and/or solution id. Please add:\nsetClientId(XXX)\nsetClientSecret(XXX)\nsetSolutionId(XXX)")
     }
 
     preferences.getAccessToken()?.let {
       // We have a valid access token
-      fetchConsentSolution()
+      val solution = fetchConsentSolution()
+      solution
     } ?: fetchToken()
   }
 

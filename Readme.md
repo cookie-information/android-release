@@ -15,17 +15,22 @@ You will then receive credentials, that will need to be provided for initializin
 This library is provided to you, to integrate mobile consents in an easy way.
 Lets get started.
 
-##Here are the update for release: 0.2.6:  
--Enable resetting consents, either all or by Type.  
+#Here are the update for release: 0.2.6:
+-Enable resetting consents, either all or by Type.
 -Support multiple language, and enforce selecting at least one language. Please note, these languages must be 
-    synchronized with the consents dashboard.  
+    synchronized with the consents dashboard.
 -Consent List UI, has updated to a clearer separation of required and optional consents.
+
 
 #Here are the main objects you should be familiar with:
 ```kotlin
 class MobileConsentSdk
 class MobileConsentCredentials
 class MobileConsentCustomUI
+class SdkTextStyle  
+class TitleStyle
+class SubtitleStyle
+class BodyStyle
 ```
 
 The above objects are required in order to initialize the sdk.
@@ -35,6 +40,11 @@ MobileConsentSdk - is the object that handles all the consents info, and state. 
 MobileConsentCredentials - The object that contains all credentials required for fetching the relevant data for your company/application.
 
 MobileConsentCustomUI - The color theme used for various components that are included in the library.
+
+SdkTextStyle - The object that wraps the text styling of the app.  
+TitleStyle - The typeface of titles.
+SubtitleStyle - The typeface of secondary titles
+BodyStyle - The typeface of sdks body
 
 Steps to implement:
 -Extend the application class. (Dont forget to add to manifest)
@@ -51,7 +61,7 @@ class App : Application(), Consentable {
   override fun provideConsentSdk() = MobileConsentSdk.Builder(this)
     .setClientCredentials(provideCredentials())
     .setMobileConsentCustomUI(MobileConsentCustomUI(Color.parseColor("any hexcode color string")))
-    .setLanguage("A list of locales that the consents support.") //please ensure your consents are set to have the the corresponding translation on the dashboard.
+    .setLanguages("A list of locales that the consents support.") //please ensure your consents are set to have the the corresponding translation on the dashboard.
     .build()
 
   override fun provideCredentials(): MobileConsentCredentials {
@@ -95,7 +105,7 @@ public class MyApplication extends Application implements Consentable {
     return MobileConsentSdk.Builder(this)
         .setClientCredentials(provideCredentials())
         .setMobileConsentCustomUI(MobileConsentCustomUI(Color.parseColor("any hexcode color string")))
-        .setLanguage("A string that represent the language, wanted") //please ensure your consents are set to have the the corresponding translation on the dashboard.
+        .setLanguages("A list of locales that the consents support.") //please ensure your consents are set to have the the corresponding translation on the dashboard.
         .build();
   }
 

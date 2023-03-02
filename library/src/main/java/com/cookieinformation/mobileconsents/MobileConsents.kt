@@ -1,6 +1,7 @@
 package com.cookieinformation.mobileconsents
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.os.bundleOf
 import com.cookieinformation.mobileconsents.ConsentItem.Type
@@ -155,7 +156,11 @@ public class MobileConsents constructor(
   }
 
   public suspend fun shouldDisplayConsents(): Boolean {
-    return !getMobileConsentSdk().getSavedConsents().containsValue(true)
+    val latest = getMobileConsentSdk().getLatestStoredConsentVersion()
+    val solution = getMobileConsentSdk().fetchConsentSolution().consentSolutionVersionId
+    val hasVersionUpdated = getMobileConsentSdk().getLatestStoredConsentVersion().toString() != solution.toString()
+    Log.d("TAG", "shouldDisplayConsents: postConsent: $solution   $latest  $hasVersionUpdated")
+    return !getMobileConsentSdk().getSavedConsents().containsValue(true) || hasVersionUpdated
   }
 
   public suspend fun haveConsentsBeenAccepted(): Boolean{

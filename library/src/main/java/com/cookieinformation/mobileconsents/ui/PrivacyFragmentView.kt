@@ -11,12 +11,11 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.MainThread
-import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.R
+import com.cookieinformation.mobileconsents.models.SdkTextStyle
 import com.cookieinformation.mobileconsents.ui.PrivacyFragmentView.IntentListener
 import com.cookieinformation.mobileconsents.util.setTextFromHtml
 import java.util.UUID
@@ -30,7 +29,8 @@ public class PrivacyFragmentView @JvmOverloads constructor(
   attrs: AttributeSet? = null,
   defStyleAttr: Int = 0,
   defStyleRes: Int = 0,
-  sdkColor: Int?
+  sdkColor: Int?,
+  sdkTextStyle: SdkTextStyle?
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
   ConsentSolutionView<PrivacyFragmentViewData, IntentListener> {
 
@@ -65,13 +65,14 @@ public class PrivacyFragmentView @JvmOverloads constructor(
   }
 
   private val intentListeners = mutableSetOf<IntentListener>()
-  private val consentListAdapter = PrivacyFragmentListAdapter(::onChoiceChanged, sdkColor)
+  private val consentListAdapter = PrivacyFragmentListAdapter(::onChoiceChanged, sdkColor, sdkTextStyle)
   public var onReadMore: (info: String, poweredBy: String) -> Unit = { _, _ ->
   }
 
   private val contentView: View
   private val progressBar: View
-  public var parsedColorToInt: Int? = sdkColor//Color.parseColor("#FFE91E63")// = attrs?.getAttributeResourceValue(0, 0)
+  public var parsedColorToInt: Int? = sdkColor
+  public var customTypeface: SdkTextStyle? = sdkTextStyle
 
   private lateinit var data: PrivacyFragmentViewData
 
@@ -104,6 +105,9 @@ public class PrivacyFragmentView @JvmOverloads constructor(
     findViewById<TextView>(R.id.mobileconsents_privacy_info_read_more).apply {
       parsedColorToInt?.let {
         setTextColor(it)
+      }
+      customTypeface?.subtitleStyle?.let {
+        typeface = it.typeface
       }
       setOnClickListener {
         onReadMoreClicked()
@@ -180,9 +184,15 @@ public class PrivacyFragmentView @JvmOverloads constructor(
     this.data = data
     findViewById<TextView>(R.id.mobileconsents_privacy_info_title).apply {
       text = data.privacyTitleText
+      customTypeface?.titleStyle?.let {
+        typeface = it.typeface
+      }
     }
     findViewById<TextView>(R.id.mobileconsents_privacy_info_short_description).apply {
       text = data.privacyDescriptionShortText
+      customTypeface?.subtitleStyle?.let {
+        typeface = it.typeface
+      }
     }
     findViewById<TextView>(R.id.mobileconsents_privacy_info_read_more).apply {
       text = data.privacyReadMoreText

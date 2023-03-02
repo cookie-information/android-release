@@ -9,6 +9,7 @@ import android.view.WindowManager
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
+import com.cookieinformation.mobileconsents.Consentable
 import com.cookieinformation.mobileconsents.R
 import com.cookieinformation.mobileconsents.util.setTextFromHtml
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -48,6 +49,11 @@ internal class ReadMoreBottomSheet :
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     view.findViewById<TextView>(R.id.mobileconsents_privacy_info_read_more).apply {
+      val app = requireContext().applicationContext as Consentable
+      val style = app.sdk.getMobileConsentSdk().getUiComponentColor()?.sdkTextStyle
+      style?.bodyStyle?.typeface?.let {
+        typeface = it
+      }
       text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         Html.fromHtml(info, Html.FROM_HTML_MODE_COMPACT)
       } else {
@@ -63,6 +69,7 @@ internal class ReadMoreBottomSheet :
       sdkColor?.let {
         setBackgroundColor(it)
       }
+
       setNavigationOnClickListener {
         dismiss()
       }

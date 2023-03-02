@@ -8,13 +8,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.R
+import com.cookieinformation.mobileconsents.models.SdkTextStyle
 
 /**
  * RecyclerView's adapter for [PrivacyFragmentPreferencesItem] item model.
  */
 internal class PrivacyFragmentListAdapter(
   private val onConsentItemChoiceToggle: (Type, Boolean) -> Unit,
-  private val sdkColor: Int?
+  private val sdkColor: Int?,
+  private val sdkTextStyle: SdkTextStyle?
 ) :
   ListAdapter<PrivacyFragmentPreferencesItem, PrivacyFragmentListAdapter.ItemViewHolder>(AdapterConsentItemDiffCallback()) {
 
@@ -22,7 +24,7 @@ internal class PrivacyFragmentListAdapter(
     PreferencesItemViewHolder(
       LayoutInflater.from(parent.context)
         .inflate(R.layout.mobileconsents_privacy_item_preferences, parent, false),
-      onConsentItemChoiceToggle, sdkColor
+      onConsentItemChoiceToggle, sdkColor, sdkTextStyle
     )
 
   override fun onBindViewHolder(holder: ItemViewHolder, position: Int) = holder.bind(getItem(position))
@@ -31,11 +33,14 @@ internal class PrivacyFragmentListAdapter(
     abstract fun bind(item: PrivacyFragmentPreferencesItem)
   }
 
-  class PreferencesItemViewHolder(itemView: View, onConsentItemChoiceToggle: (Type, Boolean) -> Unit, sdkColor: Int?) :
+  class PreferencesItemViewHolder(itemView: View, onConsentItemChoiceToggle: (Type, Boolean) -> Unit,
+    sdkColor: Int?,
+    sdkTextStyle: SdkTextStyle?,
+  ) :
     ItemViewHolder(itemView) {
 
     private val preferencesAdapter = PrivacyPreferencesListAdapter(
-      onConsentItemChoiceToggle, sdkColor
+      onConsentItemChoiceToggle, sdkColor, sdkTextStyle
     )
 
     init {

@@ -3,6 +3,7 @@ package com.hanna.test.cookieinformation.javasample;
 import android.app.Application;
 import android.graphics.Color;
 
+import android.graphics.Typeface;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -11,9 +12,13 @@ import com.cookieinformation.mobileconsents.ConsentItem;
 import com.cookieinformation.mobileconsents.Consentable;
 import com.cookieinformation.mobileconsents.MobileConsentSdk;
 import com.cookieinformation.mobileconsents.MobileConsents;
+import com.cookieinformation.mobileconsents.models.BodyStyle;
 import com.cookieinformation.mobileconsents.models.MobileConsentCredentials;
 import com.cookieinformation.mobileconsents.models.MobileConsentCustomUI;
 
+import com.cookieinformation.mobileconsents.models.SdkTextStyle;
+import com.cookieinformation.mobileconsents.models.SubtitleStyle;
+import com.cookieinformation.mobileconsents.models.TitleStyle;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +61,13 @@ public class MyApplication extends Application implements Consentable {
         localList.add(Locale.FRENCH);
         return MobileConsentSdk.Builder(this)
             .setClientCredentials(provideCredentials())
-            .setMobileConsentCustomUI(new MobileConsentCustomUI(Color.parseColor("#ff0000")))
+            .setMobileConsentCustomUI(
+                new MobileConsentCustomUI(Color.parseColor("#ff0000"),
+                    new SdkTextStyle(
+                    new TitleStyle(null),
+                    new SubtitleStyle(Typeface.MONOSPACE),
+                    new BodyStyle(null)
+                )))
             .setLanguages(localList)
             .build();
     }
