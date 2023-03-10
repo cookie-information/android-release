@@ -82,6 +82,12 @@ public class MobileConsentSdk internal constructor(
    * @throws [IOException] in case of any error.
    */
   public suspend fun postConsent(consent: Consent): Unit = withContext(dispatcher) {
+//    fetch a new token if the current token doesn't exist, or has expired.
+    val token = consentStorage.tokenPreferences.getAccessToken()
+    if (token == null) {
+      val updateToken = fetchToken()
+      consentStorage.tokenPreferences.setTokenResponse(updateToken)
+    }
     val userId = consentStorage.getUserId()
     val call = consentClient.postConsent(consent, userId, applicationProperties)
     call.enqueueSuspending().closeQuietly()

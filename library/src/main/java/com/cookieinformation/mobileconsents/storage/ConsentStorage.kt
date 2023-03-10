@@ -39,6 +39,7 @@ internal class ConsentStorage(
 ) {
 
   val consentPreferences = ConsentPreferences(applicationContext)
+  val tokenPreferences = Preferences(applicationContext)
 
   /**
    * SharedFlow for observing "save consents" events.
