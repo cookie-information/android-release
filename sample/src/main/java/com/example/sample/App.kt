@@ -31,6 +31,7 @@ class App : Application(), Consentable {
         )
       )
     )
+    .setCustomConsentView(CustomConsentView(applicationContext))
     .setLanguages(listOf(Locale.FRANCE, Locale("da")))
     .build()
 

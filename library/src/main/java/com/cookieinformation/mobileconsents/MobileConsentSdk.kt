@@ -1,7 +1,6 @@
 package com.cookieinformation.mobileconsents
 
 import android.content.Context
-import android.util.Log
 import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.adapter.extension.parseFromResponseBody
 import com.cookieinformation.mobileconsents.adapter.moshi
@@ -16,6 +15,7 @@ import com.cookieinformation.mobileconsents.networking.response.TokenResponseJso
 import com.cookieinformation.mobileconsents.networking.response.toDomain
 import com.cookieinformation.mobileconsents.storage.ConsentStorage
 import com.cookieinformation.mobileconsents.system.ApplicationProperties
+import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import com.cookieinformation.mobileconsents.ui.LocaleProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharedFlow
@@ -41,7 +41,8 @@ public class MobileConsentSdk internal constructor(
   private val dispatcher: CoroutineDispatcher,
   public val saveConsentsFlow: SharedFlow<Map<Type, Boolean>>,
   private val uiComponentColor: MobileConsentCustomUI?,
-  private val uiLanguageCode: LocaleProvider
+  private val uiLanguageCode: LocaleProvider,
+  private val consentsView: BaseConsentsView?
 ) {
 
   public fun getClientId(): String = consentClient.clientId
@@ -49,6 +50,7 @@ public class MobileConsentSdk internal constructor(
   public fun getConsentSolutionId(): String = consentClient.consentSolutionId.toString()
   public fun getUiComponentColor(): MobileConsentCustomUI? = uiComponentColor
   public fun uiLanguageProvider(): LocaleProvider = uiLanguageCode
+  public fun getConsentsView(): BaseConsentsView? = consentsView
 
   /**
    * Obtain [TokenResponse] from authentication server.

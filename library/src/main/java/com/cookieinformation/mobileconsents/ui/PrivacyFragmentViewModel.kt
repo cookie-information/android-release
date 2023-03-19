@@ -1,12 +1,13 @@
 package com.cookieinformation.mobileconsents.ui
 
 import androidx.lifecycle.ViewModel
+import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 
 /**
  * The view model class for the [BasePrivacyFragment].
  */
 internal class PrivacyFragmentViewModel(binder: ConsentSolutionBinder) :
-  ConsentSolutionViewModel<PrivacyFragmentView, PrivacyFragmentPresenter>(PrivacyFragmentPresenter(), binder) {
+  ConsentSolutionViewModel<BaseConsentsView, PrivacyFragmentPresenter>(PrivacyFragmentPresenter(), binder) {
 
   class Factory(private val binder: ConsentSolutionBinder) : androidx.lifecycle.ViewModelProvider.Factory {
 

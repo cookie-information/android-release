@@ -4,7 +4,8 @@ import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.ConsentItem.Type.Info
 import com.cookieinformation.mobileconsents.ConsentSolution
 import com.cookieinformation.mobileconsents.UiTexts
-import com.cookieinformation.mobileconsents.ui.PrivacyFragmentView.IntentListener
+import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
+import com.cookieinformation.mobileconsents.ui.base.IntentListener
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import java.util.UUID
@@ -14,7 +15,7 @@ import java.util.UUID
  */
 internal class PrivacyFragmentPresenter(
   dispatcher: CoroutineDispatcher = Dispatchers.Main
-) : ConsentSolutionPresenter<PrivacyFragmentView, PrivacyFragmentViewData, IntentListener>(dispatcher),
+) : ConsentSolutionPresenter<BaseConsentsView, PrivacyFragmentViewData, IntentListener>(dispatcher),
   IntentListener {
 
   private val preferencesItemId = UUID(0, 0)
