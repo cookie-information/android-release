@@ -93,10 +93,12 @@ class CustomConsentsAdapter(val onChoiceChanged: (uuid: UUID, accepted: Boolean)
 
   override fun onBindViewHolder(holder: VH, position: Int) {
     val data = currentList[position]
-    holder.consentTitle.text = "${data.text} ${data.required}"
+    holder.consentTitle.text = data.text
     holder.consentState.isChecked = data.accepted || data.required
-    holder.consentState.setOnCheckedChangeListener { compoundButton, b ->
-      onChoiceChanged(data.id, b)
+    holder.consentState.isClickable = !data.required
+    holder.consentState.setOnCheckedChangeListener { _, b ->
+      if (!data.required)
+        onChoiceChanged(data.id, b)
     }
   }
 }

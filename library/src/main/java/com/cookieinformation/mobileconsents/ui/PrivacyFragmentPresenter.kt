@@ -122,7 +122,7 @@ internal class PrivacyFragmentPresenter(
     savedConsents: Map<UUID, Boolean>
   ): PrivacyFragmentPreferencesItem {
     val items = consentSolution.consentItems
-      .filter { it.type.isSetting }
+//      .filter { it.type.isSetting }
       .map { it.toPrivacyPreferencesItem(savedConsents) }
 
     val titleTranslation = consentSolution.uiTexts.consentPreferencesLabel.translate()
