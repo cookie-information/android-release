@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.PorterDuff
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -13,12 +14,10 @@ import android.widget.TextView
 import androidx.annotation.MainThread
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.R
 import com.cookieinformation.mobileconsents.models.SdkTextStyle
-import com.cookieinformation.mobileconsents.ui.PrivacyFragmentView.IntentListener
+import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import com.cookieinformation.mobileconsents.util.setTextFromHtml
-import java.util.UUID
 
 /**
  * The Privacy view implementation. The view is used in [BasePrivacyFragment] and should not be used directly
@@ -31,40 +30,8 @@ public class PrivacyFragmentView @JvmOverloads constructor(
   defStyleRes: Int = 0,
   sdkColor: Int?,
   sdkTextStyle: SdkTextStyle?
-) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
-  ConsentSolutionView<PrivacyFragmentViewData, IntentListener> {
+) : BaseConsentsView(context, attrs, defStyleAttr, defStyleRes) {
 
-  /**
-   * A listener for events that can be triggered by the user.
-   */
-  @MainThread
-  public interface IntentListener {
-
-    /**
-     * Called when the user wants to change the choice for the consent.
-     *
-     * @param id [UUID] of the consents.
-     * @param accepted user's choice.
-     */
-    public fun onPrivacyChoiceChanged(id: Type, accepted: Boolean)
-
-    /**
-     * Called when the user accepts selected consents. It is called only if all required consents are chosen by the user.
-     */
-    public fun onPrivacyAcceptSelectedClicked()
-
-    /**
-     * Called when the user accepts all consents.
-     */
-    public fun onPrivacyAcceptAllClicked()
-
-    /**
-     * Called when the user wants to close the view.
-     */
-    public fun onPrivacyCenterDismissRequest()
-  }
-
-  private val intentListeners = mutableSetOf<IntentListener>()
   private val consentListAdapter = PrivacyFragmentListAdapter(::onChoiceChanged, sdkColor, sdkTextStyle)
   public var onReadMore: (info: String, poweredBy: String) -> Unit = { _, _ ->
   }
@@ -77,7 +44,7 @@ public class PrivacyFragmentView @JvmOverloads constructor(
   private lateinit var data: PrivacyFragmentViewData
 
   init {
-    inflate(context, R.layout.mobileconsents_privacy, this)
+
     contentView = findViewById(R.id.mobileconsents_privacy_layout)
     contentView.visibility = View.GONE
 
@@ -138,38 +105,12 @@ public class PrivacyFragmentView @JvmOverloads constructor(
     onReadMore(data.privacyDescriptionLongText, data.poweredByLabelText)
   }
 
-  private fun onAcceptSelectedClicked() {
-    for (listener in intentListeners) {
-      listener.onPrivacyAcceptSelectedClicked()
-    }
+  override fun getConsentsLayout(): Int {
+    return R.layout.mobileconsents_privacy
   }
 
-  private fun onAcceptAllClicked() {
-    for (listener in intentListeners) {
-      listener.onPrivacyAcceptAllClicked()
-    }
-  }
-
-  private fun onChoiceChanged(id: Type, accepted: Boolean) {
-    for (listener in intentListeners) {
-      listener.onPrivacyChoiceChanged(id, accepted)
-    }
-  }
-
-  private fun onDismissRequest() {
-    for (listener in intentListeners) {
-      listener.onPrivacyCenterDismissRequest()
-    }
-  }
-
-  public override fun addIntentListener(listener: IntentListener) {
-    require(!intentListeners.contains(listener))
-    intentListeners.add(listener)
-  }
-
-  public override fun removeIntentListener(listener: IntentListener) {
-    require(intentListeners.contains(listener))
-    intentListeners.remove(listener)
+  override fun getLayoutViewGroup(): ViewGroup {
+    return this
   }
 
   override fun showProgressBar() {

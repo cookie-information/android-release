@@ -14,6 +14,7 @@ import com.cookieinformation.mobileconsents.storage.ConsentStorage
 import com.cookieinformation.mobileconsents.storage.MoshiFileHandler
 import com.cookieinformation.mobileconsents.storage.Preferences
 import com.cookieinformation.mobileconsents.system.getApplicationProperties
+import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import com.cookieinformation.mobileconsents.ui.DefaultLocaleProvider
 import com.cookieinformation.mobileconsents.ui.LocaleProvider
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +41,12 @@ internal class MobileConsentSdkBuilder constructor(
   private var clientSecret: String? = null
   private var customColor: MobileConsentCustomUI? = null
   private var sdkLocale: LocaleProvider? = null
+  private var customConsentView: BaseConsentsView? = null
+
+  override fun setCustomConsentView(view: BaseConsentsView?): CallFactory {
+    customConsentView = view
+    return this
+  }
 
   override fun setClientCredentials(credentials: MobileConsentCredentials): CallFactory {
     clientId = credentials.clientId
@@ -115,7 +122,8 @@ internal class MobileConsentSdkBuilder constructor(
       dispatcher = Dispatchers.IO,
       saveConsentsFlow = consentStorage.saveConsentsFlow,
       uiComponentColor = customColor,
-      sdkLocale ?: DefaultLocaleProvider(context.applicationContext)
+      uiLanguageCode = sdkLocale ?: DefaultLocaleProvider(context.applicationContext),
+      consentsView =  customConsentView
     )
   }
 
@@ -129,7 +137,7 @@ internal class MobileConsentSdkBuilder constructor(
      * Returns global flow for observing end emitting "save consents" events.
      */
     @SuppressLint("SyntheticAccessor")
-    fun getSaveConsentsMutableFlow(): MutableSharedFlow<Map<Type, Boolean>> = synchronized(this) {
+    fun getSaveConsentsMutableFlow(): MutableSharedFlow<Map<UUID, Boolean>> = synchronized(this) {
       var eventsEmitter = SaveConsentsMutableFlowReference.get()
       if (eventsEmitter == null) {
         eventsEmitter = MutableSharedFlow()
@@ -142,6 +150,6 @@ internal class MobileConsentSdkBuilder constructor(
      * Reference to global flow for observing end emitting "save consents" events, shared across all SDK instances.
      * Warning: Do not use this field directly. Use [getSaveConsentsMutableFlow].
      */
-    private var SaveConsentsMutableFlowReference = WeakReference<MutableSharedFlow<Map<Type, Boolean>>>(null)
+    private var SaveConsentsMutableFlowReference = WeakReference<MutableSharedFlow<Map<UUID, Boolean>>>(null)
   }
 }

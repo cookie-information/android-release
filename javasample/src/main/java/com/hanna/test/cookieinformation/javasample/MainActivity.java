@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.cookieinformation.mobileconsents.ConsentItem;
 import com.cookieinformation.mobileconsents.GetConsents;
+import java.util.UUID;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     findViewById(R.id.reset_all_consents).setOnClickListener(v ->
         ((MyApplication) getApplication()).getSdk().resetConsentChoice(
-            ConsentItem.Type.Companion.findTypeByValue(""),
+            UUID.randomUUID(),
             new Continuation<Unit>() {
               @NonNull @Override public CoroutineContext getContext() {
                 return null;

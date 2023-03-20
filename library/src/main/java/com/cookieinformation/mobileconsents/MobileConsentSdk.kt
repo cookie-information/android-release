@@ -1,8 +1,6 @@
 package com.cookieinformation.mobileconsents
 
 import android.content.Context
-import android.util.Log
-import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.adapter.extension.parseFromResponseBody
 import com.cookieinformation.mobileconsents.adapter.moshi
 import com.cookieinformation.mobileconsents.interfaces.CallFactory
@@ -17,6 +15,7 @@ import com.cookieinformation.mobileconsents.networking.response.toDomain
 import com.cookieinformation.mobileconsents.storage.ConsentStorage
 import com.cookieinformation.mobileconsents.system.ApplicationProperties
 import com.cookieinformation.mobileconsents.ui.LocaleProvider
+import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.withContext
@@ -39,9 +38,10 @@ public class MobileConsentSdk internal constructor(
   private val consentStorage: ConsentStorage,
   private val applicationProperties: ApplicationProperties,
   private val dispatcher: CoroutineDispatcher,
-  public val saveConsentsFlow: SharedFlow<Map<Type, Boolean>>,
+  public val saveConsentsFlow: SharedFlow<Map<UUID, Boolean>>,
   private val uiComponentColor: MobileConsentCustomUI?,
-  private val uiLanguageCode: LocaleProvider
+  private val uiLanguageCode: LocaleProvider,
+  private val consentsView: BaseConsentsView?
 ) {
 
   public fun getClientId(): String = consentClient.clientId
@@ -49,6 +49,7 @@ public class MobileConsentSdk internal constructor(
   public fun getConsentSolutionId(): String = consentClient.consentSolutionId.toString()
   public fun getUiComponentColor(): MobileConsentCustomUI? = uiComponentColor
   public fun uiLanguageProvider(): LocaleProvider = uiLanguageCode
+  public fun getConsentsView(): BaseConsentsView? = consentsView
 
   /**
    * Obtain [TokenResponse] from authentication server.
@@ -104,7 +105,7 @@ public class MobileConsentSdk internal constructor(
    * @return returns Map of ConsentItem id and choice in a form of Boolean
    * @throws [IOExcepti\on] in case of any error.
    */
-  public suspend fun getSavedConsents(): Map<Type, Boolean> = withContext(dispatcher) {
+  public suspend fun getSavedConsents(): Map<UUID, Boolean> = withContext(dispatcher) {
     consentStorage.getAllConsentChoices()
   }
 
@@ -118,7 +119,7 @@ public class MobileConsentSdk internal constructor(
   /**
    * Reset past consent choices stored on device memory.
    */
-  public suspend fun resetConsentChoice(choice: ConsentItem.Type): Unit = withContext(dispatcher) {
+  public suspend fun resetConsentChoice(choice: UUID): Unit = withContext(dispatcher) {
     consentStorage.resetAllConsentChoices(choice)
   }
 

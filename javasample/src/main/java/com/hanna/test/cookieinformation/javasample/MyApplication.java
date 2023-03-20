@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import java.util.UUID;
 import kotlin.coroutines.Continuation;
 import kotlinx.coroutines.Dispatchers;
 
@@ -36,13 +37,12 @@ public class MyApplication extends Application implements Consentable {
         return new MobileConsents(provideConsentSdk(), Dispatchers.getMain());
     }
 
-
     @Nullable
     @Override
-    public Object getSavedConsents(@NonNull Continuation<? super Map<ConsentItem.Type, Boolean>> continuation) {
-        return getSdk().getSavedConsents(new CallListener<Map<ConsentItem.Type, Boolean>>() {
+    public Object getSavedConsents(@NonNull Continuation<? super Map<UUID, Boolean>> continuation) {
+        return getSdk().getSavedConsents(new CallListener<Map<UUID, Boolean>>() {
             @Override
-            public void onSuccess(Map<ConsentItem.Type, Boolean> typeBooleanMap) {
+            public void onSuccess(Map<UUID, Boolean> typeBooleanMap) {
 
             }
 

@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.R
 import com.cookieinformation.mobileconsents.models.SdkTextStyle
+import java.util.UUID
 
 /**
  * RecyclerView's adapter for [PrivacyFragmentPreferencesItem] item model.
  */
 internal class PrivacyFragmentListAdapter(
-  private val onConsentItemChoiceToggle: (Type, Boolean) -> Unit,
+  private val onConsentItemChoiceToggle: (UUID, Boolean) -> Unit,
   private val sdkColor: Int?,
   private val sdkTextStyle: SdkTextStyle?
 ) :
@@ -33,7 +33,7 @@ internal class PrivacyFragmentListAdapter(
     abstract fun bind(item: PrivacyFragmentPreferencesItem)
   }
 
-  class PreferencesItemViewHolder(itemView: View, onConsentItemChoiceToggle: (Type, Boolean) -> Unit,
+  class PreferencesItemViewHolder(itemView: View, onConsentItemChoiceToggle: (UUID, Boolean) -> Unit,
     sdkColor: Int?,
     sdkTextStyle: SdkTextStyle?,
   ) :
