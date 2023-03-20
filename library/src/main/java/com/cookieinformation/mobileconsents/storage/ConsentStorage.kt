@@ -1,7 +1,7 @@
 package com.cookieinformation.mobileconsents.storage
 
 import android.content.Context
-import com.cookieinformation.mobileconsents.ConsentItem.Type
+import com.cookieinformation.mobileconsents.ConsentItem.
 import com.cookieinformation.mobileconsents.ProcessingPurpose
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -109,14 +109,14 @@ internal class ConsentStorage(
   fun getAllConsentChoices(): Map<UUID, Boolean> = consentPreferences.getAllConsentChoices()
 
   /**
-   * Resets a consent by having .
-   */
-  public fun resetAllConsentChoices(choice: UUID) = consentPreferences.resetConsentChoice(choice)
-
-  /**
    * Reset all consents to default value.
    */
   public fun resetAllConsentChoices() = consentPreferences.resetAllConsentChoices()
+
+  /**
+   * Resets a consent by having .
+   */
+  public fun resetAllConsentChoices(choice: UUID) = consentPreferences.resetConsentChoice(choice)
 
   /**
    * Maps key and value read from file to consents map
