@@ -3,6 +3,8 @@ package com.cookieinformation.mobileconsents.ui
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.os.Build
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -142,7 +144,13 @@ public class PreferenceItemViewHolder(
       }
     }
     consentDetails?.apply {
-      text = data.details
+      //this is to support clients that would like to html the content of the consents
+      text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        Html.fromHtml(data.details, Html.FROM_HTML_MODE_LEGACY).toString()
+      } else {
+        Html.fromHtml(data.details).toString()
+      }
+
       sdkTextStyle?.bodyStyle?.let {
         typeface = it.typeface
       }
