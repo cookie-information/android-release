@@ -3,11 +3,11 @@ package com.cookieinformation.mobileconsents.ui
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.ConsentSolution
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 /**
  * The generic view moder for [BasePrivacyFragment].
@@ -25,7 +25,7 @@ internal open class ConsentSolutionViewModel<ViewType, PresenterType>(
 
     data class ConsentsChosen(
       val consentSolution: ConsentSolution,
-      val consents: Map<Type, Boolean>,
+      val consents: Map<UUID, Boolean>,
       val external: Boolean
     ) : Event()
 
@@ -75,7 +75,7 @@ internal open class ConsentSolutionViewModel<ViewType, PresenterType>(
    * If method is overridden, the super must be called.
    */
   @CallSuper
-  override fun onConsentsChosen(consentSolution: ConsentSolution, consents: Map<Type, Boolean>, external: Boolean) =
+  override fun onConsentsChosen(consentSolution: ConsentSolution, consents: Map<UUID, Boolean>, external: Boolean) =
     emitEvent(Event.ConsentsChosen(consentSolution, consents, external))
 
   /**

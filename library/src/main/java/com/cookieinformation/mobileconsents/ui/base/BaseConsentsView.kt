@@ -39,9 +39,9 @@ public abstract class BaseConsentsView @JvmOverloads constructor(
     }
   }
 
-  protected fun onChoiceChanged(type: Type, accepted: Boolean) {
+  protected fun onChoiceChanged(uuid: UUID, accepted: Boolean) {
     for (listener in intentListeners) {
-      listener.onPrivacyChoiceChanged(type, accepted)
+      listener.onPrivacyChoiceChanged(uuid, accepted)
     }
   }
 
@@ -75,7 +75,7 @@ public interface IntentListener {
    * @param id [UUID] of the consents.
    * @param accepted user's choice.
    */
-  public fun onPrivacyChoiceChanged(id: Type, accepted: Boolean)
+  public fun onPrivacyChoiceChanged(uuid: UUID, accepted: Boolean)
 
   /**
    * Called when the user accepts selected consents. It is called only if all required consents are chosen by the user.

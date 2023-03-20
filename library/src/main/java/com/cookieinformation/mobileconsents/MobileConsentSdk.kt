@@ -39,7 +39,7 @@ public class MobileConsentSdk internal constructor(
   private val consentStorage: ConsentStorage,
   private val applicationProperties: ApplicationProperties,
   private val dispatcher: CoroutineDispatcher,
-  public val saveConsentsFlow: SharedFlow<Map<Type, Boolean>>,
+  public val saveConsentsFlow: SharedFlow<Map<UUID, Boolean>>,
   private val uiComponentColor: MobileConsentCustomUI?,
   private val uiLanguageCode: LocaleProvider,
   private val consentsView: BaseConsentsView?
@@ -106,7 +106,7 @@ public class MobileConsentSdk internal constructor(
    * @return returns Map of ConsentItem id and choice in a form of Boolean
    * @throws [IOExcepti\on] in case of any error.
    */
-  public suspend fun getSavedConsents(): Map<Type, Boolean> = withContext(dispatcher) {
+  public suspend fun getSavedConsents(): Map<UUID, Boolean> = withContext(dispatcher) {
     consentStorage.getAllConsentChoices()
   }
 
@@ -120,7 +120,7 @@ public class MobileConsentSdk internal constructor(
   /**
    * Reset past consent choices stored on device memory.
    */
-  public suspend fun resetConsentChoice(choice: ConsentItem.Type): Unit = withContext(dispatcher) {
+  public suspend fun resetConsentChoice(choice: UUID): Unit = withContext(dispatcher) {
     consentStorage.resetAllConsentChoices(choice)
   }
 

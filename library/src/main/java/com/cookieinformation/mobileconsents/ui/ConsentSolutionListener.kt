@@ -1,7 +1,7 @@
 package com.cookieinformation.mobileconsents.ui
 
-import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.ConsentSolution
+import java.util.UUID
 
 /**
  * The events listener of [ConsentSolutionPresenter]
@@ -17,7 +17,7 @@ public interface ConsentSolutionListener {
    * @param consents map of all saved choices of consents.
    * @param external true if consents were accepted in current presenter otherwise false
    */
-  public fun onConsentsChosen(consentSolution: ConsentSolution, consents: Map<Type, Boolean>, external: Boolean)
+  public fun onConsentsChosen(consentSolution: ConsentSolution, consents: Map<UUID, Boolean>, external: Boolean)
 
   /**
    * The method is called when the user wants to close the view without saving his choice.

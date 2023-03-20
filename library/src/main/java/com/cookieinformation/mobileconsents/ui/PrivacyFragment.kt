@@ -17,6 +17,7 @@ import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import com.cookieinformation.mobileconsents.ui.base.BasePrivacyFragment
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.util.UUID
 
 /**
  * The base fragment for "Privacy Fragment" view.
@@ -87,7 +88,7 @@ internal class PrivacyFragment : BasePrivacyFragment() {
     ReadMoreBottomSheet.newInstance(info, poweredBy, getSdkSetColor()).show(parentFragmentManager, "tag")
   }
 
-  override fun onConsentsChosen(consentSolution: ConsentSolution, consents: Map<Type, Boolean>, external: Boolean) {
+  override fun onConsentsChosen(consentSolution: ConsentSolution, consents: Map<UUID, Boolean>, external: Boolean) {
     requireActivity().onBackPressed()
   }
 

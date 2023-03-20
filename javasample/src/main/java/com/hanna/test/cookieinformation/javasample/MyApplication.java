@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import java.util.UUID;
 import kotlin.coroutines.Continuation;
 import kotlinx.coroutines.Dispatchers;
 
@@ -36,13 +37,12 @@ public class MyApplication extends Application implements Consentable {
         return new MobileConsents(provideConsentSdk(), Dispatchers.getMain());
     }
 
-
     @Nullable
     @Override
-    public Object getSavedConsents(@NonNull Continuation<? super Map<ConsentItem.Type, Boolean>> continuation) {
-        return getSdk().getSavedConsents(new CallListener<Map<ConsentItem.Type, Boolean>>() {
+    public Object getSavedConsents(@NonNull Continuation<? super Map<UUID, Boolean>> continuation) {
+        return getSdk().getSavedConsents(new CallListener<Map<UUID, Boolean>>() {
             @Override
-            public void onSuccess(Map<ConsentItem.Type, Boolean> typeBooleanMap) {
+            public void onSuccess(Map<UUID, Boolean> typeBooleanMap) {
 
             }
 
@@ -78,7 +78,7 @@ public class MyApplication extends Application implements Consentable {
         return new MobileConsentCredentials(
             "40dbe5a7-1c01-463a-bb08-a76970c0efa0",
             "68cbf024407a20b8df4aecc3d9937f43c6e83169dafcb38b8d18296b515cc0d5f8bca8165d615caa4d12e236192851e9c5852a07319428562af8f920293bc1db",
-            "4113ab88-4980-4429-b2d1-3454cc81197b"
+            "75713910-47e1-4568-b6d6-f6338c63d18b"
         );
     }
 }

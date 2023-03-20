@@ -81,7 +81,7 @@ public class MobileConsents constructor(
    * @param listener listener for success/failure of operation.
    * @return [Subscription] object allowing for call cancellation.
    */
-  public fun getSavedConsents(listener: CallListener<Map<Type, Boolean>>): Subscription {
+  public fun getSavedConsents(listener: CallListener<Map<UUID, Boolean>>): Subscription {
     val job = scope.launch {
       try {
         listener.onSuccess(mobileConsentSdk.getSavedConsents())
@@ -171,7 +171,7 @@ public class MobileConsents constructor(
     return getMobileConsentSdk().resetAllConsentChoices()
   }
 
-  public suspend fun resetConsentChoice(consentKey: ConsentItem.Type) {
+  public suspend fun resetConsentChoice(consentKey: UUID) {
     return getMobileConsentSdk().resetConsentChoice(consentKey)
   }
 }
@@ -210,5 +210,5 @@ public interface SaveConsentsObserver {
   /**
    * Called every time when consents are saved
    */
-  public fun onConsentsSaved(consents: Map<Type, Boolean>)
+  public fun onConsentsSaved(consents: Map<UUID, Boolean>)
 }

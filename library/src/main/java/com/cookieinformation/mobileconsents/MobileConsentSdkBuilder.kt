@@ -137,7 +137,7 @@ internal class MobileConsentSdkBuilder constructor(
      * Returns global flow for observing end emitting "save consents" events.
      */
     @SuppressLint("SyntheticAccessor")
-    fun getSaveConsentsMutableFlow(): MutableSharedFlow<Map<Type, Boolean>> = synchronized(this) {
+    fun getSaveConsentsMutableFlow(): MutableSharedFlow<Map<UUID, Boolean>> = synchronized(this) {
       var eventsEmitter = SaveConsentsMutableFlowReference.get()
       if (eventsEmitter == null) {
         eventsEmitter = MutableSharedFlow()
@@ -150,6 +150,6 @@ internal class MobileConsentSdkBuilder constructor(
      * Reference to global flow for observing end emitting "save consents" events, shared across all SDK instances.
      * Warning: Do not use this field directly. Use [getSaveConsentsMutableFlow].
      */
-    private var SaveConsentsMutableFlowReference = WeakReference<MutableSharedFlow<Map<Type, Boolean>>>(null)
+    private var SaveConsentsMutableFlowReference = WeakReference<MutableSharedFlow<Map<UUID, Boolean>>>(null)
   }
 }

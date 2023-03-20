@@ -6,19 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.CheckBox
 import android.widget.Switch
 import android.widget.TextView
-import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.cookieinformation.mobileconsents.ConsentItem
-import com.cookieinformation.mobileconsents.ConsentItem.Type
-import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import com.cookieinformation.mobileconsents.ui.PrivacyFragmentViewData
 import com.cookieinformation.mobileconsents.ui.PrivacyPreferencesItem
+import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import com.example.sample.CustomConsentsAdapter.VH
+import java.util.UUID
 
 class CustomConsentView @JvmOverloads constructor(
   context: Context,
@@ -67,7 +64,7 @@ class CustomConsentView @JvmOverloads constructor(
   }
 }
 
-class CustomConsentsAdapter(val onChoiceChanged: (type: Type, accepted: Boolean) -> Unit) :
+class CustomConsentsAdapter(val onChoiceChanged: (uuid: UUID, accepted: Boolean) -> Unit) :
   ListAdapter<PrivacyPreferencesItem, VH>(diffUtil) {
 
   companion object {
@@ -96,10 +93,10 @@ class CustomConsentsAdapter(val onChoiceChanged: (type: Type, accepted: Boolean)
 
   override fun onBindViewHolder(holder: VH, position: Int) {
     val data = currentList[position]
-    holder.consentTitle.text = data.text
+    holder.consentTitle.text = "${data.text} ${data.required}"
     holder.consentState.isChecked = data.accepted || data.required
     holder.consentState.setOnCheckedChangeListener { compoundButton, b ->
-      onChoiceChanged(data.type, b)
+      onChoiceChanged(data.id, b)
     }
   }
 }

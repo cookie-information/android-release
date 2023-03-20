@@ -11,16 +11,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.R
 import com.cookieinformation.mobileconsents.models.SdkTextStyle
 import com.cookieinformation.mobileconsents.models.SubtitleStyle
+import java.util.UUID
 
 /**
  * The RecyclerView's adapter for [PrivacyPreferencesItem] item model.
  */
 internal class PrivacyPreferencesListAdapter(
-  private val onConsentItemChoiceChanged: (Type, Boolean) -> Unit,
+  private val onConsentItemChoiceChanged: (UUID, Boolean) -> Unit,
   private val sdkColor: Int?,
   private val sdkTextStyle: SdkTextStyle?
 ) :
@@ -93,7 +93,7 @@ public abstract class BindableViewHolder<T>(itemView: View) : ViewHolder(itemVie
 public class PreferenceItemViewHolder(
   itemView: View,
   private val sdkColor: Int?,
-  public val onConsentItemChanged: (Type, Boolean) -> Unit,
+  public val onConsentItemChanged: (UUID, Boolean) -> Unit,
   public val sdkTextStyle: SdkTextStyle?
 ) : BindableViewHolder<PrivacyPreferencesItem>(itemView) {
 
@@ -131,13 +131,13 @@ public class PreferenceItemViewHolder(
     consentSwitch.apply {
       isChecked = data.accepted || data.required
       if (data.required) {
-        onConsentItemChanged(data.type, isChecked)
+        onConsentItemChanged(data.id, isChecked)
       }
       isClickable = !data.required
       setOnCheckedChangeListener { buttonView, isChecked ->
         if (buttonView.isPressed) {
           // Detect only user action
-          onConsentItemChanged(data.type, isChecked)
+          onConsentItemChanged(data.id, isChecked)
         }
       }
     }
