@@ -104,6 +104,15 @@ internal class ConsentStorage(
   }
 
   /**
+   * Get the latest stored consent version id.
+   */
+  fun getLatestStoredConsentVersion(): UUID = try {
+    UUID.fromString(consentPreferences.getLatestStoredConsentVersion())
+  } catch (e: java.lang.Exception) {
+    UUID.randomUUID()
+  }
+
+  /**
    * Get all of stored consent choices. User id is filtered out.
    */
   fun getAllConsentChoices(): Map<UUID, Boolean> = consentPreferences.getAllConsentChoices()
@@ -117,6 +126,16 @@ internal class ConsentStorage(
    * Resets a consent by having .
    */
   public fun resetAllConsentChoices(choice: UUID) = consentPreferences.resetConsentChoice(choice)
+
+  /**
+   * Reset all consents to default value.
+   */
+  public fun resetAllConsentChoices() = consentPreferences.resetAllConsentChoices()
+
+  /**
+   * Resets a consent by having .
+   */
+  public fun resetAllConsentChoices(choice: Type) = consentPreferences.resetConsentChoice(choice)
 
   /**
    * Maps key and value read from file to consents map
