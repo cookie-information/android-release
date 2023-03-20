@@ -1,6 +1,7 @@
 package com.cookieinformation.mobileconsents
 
 import android.content.Context
+import android.util.Log
 import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.adapter.extension.parseFromResponseBody
 import com.cookieinformation.mobileconsents.adapter.moshi

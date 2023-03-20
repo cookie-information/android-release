@@ -36,6 +36,12 @@ internal class PrivacyFragment : BasePrivacyFragment() {
     return mobileConsentSdk.getMobileConsentSdk().getUiComponentColor()?.sdkTextStyle
   }
 
+  fun getCustomSetFont(): SdkTextStyle? {
+    val app = requireContext().applicationContext as Consentable
+    val mobileConsentSdk = app.sdk
+    return mobileConsentSdk.getMobileConsentSdk().getUiComponentColor()?.sdkTextStyle
+  }
+
   /**
    * If method is overridden, the super must be called.
    */
