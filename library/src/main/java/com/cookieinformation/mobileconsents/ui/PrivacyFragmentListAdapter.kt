@@ -50,7 +50,7 @@ internal class PrivacyFragmentListAdapter(
     }
 
     override fun bind(item: PrivacyFragmentPreferencesItem) {
-      val groups = item.items.groupBy { it.required }
+      val groups = item.items.filter { it.type!= Type.Info }.groupBy { it.required }
       val finalList = mutableListOf<ItemizedPreference>().apply {
         groups[true]?.let {
           add(

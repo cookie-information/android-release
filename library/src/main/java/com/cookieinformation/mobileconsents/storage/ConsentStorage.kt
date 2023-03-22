@@ -109,14 +109,14 @@ internal class ConsentStorage(
   fun getAllConsentChoices(): Map<UUID, Boolean> = consentPreferences.getAllConsentChoices()
 
   /**
-   * Reset all consents to default value.
-   */
-  public fun resetAllConsentChoices() = consentPreferences.resetAllConsentChoices()
-
-  /**
    * Resets a consent by having .
    */
   public fun resetAllConsentChoices(choice: UUID) = consentPreferences.resetConsentChoice(choice)
+
+  /**
+   * Reset all consents to default value.
+   */
+  public fun resetAllConsentChoices() = consentPreferences.resetAllConsentChoices()
 
   /**
    * Maps key and value read from file to consents map
