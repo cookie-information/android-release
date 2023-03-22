@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.ui.PrivacyFragmentViewData
 import com.cookieinformation.mobileconsents.ui.PrivacyPreferencesItem
 import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
@@ -51,8 +52,11 @@ class CustomConsentView @JvmOverloads constructor(
     val adapter = CustomConsentsAdapter(onChoiceChanged = ::onChoiceChanged)
     findViewById<RecyclerView>(R.id.consents_list).adapter = adapter
 
-    adapter.submitList(data.items[0].items)
+    //Type.Info represents the privacy policy, in order to remove it from the consent
+    adapter.submitList(data.items[0].items.filter { it.type != Type.Info })
 
+     val privacyPolicy = data.items[0].items.first { it.type == Type.Info }
+    //display the policy as whishes.
   }
 
   override fun showRetryDialog(onRetry: () -> Unit, onDismiss: () -> Unit, title: String, message: String) {

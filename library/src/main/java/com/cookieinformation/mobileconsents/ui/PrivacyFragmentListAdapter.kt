@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.R
 import com.cookieinformation.mobileconsents.models.SdkTextStyle
 import java.util.UUID
@@ -50,7 +51,7 @@ internal class PrivacyFragmentListAdapter(
     }
 
     override fun bind(item: PrivacyFragmentPreferencesItem) {
-      val groups = item.items.groupBy { it.required }
+      val groups = item.items.filter { it.type!= Type.Info }.groupBy { it.required }
       val finalList = mutableListOf<ItemizedPreference>().apply {
         groups[true]?.let {
           add(
