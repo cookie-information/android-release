@@ -1,7 +1,7 @@
 package com.cookieinformation.mobileconsents.storage
 
 import android.content.Context
-import com.cookieinformation.mobileconsents.ConsentItem.
+import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.ProcessingPurpose
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
