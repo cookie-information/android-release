@@ -147,23 +147,26 @@ public class MobileConsents constructor(
 
   public fun displayConsentsIfNeeded(
     listener: ActivityResultLauncher<Bundle?>,
+    onError: (e: IOException) -> Unit
   ) {
     scope.launch {
-      if (shouldDisplayConsents()) {
-        displayConsents(listener)
+      try {
+        if (shouldDisplayConsents()) {
+          displayConsents(listener)
+        }
+      } catch (e: IOException) {
+        onError(e)
       }
     }
   }
 
   public suspend fun shouldDisplayConsents(): Boolean {
-    val latest = getMobileConsentSdk().getLatestStoredConsentVersion()
     val solution = getMobileConsentSdk().fetchConsentSolution().consentSolutionVersionId
     val hasVersionUpdated = getMobileConsentSdk().getLatestStoredConsentVersion().toString() != solution.toString()
-    Log.d("TAG", "shouldDisplayConsents: postConsent: $solution   $latest  $hasVersionUpdated")
     return !getMobileConsentSdk().getSavedConsents().containsValue(true) || hasVersionUpdated
   }
 
-  public suspend fun haveConsentsBeenAccepted(): Boolean{
+  public suspend fun haveConsentsBeenAccepted(): Boolean {
     return !getMobileConsentSdk().getSavedConsents().containsValue(true)
   }
 

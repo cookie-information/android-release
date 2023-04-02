@@ -3,6 +3,7 @@ package com.example.sample
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.cookieinformation.mobileconsents.GetConsents
@@ -26,7 +27,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     findViewById<Button>(R.id.display_if_needed).setOnClickListener {
-      (applicationContext as App).sdk.displayConsentsIfNeeded(listener)
+      (applicationContext as App).sdk.displayConsentsIfNeeded(listener) {
+        Toast.makeText(this, it.message.orEmpty(), Toast.LENGTH_SHORT).show()
+      }
     }
 
     findViewById<Button>(R.id.reset_all_consents).setOnClickListener {
