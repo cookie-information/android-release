@@ -1,15 +1,17 @@
 package com.hanna.test.cookieinformation.javasample;
 
 import android.os.Bundle;
+import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import com.cookieinformation.mobileconsents.ConsentItem;
 import com.cookieinformation.mobileconsents.GetConsents;
+import java.io.IOException;
 import java.util.UUID;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
+import kotlin.jvm.functions.Function1;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +28,12 @@ public class MainActivity extends AppCompatActivity {
         .displayConsents(listener));
 
     findViewById(R.id.display_if_needed).setOnClickListener(v -> ((MyApplication) getApplication()).getSdk()
-        .displayConsentsIfNeeded(listener));
+        .displayConsentsIfNeeded(listener, new Function1<IOException, Unit>() {
+          @Override public Unit invoke(IOException e) {
+            Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            return null;
+          }
+        }));
 
     findViewById(R.id.reset_all_consents).setOnClickListener(v -> ((MyApplication) getApplication()).getSdk()
         .resetAllConsentChoices(
