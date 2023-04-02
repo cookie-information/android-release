@@ -14,6 +14,7 @@ import com.cookieinformation.mobileconsents.networking.response.TokenResponseJso
 import com.cookieinformation.mobileconsents.networking.response.toDomain
 import com.cookieinformation.mobileconsents.storage.ConsentStorage
 import com.cookieinformation.mobileconsents.system.ApplicationProperties
+import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import com.cookieinformation.mobileconsents.ui.LocaleProvider
 import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import kotlinx.coroutines.CoroutineDispatcher
