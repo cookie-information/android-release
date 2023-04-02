@@ -55,16 +55,8 @@ class CustomConsentView @JvmOverloads constructor(
     //Type.Info represents the privacy policy, in order to remove it from the consent
     adapter.submitList(data.items[0].items.filter { it.type != Type.Info })
 
-     val privacyPolicy = data.items[0].items.first { it.type == Type.Info }
-    //display the policy as whishes.
-  }
-
-  override fun showRetryDialog(onRetry: () -> Unit, onDismiss: () -> Unit, title: String, message: String) {
-
-  }
-
-  override fun showErrorDialog(onDismiss: () -> Unit) {
-
+    val privacyPolicy = data.items[0].items.first { it.type == Type.Info }
+    //display the policy as wish.
   }
 }
 

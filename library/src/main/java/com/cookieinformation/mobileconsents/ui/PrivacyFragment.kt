@@ -24,13 +24,13 @@ import java.util.UUID
  */
 internal class PrivacyFragment : BasePrivacyFragment() {
 
-  fun getSdkSetColor(): Int? {
+  private fun getSdkSetColor(): Int? {
     val app = requireContext().applicationContext as Consentable
     val mobileConsentSdk = app.sdk
     return mobileConsentSdk.getMobileConsentSdk().getUiComponentColor()?.primaryColor
   }
 
-  fun getCustomSetFont(): SdkTextStyle? {
+  private fun getCustomSetFont(): SdkTextStyle? {
     val app = requireContext().applicationContext as Consentable
     val mobileConsentSdk = app.sdk
     return mobileConsentSdk.getMobileConsentSdk().getUiComponentColor()?.sdkTextStyle
@@ -43,9 +43,11 @@ internal class PrivacyFragment : BasePrivacyFragment() {
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     val app = requireContext().applicationContext as Consentable
     val mobileConsentCustomView = app.sdk.getMobileConsentSdk().getConsentsView()
-    return mobileConsentCustomView ?: PrivacyFragmentView(requireContext(), sdkColor = getSdkSetColor(), sdkTextStyle = getCustomSetFont()).also {
+    val view =  mobileConsentCustomView ?: PrivacyFragmentView(requireContext(), sdkColor = getSdkSetColor(), sdkTextStyle = getCustomSetFont()).also {
       it.onReadMore = ::onReadMore
     }
+    view.setActivityContext(requireActivity())
+    return view
   }
 
 

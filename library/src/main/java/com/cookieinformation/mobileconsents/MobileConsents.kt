@@ -163,11 +163,16 @@ public class MobileConsents constructor(
   public suspend fun shouldDisplayConsents(): Boolean {
     val solution = getMobileConsentSdk().fetchConsentSolution().consentSolutionVersionId
     val hasVersionUpdated = getMobileConsentSdk().getLatestStoredConsentVersion().toString() != solution.toString()
-    return !getMobileConsentSdk().getSavedConsents().containsValue(true) || hasVersionUpdated
+    return !getConsents().containsValue(true) || hasVersionUpdated
+  }
+
+  public suspend fun getConsents(): Map<UUID, Boolean> {
+    return getMobileConsentSdk().getSavedConsents()
   }
 
   public suspend fun haveConsentsBeenAccepted(): Boolean {
-    return !getMobileConsentSdk().getSavedConsents().containsValue(true)
+    val consents = getMobileConsentSdk().getSavedConsents()
+    return consents.containsValue(true)
   }
 
   public suspend fun resetAllConsentChoices() {

@@ -1,5 +1,6 @@
 package com.cookieinformation.mobileconsents.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PorterDuff
 import android.util.AttributeSet
@@ -156,15 +157,5 @@ public class PrivacyFragmentView @JvmOverloads constructor(
 
   private fun showContentViewData() {
     contentView.visibility = View.VISIBLE
-  }
-
-  override fun showRetryDialog(onRetry: () -> Unit, onDismiss: () -> Unit, title: String, message: String) {
-    // postDelayed is workaround for: If view is embedded in a DialogFragment, the below dialog is shown under the DialogFragment.
-    postDelayed({ createRetryDialog(context, onRetry, onDismiss, title, message).show() }, 0)
-  }
-
-  override fun showErrorDialog(onDismiss: () -> Unit) {
-    // postDelayed is workaround for: If view is embedded in a DialogFragment, the below dialog is shown under the DialogFragment.
-    postDelayed({ createErrorDialog(context, onDismiss).show() }, 0)
   }
 }

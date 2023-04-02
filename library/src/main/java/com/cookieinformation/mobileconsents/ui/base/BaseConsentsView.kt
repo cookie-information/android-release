@@ -5,9 +5,10 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.MainThread
-import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.ui.ConsentSolutionView
 import com.cookieinformation.mobileconsents.ui.PrivacyFragmentViewData
+import com.cookieinformation.mobileconsents.ui.createErrorDialog
+import com.cookieinformation.mobileconsents.ui.createRetryDialog
 import java.util.UUID
 
 public abstract class BaseConsentsView @JvmOverloads constructor(
@@ -22,8 +23,13 @@ public abstract class BaseConsentsView @JvmOverloads constructor(
     inflate(context, getConsentsLayout(), getLayoutViewGroup())
   }
 
+  protected var activityCxt: Context= context
+
   public abstract fun getConsentsLayout(): Int
   public abstract fun getLayoutViewGroup(): ViewGroup
+  public fun setActivityContext(ctx: Context){
+    this.activityCxt = ctx
+  }
 
   private val intentListeners = mutableSetOf<IntentListener>()
 
@@ -59,6 +65,16 @@ public abstract class BaseConsentsView @JvmOverloads constructor(
   public override fun removeIntentListener(listener: IntentListener) {
     require(intentListeners.contains(listener))
     intentListeners.remove(listener)
+  }
+
+  override fun showRetryDialog(onRetry: () -> Unit, onDismiss: () -> Unit, title: String, message: String) {
+    // postDelayed is workaround for: If view is embedded in a DialogFragment, the below dialog is shown under the DialogFragment.
+    postDelayed({ createRetryDialog(activityCxt, onRetry, onDismiss, title, message).show() }, 0)
+  }
+
+  override fun showErrorDialog(onDismiss: () -> Unit) {
+    // postDelayed is workaround for: If view is embedded in a DialogFragment, the below dialog is shown under the DialogFragment.
+    postDelayed({ createErrorDialog(activityCxt, onDismiss).show() }, 0)
   }
 }
 
