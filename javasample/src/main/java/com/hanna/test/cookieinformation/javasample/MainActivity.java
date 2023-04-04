@@ -1,13 +1,17 @@
 package com.hanna.test.cookieinformation.javasample;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.cookieinformation.mobileconsents.GetConsents;
+import com.cookieinformation.mobileconsents.storage.ConsentWithType;
 import java.io.IOException;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
@@ -21,7 +25,9 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     ActivityResultLauncher<Bundle> listener = registerForActivityResult(new GetConsents(getApplication()), result -> {
-
+      for (Map.Entry<UUID, ? extends ConsentWithType> entry : result.entrySet()) {
+        Log.d("Show Entry", entry.getKey() + ": "+entry.getValue().getType()+" : "+entry.getValue().getConsented());
+      }
     });
 
     findViewById(R.id.display_always).setOnClickListener(v -> ((MyApplication) getApplication()).getSdk()

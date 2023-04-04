@@ -66,6 +66,9 @@ internal class ConsentStorage(
     saveConsentsMutableFlow.emit(writtenValues.toConsents())
     writtenValues.toConsents().toMap().forEach {
       consentPreferences.usersConsentsPreferences().edit().putBoolean(it.key.toString(), it.value).commit()
+      consentPreferences.consentsTypePreferences().edit()
+        .putString(it.key.toString(), purposes.find { pur -> pur.consentItemId == it.key }?.type?.typeName.orEmpty())
+        .commit()
     }
   }
 
@@ -91,7 +94,7 @@ internal class ConsentStorage(
   }
 
   fun getConsentChoice(type: Type): Boolean {
-    return consentPreferences.usersConsentsPreferences().getBoolean(type.name, false)
+    return consentPreferences.usersConsentsPreferences().getBoolean(type.typeName, false)
   }
 
   /**
@@ -107,6 +110,14 @@ internal class ConsentStorage(
    * Get all of stored consent choices. User id is filtered out.
    */
   fun getAllConsentChoices(): Map<UUID, Boolean> = consentPreferences.getAllConsentChoices()
+
+  /**
+   * Get all of stored consent choices. User id is filtered out.
+   */
+
+  fun getAllConsentChoicesWithType(): Map<UUID, ConsentWithType>{
+    return consentPreferences.getAllConsentChoicesWithType()
+  }
 
   /**
    * Resets a consent by having .

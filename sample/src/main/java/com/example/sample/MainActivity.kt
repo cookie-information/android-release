@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     GetConsents(this),
   ) {
     it.entries.forEach { entry ->
-      Log.d("Show Entry", "${entry.key}: ${entry.value}")
+      Log.d("Show Entry", "${entry.key}: ${entry.value.type}: ${entry.value.consented}")
     }
   }
 

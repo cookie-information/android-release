@@ -74,7 +74,7 @@ internal class ConsentClient(
     date: String = getUtcDate()
   ): Call {
     val adapter = ConsentRequestJsonAdapter(moshi)
-    val requestBody = adapter.parseToRequestBody(consent.toRequest(userId, date, applicationProperties))
+    val requestBody = adapter.parseToRequestBody(consent.toRequest(userId, applicationProperties))
     val accessToken = preferences.getAccessToken()
     val request = Request.Builder()
       .url(postUrl)
