@@ -19,6 +19,7 @@ import com.cookieinformation.mobileconsents.models.MobileConsentCustomUI;
 import com.cookieinformation.mobileconsents.models.SdkTextStyle;
 import com.cookieinformation.mobileconsents.models.SubtitleStyle;
 import com.cookieinformation.mobileconsents.models.TitleStyle;
+import com.cookieinformation.mobileconsents.storage.ConsentWithType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,22 @@ public class MyApplication extends Application implements Consentable {
         return getSdk().getSavedConsents(new CallListener<Map<UUID, Boolean>>() {
             @Override
             public void onSuccess(Map<UUID, Boolean> typeBooleanMap) {
+
+            }
+
+            @Override
+            public void onFailure(@NonNull IOException e) {
+
+            }
+        });
+    }
+
+    @Nullable
+    @Override
+    public Object getSavedConsentsWithType(@NonNull Continuation<? super Map<UUID, ConsentWithType>> continuation) {
+        return getSdk().getSavedConsentsWithType(new CallListener<Map<UUID, ConsentWithType>>() {
+            @Override
+            public void onSuccess(Map<UUID, ConsentWithType> typeBooleanMap) {
 
             }
 

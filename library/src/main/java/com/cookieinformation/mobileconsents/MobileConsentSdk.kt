@@ -13,6 +13,7 @@ import com.cookieinformation.mobileconsents.networking.response.TokenResponse
 import com.cookieinformation.mobileconsents.networking.response.TokenResponseJsonAdapter
 import com.cookieinformation.mobileconsents.networking.response.toDomain
 import com.cookieinformation.mobileconsents.storage.ConsentStorage
+import com.cookieinformation.mobileconsents.storage.ConsentWithType
 import com.cookieinformation.mobileconsents.system.ApplicationProperties
 import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import com.cookieinformation.mobileconsents.ui.LocaleProvider
@@ -108,6 +109,15 @@ public class MobileConsentSdk internal constructor(
    */
   public suspend fun getSavedConsents(): Map<UUID, Boolean> = withContext(dispatcher) {
     consentStorage.getAllConsentChoices()
+  }
+
+  /**
+   * Obtain past consent choices with type stored on device memory.
+   * @return returns Map of ConsentItem id and choice in a form of Boolean
+   * @throws [IOExcepti\on] in case of any error.
+   */
+  public suspend fun getSavedConsentsWithType(): Map<UUID, ConsentWithType> = withContext(dispatcher) {
+    consentStorage.getAllConsentChoicesWithType()
   }
 
   /**
