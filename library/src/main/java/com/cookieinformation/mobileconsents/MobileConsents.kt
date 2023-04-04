@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.os.bundleOf
 import com.cookieinformation.mobileconsents.ConsentItem.Type
+import com.cookieinformation.mobileconsents.storage.ConsentWithType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -85,6 +86,23 @@ public class MobileConsents constructor(
     val job = scope.launch {
       try {
         listener.onSuccess(mobileConsentSdk.getSavedConsents())
+      } catch (e: IOException) {
+        listener.onFailure(e)
+      }
+    }
+
+    return JobSubscription(job)
+  }
+
+  /**
+   * Obtain past consent choices stored on device memory. Returns Map of ConsentItem id and choice in a form of Boolean.
+   * @param listener listener for success/failure of operation.
+   * @return [Subscription] object allowing for call cancellation.
+   */
+  public fun getSavedConsentsWithType(listener: CallListener<Map<UUID, ConsentWithType>>): Subscription {
+    val job = scope.launch {
+      try {
+        listener.onSuccess(mobileConsentSdk.getSavedConsentsWithType())
       } catch (e: IOException) {
         listener.onFailure(e)
       }

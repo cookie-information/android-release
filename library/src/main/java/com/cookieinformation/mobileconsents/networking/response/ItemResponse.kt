@@ -1,5 +1,6 @@
 package com.cookieinformation.mobileconsents.networking.response
 
+import android.util.Log
 import com.cookieinformation.mobileconsents.ConsentItem
 import com.cookieinformation.mobileconsents.ConsentItem.Type.Info
 import com.cookieinformation.mobileconsents.ConsentItem.Type.Setting
@@ -25,10 +26,12 @@ internal data class ItemResponse(
 internal fun ItemResponse.toDomain(): ConsentItem {
   val shortText = mutableListOf<TextTranslation>()
   val longText = mutableListOf<TextTranslation>()
+  Log.d("TAG", "toDomain: storeConsentChoices: "+type.toDomainItemType().typeName)
   for (consentTranslation in translations) {
     shortText.add(TextTranslation(consentTranslation.language, consentTranslation.shortText))
     longText.add(TextTranslation(consentTranslation.language, consentTranslation.longText))
   }
+
   return ConsentItem(
     shortText = shortText,
     longText = longText,
@@ -40,10 +43,10 @@ internal fun ItemResponse.toDomain(): ConsentItem {
 
 private fun String.toDomainItemType(): ConsentItem.Type =
   when (lowercase(Locale.getDefault())) {
-    TypeNecessary.name-> TypeNecessary
-    TypeMarketing.name -> TypeMarketing
-    TypeStatistical.name -> TypeStatistical
-    TypeFunctional.name -> TypeFunctional
-    Info.name -> Info
+    TypeNecessary.typeName-> TypeNecessary
+    TypeMarketing.typeName -> TypeMarketing
+    TypeStatistical.typeName -> TypeStatistical
+    TypeFunctional.typeName -> TypeFunctional
+    Info.typeName -> Info
     else -> Setting(this) // TODO Ensure if default value should be "SETTING"
   }
