@@ -3,9 +3,14 @@ package com.cookieinformation.mobileconsents.storage
 import android.content.Context
 import android.content.SharedPreferences
 import com.cookieinformation.mobileconsents.ConsentItem
+import com.cookieinformation.mobileconsents.ConsentItem.Type
 import java.util.UUID
 
 internal class ConsentPreferences(private val applicationContext: Context) {
+
+  fun sharedPreferences(): SharedPreferences {
+    return applicationContext.getSharedPreferences(CONSENT_PREFERENCES, Context.MODE_PRIVATE)
+  }
 
   private fun consentsMetaPreferences(): SharedPreferences {
     return applicationContext.getSharedPreferences(CONSENT_META_PREFERENCES, Context.MODE_PRIVATE)
@@ -23,6 +28,12 @@ internal class ConsentPreferences(private val applicationContext: Context) {
 
   fun saveLatestStoredConsentVersion(consentId: UUID) {
     consentsMetaPreferences().edit().putString(LATEST_CONSENT_ID, consentId.toString()).commit()
+  }
+
+  fun getOldAllConsentChoices(): Map<Type, Boolean> {
+    return sharedPreferences().all.mapKeys {
+      Type.findTypeByValue(it.key)
+    }.mapValues { it.value as? Boolean ?: false }
   }
 
   fun getAllConsentChoices(): Map<UUID, Boolean> {
@@ -53,6 +64,7 @@ internal class ConsentPreferences(private val applicationContext: Context) {
   }
 
   companion object {
+    private const val CONSENT_PREFERENCES = "consent_preference"
     private const val USER_CONSENT_PREFERENCES = "user_consent_preference"
     private const val CONSENTS_TYPE_PREFERENCES = "consent_type_preference"
     private const val CONSENT_META_PREFERENCES = "consent_meta_preference"
