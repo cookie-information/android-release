@@ -1,6 +1,7 @@
 package com.cookieinformation.mobileconsents
 
 import android.content.Context
+import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.adapter.extension.parseFromResponseBody
 import com.cookieinformation.mobileconsents.adapter.moshi
 import com.cookieinformation.mobileconsents.interfaces.CallFactory
@@ -99,6 +100,15 @@ public class MobileConsentSdk internal constructor(
 
   public fun getLatestStoredConsentVersion(): UUID {
     return consentStorage.getLatestStoredConsentVersion()
+  }
+
+  /**
+   * Obtain past consent choices stored on device memory.
+   * @return returns Map of ConsentItem id and choice in a form of Boolean
+   * @throws [IOExcepti\on] in case of any error.
+   */
+  public suspend fun getOldSavedConsents(): Map<Type, Boolean> = withContext(dispatcher) {
+    consentStorage.getOldAllConsentChoices()
   }
 
   /**

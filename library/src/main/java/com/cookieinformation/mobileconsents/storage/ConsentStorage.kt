@@ -114,6 +114,11 @@ internal class ConsentStorage(
   /**
    * Get all of stored consent choices. User id is filtered out.
    */
+  fun getOldAllConsentChoices(): Map<Type, Boolean> = consentPreferences.getOldAllConsentChoices()
+
+  /**
+   * Get all of stored consent choices. User id is filtered out.
+   */
 
   fun getAllConsentChoicesWithType(): Map<UUID, ConsentWithType>{
     return consentPreferences.getAllConsentChoicesWithType()
