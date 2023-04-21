@@ -22,13 +22,11 @@ public data class Consent(
 
 internal fun Consent.toRequest(
   userId: UUID,
-  timestamp: String,
   applicationProperties: ApplicationProperties
 ) = ConsentRequest(
   userId = userId,
   consentSolutionId = consentSolutionId,
   consentSolutionVersionId = consentSolutionVersionId,
-  timestamp = timestamp,
   processingPurposes = processingPurposes.map(ProcessingPurpose::toRequest),
   customData = customData.map { CustomDataRequest(it.key, it.value) },
   applicationProperties = applicationProperties.toRequest()

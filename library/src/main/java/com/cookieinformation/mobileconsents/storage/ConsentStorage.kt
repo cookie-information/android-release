@@ -34,11 +34,12 @@ internal class ConsentStorage(
   private val mutex: Mutex,
   private val file: File,
   private val fileHandler: MoshiFileHandler,
-  private val saveConsentsMutableFlow: MutableSharedFlow<Map<Type, Boolean>>,
+  private val saveConsentsMutableFlow: MutableSharedFlow<Map<UUID, Boolean>>,
   private val dispatcher: CoroutineDispatcher
 ) {
 
   val consentPreferences = ConsentPreferences(applicationContext)
+  val tokenPreferences = Preferences(applicationContext)
 
   /**
    * SharedFlow for observing "save consents" events.
@@ -50,13 +51,24 @@ internal class ConsentStorage(
   }
 
   /**
+   * Store the current version of consents
+   */
+
+  fun saveConsentId(consentId: UUID) {
+    consentPreferences.saveLatestStoredConsentVersion(consentId)
+  }
+
+  /**
    * Store list of consent choices ([ProcessingPurpose]) as Map of Types and Booleans.
    */
   suspend fun storeConsentChoices(purposes: List<ProcessingPurpose>) {
-    val writtenValues = writeValues(purposes.associate { it.type.name to it.consentGiven.toString() })
+    val writtenValues = writeValues(purposes.associate { it.consentItemId.toString() to it.consentGiven.toString() })
     saveConsentsMutableFlow.emit(writtenValues.toConsents())
     writtenValues.toConsents().toMap().forEach {
-      consentPreferences.sharedPreferences().edit().putBoolean(it.key.name, it.value).commit()
+      consentPreferences.usersConsentsPreferences().edit().putBoolean(it.key.toString(), it.value).commit()
+      consentPreferences.consentsTypePreferences().edit()
+        .putString(it.key.toString(), purposes.find { pur -> pur.consentItemId == it.key }?.type?.typeName.orEmpty())
+        .commit()
     }
   }
 
@@ -82,22 +94,52 @@ internal class ConsentStorage(
   }
 
   fun getConsentChoice(type: Type): Boolean {
-    return consentPreferences.sharedPreferences().getBoolean(type.name, false)
+    return consentPreferences.usersConsentsPreferences().getBoolean(type.typeName, false)
+  }
+
+  /**
+   * Get the latest stored consent version id.
+   */
+  fun getLatestStoredConsentVersion(): UUID = try {
+    UUID.fromString(consentPreferences.getLatestStoredConsentVersion())
+  } catch (e: java.lang.Exception) {
+    UUID.randomUUID()
   }
 
   /**
    * Get all of stored consent choices. User id is filtered out.
    */
-  fun getAllConsentChoices(): Map<Type, Boolean> = consentPreferences.getAllConsentChoices()
+  fun getAllConsentChoices(): Map<UUID, Boolean> = consentPreferences.getAllConsentChoices()
+
+  /**
+   * Get all of stored consent choices. User id is filtered out.
+   */
+  fun getOldAllConsentChoices(): Map<Type, Boolean> = consentPreferences.getOldAllConsentChoices()
+
+  /**
+   * Get all of stored consent choices. User id is filtered out.
+   */
+
+  fun getAllConsentChoicesWithType(): Map<UUID, ConsentWithType>{
+    return consentPreferences.getAllConsentChoicesWithType()
+  }
+
+  /**
+   * Resets a consent by having .
+   */
+  public fun resetAllConsentChoices(choice: UUID) = consentPreferences.resetConsentChoice(choice)
+
+  /**
+   * Reset all consents to default value.
+   */
+  public fun resetAllConsentChoices() = consentPreferences.resetAllConsentChoices()
 
   /**
    * Maps key and value read from file to consents map
    */
-  private fun Map<String, String>.toConsents(): Map<Type, Boolean> =
-    filterKeys { it != userIdKey }
-      .entries.associate {
-        Type.findTypeByValue(it.key) to it.value.toBoolean()
-      }
+  private fun Map<String, String>.toConsents(): Map<UUID, Boolean> =
+    filterKeys { it != userIdKey && it.split("-").size == 5 }
+      .entries.associate { UUID.fromString(it.key) to it.value.toBoolean() }
 
   /**
    * Write new values to storage. Old data is copied from storage file to scratch file, along with new data.
@@ -109,7 +151,7 @@ internal class ConsentStorage(
     mutex.withLock {
       val scratchFile = File(file.path + scratchFileSuffix)
       try {
-        val data = readAll() + values
+        val data = readAll().filter { it.key == userIdKey } + values
 
         scratchFile.sink().use { sink ->
           fileHandler.writeTo(sink, data)

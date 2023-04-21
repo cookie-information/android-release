@@ -22,17 +22,17 @@ public data class ConsentItem(
   val type: Type,
 ) {
 
-  public sealed class Type(public val name: String) {
+  public sealed class Type(public val typeName: String) {
     public abstract val isSetting: Boolean
 
     public companion object{
       public fun findTypeByValue(value: String): Type {
         return when (value) {
-          Info.name -> Info
-          TypeNecessary.name -> TypeNecessary
-          TypeMarketing.name -> TypeMarketing
-          TypeStatistical.name -> TypeStatistical
-          TypeFunctional.name -> TypeFunctional
+          Info.typeName -> Info
+          TypeNecessary.typeName -> TypeNecessary
+          TypeMarketing.typeName -> TypeMarketing
+          TypeStatistical.typeName -> TypeStatistical
+          TypeFunctional.typeName -> TypeFunctional
           else -> Setting(value)
         }
       }
@@ -41,7 +41,7 @@ public data class ConsentItem(
       override val isSetting: Boolean = false
     }
 
-    public class Setting(public val customValue: String) : Type(customValue) {
+    public class Setting(private val customValue: String) : Type(customValue) {
       override val isSetting: Boolean = true
     }
 

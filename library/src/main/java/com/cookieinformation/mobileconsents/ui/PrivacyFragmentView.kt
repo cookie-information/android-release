@@ -1,23 +1,24 @@
 package com.cookieinformation.mobileconsents.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PorterDuff
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.MainThread
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.R
-import com.cookieinformation.mobileconsents.ui.PrivacyFragmentView.IntentListener
+import com.cookieinformation.mobileconsents.models.SdkTextStyle
+import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import com.cookieinformation.mobileconsents.util.setTextFromHtml
-import com.google.android.material.button.MaterialButton
-import java.util.UUID
 
 /**
  * The Privacy view implementation. The view is used in [BasePrivacyFragment] and should not be used directly
@@ -28,53 +29,23 @@ public class PrivacyFragmentView @JvmOverloads constructor(
   attrs: AttributeSet? = null,
   defStyleAttr: Int = 0,
   defStyleRes: Int = 0,
-  sdkColor: Int?
-) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
-  ConsentSolutionView<PrivacyFragmentViewData, IntentListener> {
+  sdkColor: Int?,
+  sdkTextStyle: SdkTextStyle?
+) : BaseConsentsView(context, attrs, defStyleAttr, defStyleRes) {
 
-  /**
-   * A listener for events that can be triggered by the user.
-   */
-  @MainThread
-  public interface IntentListener {
-
-    /**
-     * Called when the user wants to change the choice for the consent.
-     *
-     * @param id [UUID] of the consents.
-     * @param accepted user's choice.
-     */
-    public fun onPrivacyChoiceChanged(id: Type, accepted: Boolean)
-
-    /**
-     * Called when the user accepts selected consents. It is called only if all required consents are chosen by the user.
-     */
-    public fun onPrivacyAcceptSelectedClicked()
-
-    /**
-     * Called when the user accepts all consents.
-     */
-    public fun onPrivacyAcceptAllClicked()
-
-    /**
-     * Called when the user wants to close the view.
-     */
-    public fun onPrivacyCenterDismissRequest()
-  }
-
-  private val intentListeners = mutableSetOf<IntentListener>()
-  private val consentListAdapter = PrivacyFragmentListAdapter(::onChoiceChanged, sdkColor)
+  private val consentListAdapter = PrivacyFragmentListAdapter(::onChoiceChanged, sdkColor, sdkTextStyle)
   public var onReadMore: (info: String, poweredBy: String) -> Unit = { _, _ ->
   }
 
   private val contentView: View
   private val progressBar: View
-  public var parsedColorToInt: Int? = sdkColor//Color.parseColor("#FFE91E63")// = attrs?.getAttributeResourceValue(0, 0)
+  public var parsedColorToInt: Int? = sdkColor
+  public var customTypeface: SdkTextStyle? = sdkTextStyle
 
   private lateinit var data: PrivacyFragmentViewData
 
   init {
-    inflate(context, R.layout.mobileconsents_privacy, this)
+
     contentView = findViewById(R.id.mobileconsents_privacy_layout)
     contentView.visibility = View.GONE
 
@@ -94,18 +65,17 @@ public class PrivacyFragmentView @JvmOverloads constructor(
       adapter = consentListAdapter
     }
 
-    contentView.findViewById<Toolbar>(R.id.mobileconsents_privacy_toolbar).apply {
-      parsedColorToInt?.let {
-        setBackgroundColor(it)
-      }
-      setNavigationOnClickListener {
-        onDismissRequest()
+    findViewById<LinearLayout>(R.id.mobileconsents_privacy_info_read_more_container).apply {
+      setOnClickListener {
+        onReadMoreClicked()
       }
     }
-
     findViewById<TextView>(R.id.mobileconsents_privacy_info_read_more).apply {
       parsedColorToInt?.let {
         setTextColor(it)
+      }
+      customTypeface?.subtitleStyle?.let {
+        typeface = it.typeface
       }
       setOnClickListener {
         onReadMoreClicked()
@@ -117,14 +87,14 @@ public class PrivacyFragmentView @JvmOverloads constructor(
       }
     }
 
-    findViewById<MaterialButton>(R.id.mobileconsents_privacy_accept_selected_button).apply {
+    findViewById<Button>(R.id.mobileconsents_privacy_accept_selected_button).apply {
       parsedColorToInt?.let {
         setBackgroundColor(it)
       }
       setOnClickListener { onAcceptSelectedClicked() }
     }
 
-    findViewById<MaterialButton>(R.id.mobileconsents_privacy_accept_all_button).apply {
+    findViewById<Button>(R.id.mobileconsents_privacy_accept_all_button).apply {
       parsedColorToInt?.let {
         setBackgroundColor(it)
       }
@@ -136,38 +106,12 @@ public class PrivacyFragmentView @JvmOverloads constructor(
     onReadMore(data.privacyDescriptionLongText, data.poweredByLabelText)
   }
 
-  private fun onAcceptSelectedClicked() {
-    for (listener in intentListeners) {
-      listener.onPrivacyAcceptSelectedClicked()
-    }
+  override fun getConsentsLayout(): Int {
+    return R.layout.mobileconsents_privacy
   }
 
-  private fun onAcceptAllClicked() {
-    for (listener in intentListeners) {
-      listener.onPrivacyAcceptAllClicked()
-    }
-  }
-
-  private fun onChoiceChanged(id: Type, accepted: Boolean) {
-    for (listener in intentListeners) {
-      listener.onPrivacyChoiceChanged(id, accepted)
-    }
-  }
-
-  private fun onDismissRequest() {
-    for (listener in intentListeners) {
-      listener.onPrivacyCenterDismissRequest()
-    }
-  }
-
-  public override fun addIntentListener(listener: IntentListener) {
-    require(!intentListeners.contains(listener))
-    intentListeners.add(listener)
-  }
-
-  public override fun removeIntentListener(listener: IntentListener) {
-    require(intentListeners.contains(listener))
-    intentListeners.remove(listener)
+  override fun getLayoutViewGroup(): ViewGroup {
+    return this
   }
 
   override fun showProgressBar() {
@@ -182,19 +126,25 @@ public class PrivacyFragmentView @JvmOverloads constructor(
     this.data = data
     findViewById<TextView>(R.id.mobileconsents_privacy_info_title).apply {
       text = data.privacyTitleText
+      customTypeface?.titleStyle?.let {
+        typeface = it.typeface
+      }
     }
     findViewById<TextView>(R.id.mobileconsents_privacy_info_short_description).apply {
       text = data.privacyDescriptionShortText
+      customTypeface?.subtitleStyle?.let {
+        typeface = it.typeface
+      }
     }
     findViewById<TextView>(R.id.mobileconsents_privacy_info_read_more).apply {
       text = data.privacyReadMoreText
     }
 
-    findViewById<MaterialButton>(R.id.mobileconsents_privacy_accept_selected_button).apply {
+    findViewById<Button>(R.id.mobileconsents_privacy_accept_selected_button).apply {
       text = data.acceptSelectedButtonText
       isEnabled = data.acceptSelectedButtonEnabled
     }
-    findViewById<MaterialButton>(R.id.mobileconsents_privacy_accept_all_button).apply {
+    findViewById<Button>(R.id.mobileconsents_privacy_accept_all_button).apply {
       text = data.acceptAllButtonText
     }
     contentView.findViewById<TextView>(R.id.powered_by_label).apply {
@@ -207,15 +157,5 @@ public class PrivacyFragmentView @JvmOverloads constructor(
 
   private fun showContentViewData() {
     contentView.visibility = View.VISIBLE
-  }
-
-  override fun showRetryDialog(onRetry: () -> Unit, onDismiss: () -> Unit, title: String, message: String) {
-    // postDelayed is workaround for: If view is embedded in a DialogFragment, the below dialog is shown under the DialogFragment.
-    postDelayed({ createRetryDialog(context, onRetry, onDismiss, title, message).show() }, 0)
-  }
-
-  override fun showErrorDialog(onDismiss: () -> Unit) {
-    // postDelayed is workaround for: If view is embedded in a DialogFragment, the below dialog is shown under the DialogFragment.
-    postDelayed({ createErrorDialog(context, onDismiss).show() }, 0)
   }
 }

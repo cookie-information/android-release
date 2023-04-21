@@ -14,7 +14,10 @@ import com.cookieinformation.mobileconsents.networking.response.TokenResponse
 import com.cookieinformation.mobileconsents.networking.response.TokenResponseJsonAdapter
 import com.cookieinformation.mobileconsents.networking.response.toDomain
 import com.cookieinformation.mobileconsents.storage.ConsentStorage
+import com.cookieinformation.mobileconsents.storage.ConsentWithType
 import com.cookieinformation.mobileconsents.system.ApplicationProperties
+import com.cookieinformation.mobileconsents.ui.LocaleProvider
+import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.withContext
@@ -37,14 +40,18 @@ public class MobileConsentSdk internal constructor(
   private val consentStorage: ConsentStorage,
   private val applicationProperties: ApplicationProperties,
   private val dispatcher: CoroutineDispatcher,
-  public val saveConsentsFlow: SharedFlow<Map<Type, Boolean>>,
-  private val uiComponentColor: MobileConsentCustomUI?
+  public val saveConsentsFlow: SharedFlow<Map<UUID, Boolean>>,
+  private val uiComponentColor: MobileConsentCustomUI?,
+  private val uiLanguageCode: LocaleProvider,
+  private val consentsView: BaseConsentsView?
 ) {
 
   public fun getClientId(): String = consentClient.clientId
   public fun getSecretId(): String = consentClient.clientSecret
   public fun getConsentSolutionId(): String = consentClient.consentSolutionId.toString()
   public fun getUiComponentColor(): MobileConsentCustomUI? = uiComponentColor
+  public fun uiLanguageProvider(): LocaleProvider = uiLanguageCode
+  public fun getConsentsView(): BaseConsentsView? = consentsView
 
   /**
    * Obtain [TokenResponse] from authentication server.
@@ -67,7 +74,9 @@ public class MobileConsentSdk internal constructor(
     val call = consentClient.getConsentSolution()
     val responseBody = call.enqueueSuspending()
     val adapter = ConsentSolutionResponseJsonAdapter(moshi)
-    adapter.parseFromResponseBody(responseBody).toDomain()
+    adapter.parseFromResponseBody(responseBody).toDomain().also {
+      consentStorage.saveConsentId(it.consentSolutionVersionId)
+    }
   }
 
   /**
@@ -76,10 +85,21 @@ public class MobileConsentSdk internal constructor(
    * @throws [IOException] in case of any error.
    */
   public suspend fun postConsent(consent: Consent): Unit = withContext(dispatcher) {
+//    fetch a new token if the current token doesn't exist, or has expired.
+    val token = consentStorage.tokenPreferences.getAccessToken()
+    if (token == null) {
+      val updateToken = fetchToken()
+      consentStorage.tokenPreferences.setTokenResponse(updateToken)
+    }
     val userId = consentStorage.getUserId()
     val call = consentClient.postConsent(consent, userId, applicationProperties)
     call.enqueueSuspending().closeQuietly()
     consentStorage.storeConsentChoices(consent.processingPurposes)
+    consentStorage.saveConsentId(consent.consentSolutionVersionId)
+  }
+
+  public fun getLatestStoredConsentVersion(): UUID {
+    return consentStorage.getLatestStoredConsentVersion()
   }
 
   /**
@@ -87,8 +107,40 @@ public class MobileConsentSdk internal constructor(
    * @return returns Map of ConsentItem id and choice in a form of Boolean
    * @throws [IOExcepti\on] in case of any error.
    */
-  public suspend fun getSavedConsents(): Map<Type, Boolean> = withContext(dispatcher) {
+  public suspend fun getOldSavedConsents(): Map<Type, Boolean> = withContext(dispatcher) {
+    consentStorage.getOldAllConsentChoices()
+  }
+
+  /**
+   * Obtain past consent choices stored on device memory.
+   * @return returns Map of ConsentItem id and choice in a form of Boolean
+   * @throws [IOExcepti\on] in case of any error.
+   */
+  public suspend fun getSavedConsents(): Map<UUID, Boolean> = withContext(dispatcher) {
     consentStorage.getAllConsentChoices()
+  }
+
+  /**
+   * Obtain past consent choices with type stored on device memory.
+   * @return returns Map of ConsentItem id and choice in a form of Boolean
+   * @throws [IOExcepti\on] in case of any error.
+   */
+  public suspend fun getSavedConsentsWithType(): Map<UUID, ConsentWithType> = withContext(dispatcher) {
+    consentStorage.getAllConsentChoicesWithType()
+  }
+
+  /**
+   * Reset past consent choices stored on device memory.
+   */
+  public suspend fun resetAllConsentChoices(): Unit = withContext(dispatcher) {
+    consentStorage.resetAllConsentChoices()
+  }
+
+  /**
+   * Reset past consent choices stored on device memory.
+   */
+  public suspend fun resetConsentChoice(choice: UUID): Unit = withContext(dispatcher) {
+    consentStorage.resetAllConsentChoices(choice)
   }
 
   /**

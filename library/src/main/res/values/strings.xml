@@ -8,4 +8,8 @@
   <string name="mobileconsents_privacy_preferences_msg_error_fetch">"Consent terms can not be loaded at this time"</string>
   <string name="mobileconsents_privacy_preferences_title_error_send">"Error"</string>
   <string name="mobileconsents_privacy_preferences_msg_error_send">"A data connection is not currently allowed."</string>
+  <string name="mobileconsents_privacy_enforce_accept_consents">Please accept consents</string>
+  <string name="mobileconsents_required_privacy_consents_title">Required</string>
+  <string name="mobileconsents_optional_privacy_consents_title">Optional</string>
+  <string name="mobileconsents_optional_privacy_policy_label">Optional</string>
 </resources>

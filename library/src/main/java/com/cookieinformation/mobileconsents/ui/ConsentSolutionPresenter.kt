@@ -220,13 +220,15 @@ internal abstract class ConsentSolutionPresenter<ViewType, ViewDataType, ViewInt
    */
   fun authenticate() {
     // First check that client id, secret key and solution id are present
-    if (consentSdk.getClientId().isBlank() || consentSdk.getSecretId().isBlank() || consentSdk.getConsentSolutionId().isBlank()) {
+    if (consentSdk.getClientId().isBlank() || consentSdk.getSecretId().isBlank() || consentSdk.getConsentSolutionId()
+        .isBlank()
+    ) {
       throw RuntimeException("\nMobileConsentSdk.Builder is missing client id and/or client secret and/or solution id. Please add:\nsetClientId(XXX)\nsetClientSecret(XXX)\nsetSolutionId(XXX)")
     }
 
     preferences.getAccessToken()?.let {
       // We have a valid access token
-      fetchConsentSolution()
+     fetchConsentSolution()
     } ?: fetchToken()
   }
 
@@ -251,7 +253,7 @@ internal abstract class ConsentSolutionPresenter<ViewType, ViewDataType, ViewInt
   /**
    * Fetches the consent solution from server, reads saved choices and shows data if there is an attached view.
    */
-  fun fetchConsentSolution() {
+  private fun fetchConsentSolution() {
     scope.launch {
       try {
         viewState = ViewState.Fetching
@@ -312,13 +314,13 @@ internal abstract class ConsentSolutionPresenter<ViewType, ViewDataType, ViewInt
     type = this.type
   )
 
-  protected fun ConsentItem.toPrivacyPreferencesItem(savedConsents: Map<Type, Boolean>): PrivacyPreferencesItem {
+  protected fun ConsentItem.toPrivacyPreferencesItem(savedConsents: Map<UUID, Boolean>): PrivacyPreferencesItem {
     val textTranslation = shortText.translate()
 
     return PrivacyPreferencesItem(
       id = consentItemId,
       required = required,
-      accepted = savedConsents[type] ?: false,
+      accepted = savedConsents[consentItemId] ?: false || required,
       text = textTranslation.text,
       details = longText.translate().text,
       language = textTranslation.languageCode,
@@ -344,12 +346,12 @@ internal abstract class ConsentSolutionPresenter<ViewType, ViewDataType, ViewInt
 
   protected abstract fun createViewData(
     consentSolution: ConsentSolution,
-    savedConsents: Map<Type, Boolean>
+    savedConsents: Map<UUID, Boolean>
   ): ViewDataType
 
   protected abstract fun getGivenConsents(viewData: ViewDataType): GivenConsent
 
-  protected abstract fun onConsentsChangedWhileFetched(consents: Map<Type, Boolean>)
+  protected abstract fun onConsentsChangedWhileFetched(consents: Map<UUID, Boolean>)
 
-  protected abstract fun onConsentsChangedWhileSendError(consents: Map<Type, Boolean>)
+  protected abstract fun onConsentsChangedWhileSendError(consents: Map<UUID, Boolean>)
 }

@@ -2,7 +2,6 @@ package com.cookieinformation.mobileconsents.ui
 
 import android.content.Context
 import com.cookieinformation.mobileconsents.MobileConsentSdk
-import java.util.UUID
 
 /**
  * The class binds [BasePrivacyFragment] with the instance of

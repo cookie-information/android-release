@@ -2,8 +2,6 @@ package com.cookieinformation.mobileconsents
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.Resources
-import android.graphics.Color
 import android.widget.Toast
 import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.adapter.moshi
@@ -16,12 +14,16 @@ import com.cookieinformation.mobileconsents.storage.ConsentStorage
 import com.cookieinformation.mobileconsents.storage.MoshiFileHandler
 import com.cookieinformation.mobileconsents.storage.Preferences
 import com.cookieinformation.mobileconsents.system.getApplicationProperties
+import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
+import com.cookieinformation.mobileconsents.ui.DefaultLocaleProvider
+import com.cookieinformation.mobileconsents.ui.LocaleProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.sync.Mutex
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import java.io.File
 import java.lang.ref.WeakReference
+import java.util.Locale
 import java.util.UUID
 
 private const val storageFileName = "mobileconsents_storage.txt"
@@ -37,7 +39,14 @@ internal class MobileConsentSdkBuilder constructor(
   private var clientId: String? = null
   private var solutionId: String? = null
   private var clientSecret: String? = null
-  private var customColor: MobileConsentCustomUI? = null//MobileConsentCustomUI(Color.parseColor("#FFBB86FC"))
+  private var customColor: MobileConsentCustomUI? = null
+  private var sdkLocale: LocaleProvider? = null
+  private var customConsentView: BaseConsentsView? = null
+
+  override fun setCustomConsentView(view: BaseConsentsView?): CallFactory {
+    customConsentView = view
+    return this
+  }
 
   override fun setClientCredentials(credentials: MobileConsentCredentials): CallFactory {
     clientId = credentials.clientId
@@ -51,7 +60,16 @@ internal class MobileConsentSdkBuilder constructor(
     return this
   }
 
-  override fun build(): MobileConsentSdk{
+  override fun setLanguages(locales: List<Locale>): CallFactory {
+    sdkLocale = object : LocaleProvider {
+      override fun getLocales(): List<Locale> {
+        return locales
+      }
+    }
+    return this
+  }
+
+  override fun build(): MobileConsentSdk {
     if (customColor == null) {
       throw java.lang.Exception("Please set a custom client, you may want to set your primary color. \nAdd to the builder the following: setMobileConsentCustomUI().")
     }
@@ -63,6 +81,9 @@ internal class MobileConsentSdkBuilder constructor(
     }
     if (clientSecret == null || clientSecret.orEmpty().isEmpty()) {
       throw java.lang.Exception("Please set a client secret id")
+    }
+    if (sdkLocale == null || sdkLocale?.getLocales().orEmpty().isEmpty()) {
+      throw java.lang.Exception("Please provide the list of languages you want to provide")
     }
 
     val factory = getOkHttpClient(context)//OkHttpClient()
@@ -100,7 +121,9 @@ internal class MobileConsentSdkBuilder constructor(
       applicationProperties = context.getApplicationProperties(),
       dispatcher = Dispatchers.IO,
       saveConsentsFlow = consentStorage.saveConsentsFlow,
-      uiComponentColor = customColor
+      uiComponentColor = customColor,
+      uiLanguageCode = sdkLocale ?: DefaultLocaleProvider(context.applicationContext),
+      consentsView =  customConsentView
     )
   }
 
@@ -114,7 +137,7 @@ internal class MobileConsentSdkBuilder constructor(
      * Returns global flow for observing end emitting "save consents" events.
      */
     @SuppressLint("SyntheticAccessor")
-    fun getSaveConsentsMutableFlow(): MutableSharedFlow<Map<Type, Boolean>> = synchronized(this) {
+    fun getSaveConsentsMutableFlow(): MutableSharedFlow<Map<UUID, Boolean>> = synchronized(this) {
       var eventsEmitter = SaveConsentsMutableFlowReference.get()
       if (eventsEmitter == null) {
         eventsEmitter = MutableSharedFlow()
@@ -127,6 +150,6 @@ internal class MobileConsentSdkBuilder constructor(
      * Reference to global flow for observing end emitting "save consents" events, shared across all SDK instances.
      * Warning: Do not use this field directly. Use [getSaveConsentsMutableFlow].
      */
-    private var SaveConsentsMutableFlowReference = WeakReference<MutableSharedFlow<Map<Type, Boolean>>>(null)
+    private var SaveConsentsMutableFlowReference = WeakReference<MutableSharedFlow<Map<UUID, Boolean>>>(null)
   }
 }

@@ -1,20 +1,20 @@
 package com.cookieinformation.mobileconsents.ui
 
 import android.content.pm.ActivityInfo
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.ConsentSolution
 import com.cookieinformation.mobileconsents.Consentable
 import com.cookieinformation.mobileconsents.R
+import com.cookieinformation.mobileconsents.models.SdkTextStyle
 import com.cookieinformation.mobileconsents.ui.ConsentSolutionViewModel.Event
+import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
+import com.cookieinformation.mobileconsents.ui.base.BasePrivacyFragment
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.UUID
@@ -22,46 +22,34 @@ import java.util.UUID
 /**
  * The base fragment for "Privacy Fragment" view.
  */
-internal class PrivacyFragment : Fragment(), ConsentSolutionListener {
+internal class PrivacyFragment : BasePrivacyFragment() {
 
-  private val viewModel: PrivacyFragmentViewModel by viewModels {
-    createViewModelFactory(bindConsentSolution(ConsentSolutionBinder.InternalBuilder(requireContext())))
-  }
-
-  /**
-   * The developer must implement this method to bind the fragment with the instance of
-   * [com.cookieinformation.mobileconsents.MobileConsentSdk] and [UUID] of the consent solution.
-   *
-   * The developer should provide the same instance of
-   * [com.cookieinformation.mobileconsents.MobileConsentSdk] after configuration has changed.
-   *
-   * @param builder fluent builder that allows the developer to set up an instance of
-   * [com.cookieinformation.mobileconsents.MobileConsentSdk], [UUID] of the consent solution and
-   * optionally [LocaleProvider].
-   */
-  private fun bindConsentSolution(builder: ConsentSolutionBinder.Builder): ConsentSolutionBinder {
-    val app = requireContext().applicationContext as Consentable
-    val mobileConsentSdk = app.sdk
-
-    return builder
-      .setMobileConsentSdk(mobileConsentSdk.getMobileConsentSdk())
-      .create()
-  }
-
-  fun getSdkSetColor(): Int? {
+  private fun getSdkSetColor(): Int? {
     val app = requireContext().applicationContext as Consentable
     val mobileConsentSdk = app.sdk
     return mobileConsentSdk.getMobileConsentSdk().getUiComponentColor()?.primaryColor
+  }
+
+  private fun getCustomSetFont(): SdkTextStyle? {
+    val app = requireContext().applicationContext as Consentable
+    val mobileConsentSdk = app.sdk
+    return mobileConsentSdk.getMobileConsentSdk().getUiComponentColor()?.sdkTextStyle
   }
 
   /**
    * If method is overridden, the super must be called.
    */
   @CallSuper
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-    PrivacyFragmentView(requireContext(), sdkColor =  getSdkSetColor()).also {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    val app = requireContext().applicationContext as Consentable
+    val mobileConsentCustomView = app.sdk.getMobileConsentSdk().getConsentsView()
+    val view =  mobileConsentCustomView ?: PrivacyFragmentView(requireContext(), sdkColor = getSdkSetColor(), sdkTextStyle = getCustomSetFont()).also {
       it.onReadMore = ::onReadMore
     }
+    view.setActivityContext(requireActivity())
+    return view
+  }
+
 
   /**
    * If method is overridden, the super must be called.
@@ -72,7 +60,7 @@ internal class PrivacyFragment : Fragment(), ConsentSolutionListener {
     viewModel.events
       .onEach(::handleEvent)
       .launchIn(viewLifecycleOwner.lifecycleScope)
-    viewModel.attachView(view as PrivacyFragmentView)
+    viewModel.attachView(view as BaseConsentsView)
     val isTablet = resources.getBoolean(R.bool.isTablet)
     if (!isTablet) {
       // Force the fragments in portrait mode if app is running on a smartphone, since there is only one layout
@@ -98,13 +86,11 @@ internal class PrivacyFragment : Fragment(), ConsentSolutionListener {
       Event.Dismiss -> onDismissed()
     }
 
-  private fun createViewModelFactory(binder: ConsentSolutionBinder) = PrivacyFragmentViewModel.Factory(binder)
-
   override fun onReadMore(info: String, poweredBy: String) {
     ReadMoreBottomSheet.newInstance(info, poweredBy, getSdkSetColor()).show(parentFragmentManager, "tag")
   }
 
-  override fun onConsentsChosen(consentSolution: ConsentSolution, consents: Map<Type, Boolean>, external: Boolean) {
+  override fun onConsentsChosen(consentSolution: ConsentSolution, consents: Map<UUID, Boolean>, external: Boolean) {
     requireActivity().onBackPressed()
   }
 

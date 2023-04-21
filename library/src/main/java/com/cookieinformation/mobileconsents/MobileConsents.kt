@@ -1,9 +1,11 @@
 package com.cookieinformation.mobileconsents
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.os.bundleOf
 import com.cookieinformation.mobileconsents.ConsentItem.Type
+import com.cookieinformation.mobileconsents.storage.ConsentWithType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -80,10 +82,27 @@ public class MobileConsents constructor(
    * @param listener listener for success/failure of operation.
    * @return [Subscription] object allowing for call cancellation.
    */
-  public fun getSavedConsents(listener: CallListener<Map<Type, Boolean>>): Subscription {
+  public fun getSavedConsents(listener: CallListener<Map<UUID, Boolean>>): Subscription {
     val job = scope.launch {
       try {
         listener.onSuccess(mobileConsentSdk.getSavedConsents())
+      } catch (e: IOException) {
+        listener.onFailure(e)
+      }
+    }
+
+    return JobSubscription(job)
+  }
+
+  /**
+   * Obtain past consent choices stored on device memory. Returns Map of ConsentItem id and choice in a form of Boolean.
+   * @param listener listener for success/failure of operation.
+   * @return [Subscription] object allowing for call cancellation.
+   */
+  public fun getSavedConsentsWithType(listener: CallListener<Map<UUID, ConsentWithType>>): Subscription {
+    val job = scope.launch {
+      try {
+        listener.onSuccess(mobileConsentSdk.getSavedConsentsWithType())
       } catch (e: IOException) {
         listener.onFailure(e)
       }
@@ -146,16 +165,40 @@ public class MobileConsents constructor(
 
   public fun displayConsentsIfNeeded(
     listener: ActivityResultLauncher<Bundle?>,
+    onError: (e: IOException) -> Unit
   ) {
     scope.launch {
-      if (shouldDisplayConsents()) {
-        displayConsents(listener)
+      try {
+        if (shouldDisplayConsents()) {
+          displayConsents(listener)
+        }
+      } catch (e: IOException) {
+        onError(e)
       }
     }
   }
 
-  private suspend fun shouldDisplayConsents(): Boolean {
-    return !getMobileConsentSdk().getSavedConsents().containsValue(true)
+  public suspend fun shouldDisplayConsents(): Boolean {
+    val solution = getMobileConsentSdk().fetchConsentSolution().consentSolutionVersionId
+    val hasVersionUpdated = getMobileConsentSdk().getLatestStoredConsentVersion().toString() != solution.toString()
+    return (!getMobileConsentSdk().getOldSavedConsents().containsValue(true) && !getConsents().containsValue(true)) || hasVersionUpdated
+  }
+
+  public suspend fun getConsents(): Map<UUID, Boolean> {
+    return getMobileConsentSdk().getSavedConsents()
+  }
+
+  public suspend fun haveConsentsBeenAccepted(): Boolean {
+    val consents = getMobileConsentSdk().getSavedConsents()
+    return consents.containsValue(true)
+  }
+
+  public suspend fun resetAllConsentChoices() {
+    return getMobileConsentSdk().resetAllConsentChoices()
+  }
+
+  public suspend fun resetConsentChoice(consentKey: UUID) {
+    return getMobileConsentSdk().resetConsentChoice(consentKey)
   }
 }
 
@@ -193,5 +236,5 @@ public interface SaveConsentsObserver {
   /**
    * Called every time when consents are saved
    */
-  public fun onConsentsSaved(consents: Map<Type, Boolean>)
+  public fun onConsentsSaved(consents: Map<UUID, Boolean>)
 }
