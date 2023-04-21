@@ -57,6 +57,7 @@
   </style>
 
   <style name="MobileConsents_PrivacyLongDescription" parent="MobileConsents_Text">
+    <item name="android:textColor">@color/mobileconsents_color_text</item>
   </style>
 
   <style name="MobileConsents_PrivacyButtons" parent="@style/Widget.AppCompat.Button">
