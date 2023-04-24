@@ -125,7 +125,7 @@ internal class ConsentStorage(
   }
 
   /**
-   * Resets a consent by having .
+   * Reset all consents to default value.
    */
   public fun resetAllConsentChoices(choice: UUID) = consentPreferences.resetConsentChoice(choice)
 
