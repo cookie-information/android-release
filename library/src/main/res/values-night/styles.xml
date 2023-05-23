@@ -5,7 +5,7 @@
 
   <style name="MobileConsents_TextAppearance" parent="MobileConsents_BaseTextAppearance">
     <item name="android:textSize">@dimen/mobileconsents_text_size</item>
-    <item name="android:textColor">#89EFE9E9</item>
+    <item name="android:textColor">@color/mobileconsents_color_text</item>
   </style>
 
   <style name="MobileConsents_Text">
