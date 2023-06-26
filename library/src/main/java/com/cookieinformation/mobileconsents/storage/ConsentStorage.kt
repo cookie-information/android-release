@@ -135,6 +135,16 @@ internal class ConsentStorage(
   public fun resetAllConsentChoices() = consentPreferences.resetAllConsentChoices()
 
   /**
+   * Get all saved consent types
+   */
+  public fun getSavedConsentTypes(): Map<UUID, Type> = consentPreferences.consentsTypePreferences().all.mapKeys {
+    UUID.fromString(it.key)
+  }.mapValues {
+    Type.findTypeByValue(it.value as String)
+  }
+
+
+  /**
    * Maps key and value read from file to consents map
    */
   private fun Map<String, String>.toConsents(): Map<UUID, Boolean> =

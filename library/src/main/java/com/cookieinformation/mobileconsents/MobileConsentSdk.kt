@@ -152,6 +152,15 @@ public class MobileConsentSdk internal constructor(
     consentStorage.getConsentChoice(consentItemId)
   }
 
+  /**
+   * Obtain past consent choice types stored on device memory.
+   * @return returns Map of ConsentItem id to ConsentItem.Type
+   * @throws [IOExcepti\on] in case of any error.
+   */
+  public suspend fun getSavedConsentTypes(): Map<UUID, Type> = withContext(dispatcher) {
+    consentStorage.getSavedConsentTypes()
+  }
+
   public companion object {
     /**
      * Use to instantiate SDK with all necessary parameters.
