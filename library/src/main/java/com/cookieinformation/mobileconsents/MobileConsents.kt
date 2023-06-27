@@ -179,9 +179,15 @@ public class MobileConsents constructor(
   }
 
   public suspend fun shouldDisplayConsents(): Boolean {
+    // get current local solution version before fetching solution from the server
+    // because the local version gets overwritten in fetchConsentSolution()
+    val currentLocalVersion = getMobileConsentSdk().getLatestStoredConsentVersion()
     val solution = getMobileConsentSdk().fetchConsentSolution().consentSolutionVersionId
-    val hasVersionUpdated = getMobileConsentSdk().getLatestStoredConsentVersion().toString() != solution.toString()
-    return (!getMobileConsentSdk().getOldSavedConsents().containsValue(true) && !getConsents().containsValue(true)) || hasVersionUpdated
+    val hasVersionUpdated = currentLocalVersion.toString() != solution.toString()
+    // check if we need to force show the popup to prevent the crash due to missing locally saved consent types
+    val shouldFixMissingTypes = shouldFixMissingTypes()
+
+    return (!getMobileConsentSdk().getOldSavedConsents().containsValue(true) && !getConsents().containsValue(true)) || hasVersionUpdated || shouldFixMissingTypes
   }
 
   public suspend fun getConsents(): Map<UUID, Boolean> {
@@ -190,7 +196,9 @@ public class MobileConsents constructor(
 
   public suspend fun haveConsentsBeenAccepted(): Boolean {
     val consents = getMobileConsentSdk().getSavedConsents()
-    return consents.containsValue(true)
+    // check if we need to force users to accept consents once again to prevent the crash due to missing locally saved consent types
+    val shouldFixMissingTypes = shouldFixMissingTypes()
+    return consents.containsValue(true) && !shouldFixMissingTypes
   }
 
   public suspend fun resetAllConsentChoices() {
@@ -199,6 +207,14 @@ public class MobileConsents constructor(
 
   public suspend fun resetConsentChoice(consentKey: UUID) {
     return getMobileConsentSdk().resetConsentChoice(consentKey)
+  }
+
+  private suspend fun shouldFixMissingTypes(): Boolean {
+    // Check if we need to force show the popup to prevent the crash due to missing locally saved consent types
+    val typesSize = getMobileConsentSdk().getSavedConsentTypes().size
+    val newStorageSize = getConsents().size
+
+    return (typesSize == 0 && newStorageSize > 0)
   }
 }
 
