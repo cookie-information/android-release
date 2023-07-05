@@ -143,6 +143,17 @@ internal class ConsentStorage(
     Type.findTypeByValue(it.value as String)
   }
 
+  /**
+   * Save consent types
+   */
+  fun saveConsentTypes(types: Map<UUID, Type>) {
+    val editor = consentPreferences.consentsTypePreferences().edit()
+    types.forEach {
+      editor.putString(it.key.toString(), it.value.typeName)
+    }
+    editor.commit()
+  }
+
 
   /**
    * Maps key and value read from file to consents map

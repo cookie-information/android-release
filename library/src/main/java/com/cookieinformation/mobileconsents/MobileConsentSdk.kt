@@ -70,12 +70,17 @@ public class MobileConsentSdk internal constructor(
    * @returns [ConsentSolution] obtained CDN from server.
    * @throws [IOException] in case of any error.
    */
-  public suspend fun fetchConsentSolution(): ConsentSolution = withContext(dispatcher) {
+  public suspend fun fetchConsentSolution(saveVersionId: Boolean = true): ConsentSolution = withContext(dispatcher) {
     val call = consentClient.getConsentSolution()
     val responseBody = call.enqueueSuspending()
     val adapter = ConsentSolutionResponseJsonAdapter(moshi)
-    adapter.parseFromResponseBody(responseBody).toDomain().also {
-      consentStorage.saveConsentId(it.consentSolutionVersionId)
+    if (saveVersionId) {
+      adapter.parseFromResponseBody(responseBody).toDomain().also {
+        consentStorage.saveConsentId(it.consentSolutionVersionId)
+      }
+    }
+    else {
+      adapter.parseFromResponseBody(responseBody).toDomain()
     }
   }
 
@@ -126,6 +131,30 @@ public class MobileConsentSdk internal constructor(
    * @throws [IOExcepti\on] in case of any error.
    */
   public suspend fun getSavedConsentsWithType(): Map<UUID, ConsentWithType> = withContext(dispatcher) {
+    if (shouldFixMissingTypes()) {
+      val solution = fetchConsentSolution(saveVersionId = false)
+      val savedConsents = getSavedConsents()
+      val typesToSave = mutableMapOf<UUID, Type>()
+
+      savedConsents.forEach {
+        val uuid = it.key
+        val item = solution.consentItems.find { it.consentItemId == uuid }
+        if (item != null) {
+          typesToSave.put(uuid, item.type)
+        }
+        else {
+          // Not able to resolve the type, default to Setting("custom") to avoid a crash
+          typesToSave.put(uuid, ConsentItem.Type.Setting("custom"))
+        }
+      }
+
+      if (typesToSave.size > 0) {
+        saveConsentTypes(typesToSave);
+      }
+
+    }
+
+
     consentStorage.getAllConsentChoicesWithType()
   }
 
@@ -159,6 +188,23 @@ public class MobileConsentSdk internal constructor(
    */
   public suspend fun getSavedConsentTypes(): Map<UUID, Type> = withContext(dispatcher) {
     consentStorage.getSavedConsentTypes()
+  }
+
+  /**
+   * Save consent types. This function should only be used if due to SDK version migration
+   * consent types of the saved consents are missing
+   * @throws [IOExcepti\on] in case of any error.
+   */
+  public suspend fun saveConsentTypes(types: Map<UUID, Type>): Unit = withContext(dispatcher) {
+    consentStorage.saveConsentTypes(types)
+  }
+
+  private suspend fun shouldFixMissingTypes(): Boolean {
+    // Check if we have to save missing consent types
+    val typesSize = getSavedConsentTypes().size
+    val newStorageSize = getSavedConsents().size
+
+    return (typesSize == 0 && newStorageSize > 0)
   }
 
   public companion object {
