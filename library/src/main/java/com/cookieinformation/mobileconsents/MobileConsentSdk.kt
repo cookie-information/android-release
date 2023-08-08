@@ -53,6 +53,30 @@ public class MobileConsentSdk internal constructor(
   public fun uiLanguageProvider(): LocaleProvider = uiLanguageCode
   public fun getConsentsView(): BaseConsentsView? = consentsView
 
+  public suspend fun init() {
+    if (shouldFixMissingTypes()) {
+      val solution = fetchConsentSolution(saveVersionId = false)
+      val savedConsents = getSavedConsents()
+      val typesToSave = mutableMapOf<UUID, Type>()
+
+      savedConsents.forEach {
+        val uuid = it.key
+        val item = solution.consentItems.find { it.consentItemId == uuid }
+        if (item != null) {
+          typesToSave.put(uuid, item.type)
+        }
+        else {
+          // Not able to resolve the type, default to Setting("custom") to avoid a crash
+          typesToSave.put(uuid, ConsentItem.Type.Setting("custom"))
+        }
+      }
+
+      if (typesToSave.size > 0) {
+        saveConsentTypes(typesToSave);
+      }
+    }
+  }
+
   /**
    * Obtain [TokenResponse] from authentication server.
    * @returns [TokenResponse] obtained access token from authentication.
@@ -131,30 +155,6 @@ public class MobileConsentSdk internal constructor(
    * @throws [IOExcepti\on] in case of any error.
    */
   public suspend fun getSavedConsentsWithType(): Map<UUID, ConsentWithType> = withContext(dispatcher) {
-    if (shouldFixMissingTypes()) {
-      val solution = fetchConsentSolution(saveVersionId = false)
-      val savedConsents = getSavedConsents()
-      val typesToSave = mutableMapOf<UUID, Type>()
-
-      savedConsents.forEach {
-        val uuid = it.key
-        val item = solution.consentItems.find { it.consentItemId == uuid }
-        if (item != null) {
-          typesToSave.put(uuid, item.type)
-        }
-        else {
-          // Not able to resolve the type, default to Setting("custom") to avoid a crash
-          typesToSave.put(uuid, ConsentItem.Type.Setting("custom"))
-        }
-      }
-
-      if (typesToSave.size > 0) {
-        saveConsentTypes(typesToSave);
-      }
-
-    }
-
-
     consentStorage.getAllConsentChoicesWithType()
   }
 

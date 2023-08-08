@@ -27,10 +27,23 @@ import java.util.Locale;
 import java.util.Map;
 
 import java.util.UUID;
+import kotlin.ParameterName;
+import kotlin.Unit;
 import kotlin.coroutines.Continuation;
+import kotlin.jvm.functions.Function2;
 import kotlinx.coroutines.Dispatchers;
 
 public class MyApplication extends Application implements Consentable {
+
+    @Override public void initSDKWithCompletion(
+        @NonNull Function2<? super Boolean, ? super IOException, Unit> onComplete
+    ) {
+        getSdk().initSDKWithCompletion(onComplete);
+    }
+
+    @Nullable @Override public Object initSDK(@NonNull Continuation<? super Unit> $completion) {
+        return getSdk().initSDK($completion);
+    }
 
     @NonNull
     @Override

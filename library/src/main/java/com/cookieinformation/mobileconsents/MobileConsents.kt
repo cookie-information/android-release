@@ -34,6 +34,31 @@ public class MobileConsents constructor(
   private var saveConsentsFlowCollectJob: Job? = null
 
   /**
+   * This function (or initSDK) initializes the sdk and performs necessary migrations. It must be called (and completed) before
+   * any other function that utilizes the sdk functionality, like showing the consent popup or
+   * retrieving the saved consents.
+   */
+  public fun initSDKWithCompletion(onComplete: (success: Boolean, exception: IOException?) -> Unit) {
+    // For now the only thing we have to do here is to perform a migration from the version that introduced
+    // a problem consent types
+    scope.launch {
+      try {
+        mobileConsentSdk.init()
+        onComplete(true, null)
+      } catch (e: IOException) {
+        e.printStackTrace()
+        onComplete(false, e)
+      }
+    }
+  }
+
+  public suspend fun initSDK() {
+    // For now the only thing we have to do here is to perform a migration from the version that introduced
+    // a problem consent types
+    mobileConsentSdk.init()
+  }
+
+  /**
    * Returns associated instance of MobileConsentSdk.
    *
    * @return associated instance of MobileConsentSdk.
@@ -184,10 +209,8 @@ public class MobileConsents constructor(
     val currentLocalVersion = getMobileConsentSdk().getLatestStoredConsentVersion()
     val solution = getMobileConsentSdk().fetchConsentSolution().consentSolutionVersionId
     val hasVersionUpdated = currentLocalVersion.toString() != solution.toString()
-    // check if we need to force show the popup to prevent the crash due to missing locally saved consent types
-    val shouldFixMissingTypes = shouldFixMissingTypes()
 
-    return (!getMobileConsentSdk().getOldSavedConsents().containsValue(true) && !getConsents().containsValue(true)) || hasVersionUpdated || shouldFixMissingTypes
+    return (!getMobileConsentSdk().getOldSavedConsents().containsValue(true) && !getConsents().containsValue(true)) || hasVersionUpdated
   }
 
   public suspend fun getConsents(): Map<UUID, Boolean> {
@@ -196,9 +219,7 @@ public class MobileConsents constructor(
 
   public suspend fun haveConsentsBeenAccepted(): Boolean {
     val consents = getMobileConsentSdk().getSavedConsents()
-    // check if we need to force users to accept consents once again to prevent the crash due to missing locally saved consent types
-    val shouldFixMissingTypes = shouldFixMissingTypes()
-    return consents.containsValue(true) && !shouldFixMissingTypes
+    return consents.containsValue(true)
   }
 
   public suspend fun resetAllConsentChoices() {
@@ -207,14 +228,6 @@ public class MobileConsents constructor(
 
   public suspend fun resetConsentChoice(consentKey: UUID) {
     return getMobileConsentSdk().resetConsentChoice(consentKey)
-  }
-
-  private suspend fun shouldFixMissingTypes(): Boolean {
-    // Check if we need to force show the popup to prevent the crash due to missing locally saved consent types
-    val typesSize = getMobileConsentSdk().getSavedConsentTypes().size
-    val newStorageSize = getConsents().size
-
-    return (typesSize == 0 && newStorageSize > 0)
   }
 }
 
