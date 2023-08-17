@@ -1,5 +1,6 @@
 package com.cookieinformation.mobileconsents
 
+import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
@@ -185,19 +186,25 @@ public class MobileConsents constructor(
   public fun displayConsents(
     listener: ActivityResultLauncher<Bundle?>,
   ) {
-    listener.launch(null)//nothing to pass the intent
+    try {
+      listener.launch(null)//nothing to pass the intent
+    } catch (e: ActivityNotFoundException) {
+
+    }
   }
 
   public fun displayConsentsIfNeeded(
     listener: ActivityResultLauncher<Bundle?>,
-    onError: (e: IOException) -> Unit
+    onError: (e: Exception) -> Unit
   ) {
     scope.launch {
       try {
         if (shouldDisplayConsents()) {
           displayConsents(listener)
         }
-      } catch (e: IOException) {
+      } catch (e: ActivityNotFoundException) {
+
+      } catch (e: Exception) {
         onError(e)
       }
     }
@@ -210,7 +217,8 @@ public class MobileConsents constructor(
     val solution = getMobileConsentSdk().fetchConsentSolution().consentSolutionVersionId
     val hasVersionUpdated = currentLocalVersion.toString() != solution.toString()
 
-    return (!getMobileConsentSdk().getOldSavedConsents().containsValue(true) && !getConsents().containsValue(true)) || hasVersionUpdated
+    return (!getMobileConsentSdk().getOldSavedConsents()
+      .containsValue(true) && !getConsents().containsValue(true)) || hasVersionUpdated
   }
 
   public suspend fun getConsents(): Map<UUID, Boolean> {
