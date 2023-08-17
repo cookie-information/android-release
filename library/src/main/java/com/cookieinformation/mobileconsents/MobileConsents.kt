@@ -188,8 +188,10 @@ public class MobileConsents constructor(
   ) {
     try {
       listener.launch(null)//nothing to pass the intent
+    } catch (e: IllegalStateException) {
+      //avoid crash
     } catch (e: ActivityNotFoundException) {
-
+      //avoid crash
     }
   }
 
@@ -202,8 +204,10 @@ public class MobileConsents constructor(
         if (shouldDisplayConsents()) {
           displayConsents(listener)
         }
+      } catch (e: IllegalStateException) {
+        //avoid crash
       } catch (e: ActivityNotFoundException) {
-
+        //avoid crash
       } catch (e: Exception) {
         onError(e)
       }
