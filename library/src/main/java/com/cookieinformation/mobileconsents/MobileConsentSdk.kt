@@ -55,7 +55,7 @@ public class MobileConsentSdk internal constructor(
 
   public suspend fun init() {
     if (shouldFixMissingTypes()) {
-      val solution = fetchConsentSolution(saveVersionId = false)
+      val solution = fetchConsentSolution()
       val savedConsents = getSavedConsents()
       val typesToSave = mutableMapOf<UUID, Type>()
 
@@ -64,8 +64,7 @@ public class MobileConsentSdk internal constructor(
         val item = solution.consentItems.find { it.consentItemId == uuid }
         if (item != null) {
           typesToSave.put(uuid, item.type)
-        }
-        else {
+        } else {
           // Not able to resolve the type, default to Setting("custom") to avoid a crash
           typesToSave.put(uuid, ConsentItem.Type.Setting("custom"))
         }
@@ -94,18 +93,11 @@ public class MobileConsentSdk internal constructor(
    * @returns [ConsentSolution] obtained CDN from server.
    * @throws [IOException] in case of any error.
    */
-  public suspend fun fetchConsentSolution(saveVersionId: Boolean = true): ConsentSolution = withContext(dispatcher) {
+  public suspend fun fetchConsentSolution(): ConsentSolution = withContext(dispatcher) {
     val call = consentClient.getConsentSolution()
     val responseBody = call.enqueueSuspending()
     val adapter = ConsentSolutionResponseJsonAdapter(moshi)
-    if (saveVersionId) {
-      adapter.parseFromResponseBody(responseBody).toDomain().also {
-        consentStorage.saveConsentId(it.consentSolutionVersionId)
-      }
-    }
-    else {
-      adapter.parseFromResponseBody(responseBody).toDomain()
-    }
+    adapter.parseFromResponseBody(responseBody).toDomain()
   }
 
   /**

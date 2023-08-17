@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
         .displayConsents(listener));
 
     findViewById(R.id.display_if_needed).setOnClickListener(v -> ((MyApplication) getApplication()).getSdk()
-        .displayConsentsIfNeeded(listener, new Function1<IOException, Unit>() {
-          @Override public Unit invoke(IOException e) {
+        .displayConsentsIfNeeded(listener, new Function1<Exception, Unit>() {
+          @Override public Unit invoke(Exception e) {
             Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             return null;
           }
