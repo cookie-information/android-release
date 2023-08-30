@@ -91,11 +91,11 @@ internal class PrivacyFragment : BasePrivacyFragment() {
   }
 
   override fun onConsentsChosen(consentSolution: ConsentSolution, consents: Map<UUID, Boolean>, external: Boolean) {
-    requireActivity().onBackPressed()
+    requireActivity().finish()
   }
 
   override fun onDismissed() {
-    requireActivity().onBackPressed()
+    requireActivity().finish()
   }
 
   companion object {

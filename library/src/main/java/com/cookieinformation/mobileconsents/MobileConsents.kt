@@ -2,10 +2,7 @@ package com.cookieinformation.mobileconsents
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
-import androidx.core.os.bundleOf
-import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.adapter.extension.logException
 import com.cookieinformation.mobileconsents.storage.ConsentWithType
 import kotlinx.coroutines.CoroutineDispatcher
@@ -236,8 +233,8 @@ public class MobileConsents constructor(
     return getMobileConsentSdk().getSavedConsents()
   }
 
-  public suspend fun haveConsentsBeenAccepted(): Boolean {
-    val consents = getMobileConsentSdk().getSavedConsents()
+  public suspend fun hasUserInteractedWithConsents(): Boolean {
+    val consents: Map<UUID, Boolean> = getMobileConsentSdk().getSavedConsents()
     return consents.containsValue(true)
   }
 
