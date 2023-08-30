@@ -27,7 +27,7 @@ jobs:
         issuetype: Bug
         summary: github.event.issue.title
         description: github.event.issue.body
-        fields: '{"customfield_10171": "test"}'
+        fields: '{"status": "Backlog"}'
         
     - name: Log created issue
       run: echo "Issue ${{ steps.create.outputs.issue }} was created"
