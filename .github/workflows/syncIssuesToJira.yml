@@ -27,7 +27,7 @@ jobs:
         issuetype: Bug
         summary: ${{ github.event.issue.title }}
         description: ${{ github.event.issue.body }}
-        fields: '{"components": [ {"name": "Android" }], "customfield_10013": "MAD-8", "customfield_10149"="${{github.event.issue.number}}" }'
+        fields: '{"components": [ {"name": "Android" }], "customfield_10013": "MAD-8", "customfield_10149":"${{github.event.issue.number}}" }'
     
     - name: Log created issue
       run: echo "Issue ${{ steps.create.outputs.issue }} was created"
