@@ -25,15 +25,16 @@ jobs:
       with:
         project: MAD
         issuetype: Bug
-        summary: {{ github.event.issue.title }}
-        description: {{ github.event.issue.body }}
+        summary: ${{ github.event.issue.title }}
+        description: ${{ github.event.issue.body }}
+
     - name: Setup
       uses: atlassian/gajira-cli@v3
       with:
         version: 1.0.27
         
     - name: Change component to Android
-      run: jira --issue={{steps.create.outputs.issue}} --components="Android" --epic="MAD-8"
+      run: jira --issue=${{steps.create.outputs.issue}} --components="Android" --epic="MAD-8"
       
     - name: Log created issue
       run: echo "Issue ${{ steps.create.outputs.issue }} was created"
