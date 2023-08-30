@@ -2,10 +2,8 @@ package com.cookieinformation.mobileconsents
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
-import androidx.core.os.bundleOf
-import com.cookieinformation.mobileconsents.ConsentItem.Type
+import com.cookieinformation.mobileconsents.adapter.extension.logException
 import com.cookieinformation.mobileconsents.storage.ConsentWithType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -15,6 +13,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.io.IOException
+import java.net.UnknownHostException
 import java.util.UUID
 import java.util.concurrent.CopyOnWriteArraySet
 
@@ -206,9 +205,14 @@ public class MobileConsents constructor(
         }
       } catch (e: IllegalStateException) {
         //avoid crash
+        logException(e)
       } catch (e: ActivityNotFoundException) {
         //avoid crash
-      } catch (e: Exception) {
+        logException(e)
+      } catch (e: UnknownHostException) {
+        //avoid crash
+        logException(e)
+      }catch (e: Exception) {
         onError(e)
       }
     }
@@ -229,8 +233,8 @@ public class MobileConsents constructor(
     return getMobileConsentSdk().getSavedConsents()
   }
 
-  public suspend fun haveConsentsBeenAccepted(): Boolean {
-    val consents = getMobileConsentSdk().getSavedConsents()
+  public suspend fun hasUserInteractedWithConsents(): Boolean {
+    val consents: Map<UUID, Boolean> = getMobileConsentSdk().getSavedConsents()
     return consents.containsValue(true)
   }
 

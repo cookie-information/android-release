@@ -272,10 +272,12 @@ internal abstract class ConsentSolutionPresenter<ViewType, ViewDataType, ViewInt
     scope.launch {
       try {
         @Suppress("UNCHECKED_CAST")
-        val currentViewState = viewState as ViewState.Fetched<ViewDataType>
-        viewState = ViewState.Sending(currentViewState.data, currentViewState.consentSolution)
-        consentSdk.postConsent(createConsent())
-        listener?.onConsentsChosen(currentViewState.consentSolution, consentSdk.getSavedConsents(), false)
+        val currentViewState = viewState as? ViewState.Fetched<ViewDataType>?
+        currentViewState?.let {
+          viewState = ViewState.Sending(it.data, it.consentSolution)
+          consentSdk.postConsent(createConsent())
+          listener?.onConsentsChosen(it.consentSolution, consentSdk.getSavedConsents(), false)
+        }
       } catch (_: IOException) {
         val currentViewState = viewState
         require(currentViewState is ViewState.Sending<*>)

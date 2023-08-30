@@ -18,15 +18,5 @@ internal class PrivacyActivity : AppCompatActivity() {
     }
   }
 
-  override fun onBackPressed() {
-    lifecycleScope.launchWhenCreated {
-      val consents = (applicationContext as? Consentable)?.sdk?.getConsents().orEmpty()
-      val consentsAccepted = (applicationContext as? Consentable)?.sdk?.haveConsentsBeenAccepted()
-      if (consents.isNotEmpty() && consentsAccepted == false) {
-        Toast.makeText(applicationContext, getString(R.string.mobileconsents_privacy_enforce_accept_consents), Toast.LENGTH_SHORT).show()
-      } else {
-        super.onBackPressed()
-      }
-    }
-  }
+  override fun onBackPressed() {}
 }
