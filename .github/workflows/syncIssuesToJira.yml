@@ -6,7 +6,7 @@ name: Jira sync jobs
 
 jobs:
   create-ticket-on-issue-opened:
-    name: Transition Issue
+    name: Create Issue
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -24,7 +24,7 @@ jobs:
       uses: atlassian/gajira-create@v3
       with:
         project: MAD
-        issuetype: Issue
+        issuetype: Bug
         summary: github.event.issue.title
         description: github.event.issue.body
         fields: '{"customfield_10171": "test"}'
