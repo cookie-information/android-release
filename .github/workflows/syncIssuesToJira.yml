@@ -27,7 +27,7 @@ jobs:
         issuetype: Bug
         summary: github.event.issue.title
         description: github.event.issue.body
-        fields: '{"status": "Backlog", "Components": "Android" }'
+        fields: '{"Components": "Android" }'
         
     - name: Log created issue
       run: echo "Issue ${{ steps.create.outputs.issue }} was created"
