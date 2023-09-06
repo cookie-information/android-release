@@ -35,7 +35,7 @@ class BodyStyle
 
 The above objects are required in order to initialize the sdk.
 MobileConsentSdk - is the object that handles all the consents info, and state. This is init using the builder pattern.
-    -it is also dependant on the MobileConsentCredentials and the MobileConsentCustomUI.
+    -it is also dependent on the MobileConsentCredentials and the MobileConsentCustomUI.
 
 MobileConsentCredentials - The object that contains all credentials required for fetching the relevant data for your company/application.
 
