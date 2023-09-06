@@ -1,5 +1,5 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.cookieinformation/mobileconsents.svg?label=latest%20release)](https://search.maven.org/artifact/com.cookieinformation/mobileconsents)
-### Using the SDK:
+### Mobile Consents SDK:
 ### Integration: 
 To add SDK to your app add dependency in build.gradle(.kts) file:
 
@@ -8,21 +8,29 @@ Kotlin DSL
 implementation("com.cookieinformation:mobileconsents:<latest_release>")
 ```
 #### Setup
-
-Join our partner program for free at [Cookie Information](https://cookieinformation.com/)
-You will then receive credentials, that will need to be provided for initializing the sdk.
------------------------------------------
 This library is provided to you, to integrate mobile consents in an easy way.
 Lets get started.
 
-#Here are the update for release: 0.2.6:
--Enable resetting consents, either all or by Type.
--Support multiple language, and enforce selecting at least one language. Please note, these languages must be 
-    synchronized with the consents dashboard.
--Consent List UI, has updated to a clearer separation of required and optional consents.
+```kotlin
 
+```
 
-#Here are the main objects you should be familiar with:
+#### How to implement:
+-Create a class that inherits form the Application class.
+-implement the Consentable interface and implement the methods in the
+```kotlin
+  class App : Application(), Consentable{
+    
+  }
+```
+
+```Java
+  class App extends Application implements Consentable{
+  
+}
+```
+
+#Here are some of the main objects you should be familiar with:
 ```kotlin
 class MobileConsentSdk
 class MobileConsentCredentials

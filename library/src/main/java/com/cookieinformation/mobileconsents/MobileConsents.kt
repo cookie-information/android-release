@@ -52,12 +52,6 @@ public class MobileConsents constructor(
     }
   }
 
-  public suspend fun initSDK() {
-    // For now the only thing we have to do here is to perform a migration from the version that introduced
-    // a problem consent types
-    mobileConsentSdk.init()
-  }
-
   /**
    * Returns associated instance of MobileConsentSdk.
    *
