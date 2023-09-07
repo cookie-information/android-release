@@ -21,7 +21,8 @@ This library is provided to you, to integrate mobile consents in an easy way. Le
 
 # Here are the update for release: 2.0.1:
 
--Cover the state when the app fetches the consents, when the request has not yet completed. -The SDK now holds a new
+-Cover the state when the app fetches the consents, when the request has not yet completed.
+-The SDK now holds a new
 method (initSDKWithCompletion) which should be called prior to and any handling with the sdk. 
 Please find added methods in sample implementations below. (marked with version 2.0.1)
 
