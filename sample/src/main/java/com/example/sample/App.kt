@@ -19,6 +19,13 @@ class App : Application(), Consentable {
 
   override val sdk: MobileConsents by lazy { MobileConsents(provideConsentSdk()) }
 
+  override fun onCreate() {
+    super.onCreate()
+    sdk.initSDKWithCompletion { success, exception ->
+
+    }
+  }
+
   override fun provideConsentSdk() = MobileConsentSdk.Builder(this)
     .setClientCredentials(provideCredentials())
     .setMobileConsentCustomUI(
