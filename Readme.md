@@ -21,8 +21,8 @@ This library is provided to you, to integrate mobile consents in an easy way. Le
 
 # Here are the update for release: 2.0.1:
 
--Catch exceptions and handle them, when the request to fetching the consents have not yet completed. -The SDK now holds a new
-method (initSDKWithCompletion) which should be called prior to and any handling with the sdk. 
+-Crash fixes.  -The SDK now holds a new
+method (initSDKWithCompletion/initSDK) which should be called prior to calling any sdk methods.  -intiSDK method will require some error catching, and if any of these happen sdk methods should not be called.  
 Please find added methods in sample implementations below. (marked with version 2.0.1)
 
 # Here are the main objects you should be familiar with:
