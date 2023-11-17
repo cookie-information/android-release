@@ -35,6 +35,15 @@ import kotlinx.coroutines.Dispatchers;
 
 public class MyApplication extends Application implements Consentable {
 
+    @Override public void onCreate() {
+        super.onCreate();
+        getSdk().initSDKWithCompletion(new Function2<Boolean, IOException, Unit>() {
+            @Override public Unit invoke(Boolean aBoolean, IOException e) {
+                return null;
+            }
+        });
+    }
+
     @Override public void initSDKWithCompletion(
         @NonNull Function2<? super Boolean, ? super IOException, Unit> onComplete
     ) {
