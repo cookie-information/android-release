@@ -50,10 +50,6 @@ public class MyApplication extends Application implements Consentable {
         getSdk().initSDKWithCompletion(onComplete);
     }
 
-    @Nullable @Override public Object initSDK(@NonNull Continuation<? super Unit> $completion) {
-        return getSdk().initSDK($completion);
-    }
-
     @NonNull
     @Override
     public MobileConsents getSdk() {
