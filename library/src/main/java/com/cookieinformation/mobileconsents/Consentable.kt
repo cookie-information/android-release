@@ -18,6 +18,9 @@ public interface Consentable {
   public fun initSDKWithCompletion(onComplete: (success: Boolean, exception: IOException?) -> Unit) {
     return sdk.initSDKWithCompletion(onComplete)
   }
+  public suspend fun initSDK() {
+    return sdk.initSDK()
+  }
 
   public suspend fun getSavedConsents(): Map<UUID, Boolean> {
     return sdk.getMobileConsentSdk().getSavedConsents()
