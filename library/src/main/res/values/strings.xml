@@ -12,4 +12,6 @@
   <string name="mobileconsents_required_privacy_consents_title">Required</string>
   <string name="mobileconsents_optional_privacy_consents_title">Optional</string>
   <string name="mobileconsents_optional_privacy_policy_label">Optional</string>
+  <string name="navigation_content_description">Navigate Back</string>
+  <string name="switch_btn_is_disabled">Switch Button is disabled</string>
 </resources>
