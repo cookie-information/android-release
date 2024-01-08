@@ -97,7 +97,12 @@ public class MobileConsentSdk internal constructor(
     val call = consentClient.getConsentSolution()
     val responseBody = call.enqueueSuspending()
     val adapter = ConsentSolutionResponseJsonAdapter(moshi)
-    adapter.parseFromResponseBody(responseBody).toDomain()
+    val solution = adapter.parseFromResponseBody(responseBody).toDomain()
+    val hasChanged = getLatestStoredConsentVersion() != solution.consentSolutionVersionId
+    if (hasChanged) {
+      resetAllConsentChoices()
+    }
+    solution
   }
 
   /**
