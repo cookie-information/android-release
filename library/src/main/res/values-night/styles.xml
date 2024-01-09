@@ -19,7 +19,7 @@
   <style name="MobileConsents_PrivacyLayout" />
 
   <style name="MobileConsents_PrivacyToolbar">
-    <item name="navigationIcon">@drawable/mobileconsents_ic_close</item>
+<!--    <item name="navigationIcon">@drawable/mobileconsents_ic_close</item>-->
     <!--    <item name="android:background">?colorPrimary</item>-->
     <item name="titleTextColor">@color/mobileconsents_color_text_strong</item>
   </style>

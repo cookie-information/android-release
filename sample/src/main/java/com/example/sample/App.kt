@@ -38,8 +38,8 @@ class App : Application(), Consentable {
         )
       )
     )
-//    .setCustomConsentView(CustomConsentView(applicationContext))
-    .setLanguages(listOf(Locale.FRANCE, Locale("da")))
+    .setCustomConsentView(CustomConsentView(applicationContext))
+    .setLanguages(listOf(Locale.FRANCE, Locale("FI")))
     .build()
 
   override fun provideCredentials(): MobileConsentCredentials {
