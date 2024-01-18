@@ -13,8 +13,6 @@
     style="@style/MobileConsents_PrivacyPreferencesItemText"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:focusable="true"
     app:layout_constraintBaseline_toBaselineOf="@id/mobileconsents_privacy_preferences_item_checkbox"
     app:layout_constraintEnd_toStartOf="@id/mobileconsents_privacy_preferences_item_checkbox"
     app:layout_constraintStart_toStartOf="parent"

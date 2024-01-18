@@ -1,6 +1,5 @@
 package com.cookieinformation.mobileconsents.networking.response
 
-import android.util.Log
 import com.cookieinformation.mobileconsents.ConsentItem
 import com.cookieinformation.mobileconsents.ConsentItem.Type.Info
 import com.cookieinformation.mobileconsents.ConsentItem.Type.Setting
@@ -26,7 +25,6 @@ internal data class ItemResponse(
 internal fun ItemResponse.toDomain(): ConsentItem {
   val shortText = mutableListOf<TextTranslation>()
   val longText = mutableListOf<TextTranslation>()
-  Log.d("TAG", "toDomain: storeConsentChoices: "+type.toDomainItemType().typeName)
   for (consentTranslation in translations) {
     shortText.add(TextTranslation(consentTranslation.language, consentTranslation.shortText))
     longText.add(TextTranslation(consentTranslation.language, consentTranslation.longText))

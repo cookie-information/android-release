@@ -66,10 +66,10 @@ internal class ReadMoreBottomSheet :
     }
 
     view.findViewById<Toolbar>(R.id.mobileconsents_privacy_toolbar).apply {
+      navigationContentDescription = getString(R.string.navigation_content_description)
       sdkColor?.let {
         setBackgroundColor(it)
       }
-
       setNavigationOnClickListener {
         dismiss()
       }

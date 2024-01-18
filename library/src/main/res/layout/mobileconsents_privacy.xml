@@ -8,72 +8,85 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <TextView
-    android:id="@+id/mobileconsents_privacy_info_title"
-    style="@style/MobileConsents_PrivacyTitle"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
-
-  <TextView
-    android:id="@+id/mobileconsents_privacy_info_short_description"
-    style="@style/MobileConsents_PrivacyShortDescription"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/mobileconsents_privacy_info_title" />
-
-  <LinearLayout
-    android:id="@+id/mobileconsents_privacy_info_read_more_container"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:padding="4dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/mobileconsents_privacy_info_short_description">
-
-    <TextView
-      android:id="@+id/mobileconsents_privacy_info_read_more"
-      style="@style/MobileConsents_PrivacyReadMore"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
-      android:includeFontPadding="false"
-      android:textSize="16sp"
-      tools:text="Abcsd" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-      android:id="@+id/mobileconsents_privacy_info_read_more_arrow"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
-      android:tint="?colorAccent"
-      app:srcCompat="@drawable/mobileconsents_ic_chevron_right" />
-
-
-  </LinearLayout>
-
-  <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/mobileconsents_privacy_list"
-    style="@style/MobileConsents_PrivacyList"
+  <ScrollView
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:scrollbars="vertical"
-    android:layout_marginTop="12dp"
-    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-    app:layout_constrainedHeight="true"
-    app:layout_constraintBottom_toTopOf="@id/mobileconsents_privacy_footer"
-    app:layout_constraintTop_toBottomOf="@id/mobileconsents_privacy_info_read_more_container" />
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toTopOf="@+id/separator">
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
 
+      <TextView
+        android:id="@+id/mobileconsents_privacy_info_title"
+        style="@style/MobileConsents_PrivacyTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+      <TextView
+        android:id="@+id/mobileconsents_privacy_info_short_description"
+        style="@style/MobileConsents_PrivacyShortDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mobileconsents_privacy_info_title" />
+
+      <LinearLayout
+        android:id="@+id/mobileconsents_privacy_info_read_more_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mobileconsents_privacy_info_short_description">
+
+        <TextView
+          android:id="@+id/mobileconsents_privacy_info_read_more"
+          style="@style/MobileConsents_PrivacyReadMore"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:includeFontPadding="false"
+          android:textSize="16sp"
+          tools:text="Abcsd" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/mobileconsents_privacy_info_read_more_arrow"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:tint="?colorAccent"
+          app:srcCompat="@drawable/mobileconsents_ic_chevron_right" />
+
+
+      </LinearLayout>
+
+      <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mobileconsents_privacy_list"
+        style="@style/MobileConsents_PrivacyList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:layout_marginTop="12dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toTopOf="@id/separator"
+        app:layout_constraintTop_toBottomOf="@id/mobileconsents_privacy_info_read_more_container" />
+
+
+    </LinearLayout>
+  </ScrollView>
   <View
+    android:id="@+id/separator"
     android:layout_width="match_parent"
     android:layout_height="1dp"
     android:background="@color/mobileconsents_color_divider"
-    app:layout_constraintBottom_toTopOf="@id/mobileconsents_privacy_footer"
-    app:layout_constraintTop_toBottomOf="@id/mobileconsents_privacy_list" />
+    app:layout_constraintBottom_toTopOf="@id/mobileconsents_privacy_footer"/>
 
   <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/mobileconsents_privacy_footer"
