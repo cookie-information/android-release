@@ -9,10 +9,8 @@
 
   <androidx.appcompat.widget.Toolbar
     android:id="@+id/mobileconsents_privacy_toolbar"
-    app:titleTextColor="@color/mobileconsents_color_text_strong"
-    app:navigationIcon="@drawable/mobileconsents_ic_close"
+    style="@style/MobileConsents_PrivacyToolbar"
     android:layout_width="match_parent"
-    android:labelFor="@id/mobileconsents_privacy_toolbar"
     android:layout_height="?attr/actionBarSize"
     app:layout_constraintTop_toTopOf="parent" />
 

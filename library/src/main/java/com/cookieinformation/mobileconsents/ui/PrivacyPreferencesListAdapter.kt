@@ -133,10 +133,7 @@ public class PreferenceItemViewHolder(
     consentSwitch.apply {
       isChecked = data.accepted || data.required
       if (data.required) {
-        consentSwitch.contentDescription = itemView.context.getString(R.string.switch_btn_is_disabled)
         onConsentItemChanged(data.id, isChecked)
-      } else{
-        consentSwitch.contentDescription = null//itemView.context.getString(R.string.switch_btn_is_disabled)
       }
       isClickable = !data.required
       setOnCheckedChangeListener { buttonView, isChecked ->
