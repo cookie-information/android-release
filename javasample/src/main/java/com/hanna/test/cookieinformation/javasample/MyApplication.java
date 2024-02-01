@@ -96,7 +96,7 @@ public class MyApplication extends Application implements Consentable {
     @Override
     public MobileConsentSdk provideConsentSdk() {
         List<Locale> localList = new ArrayList();
-        localList.add(new Locale("da"));
+        localList.add(new Locale("EN"));
         localList.add(Locale.FRENCH);
         return MobileConsentSdk.Builder(this)
             .setClientCredentials(provideCredentials())
