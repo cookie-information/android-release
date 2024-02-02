@@ -75,9 +75,6 @@ public class PrivacyFragmentView @JvmOverloads constructor(
       customTypeface?.subtitleStyle?.let {
         typeface = it.typeface
       }
-      setOnClickListener {
-        onReadMoreClicked()
-      }
     }
     findViewById<ImageView>(R.id.mobileconsents_privacy_info_read_more_arrow).apply {
       parsedColorToInt?.let {
