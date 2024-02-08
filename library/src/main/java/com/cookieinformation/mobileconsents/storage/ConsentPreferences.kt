@@ -43,20 +43,18 @@ internal class ConsentPreferences(private val applicationContext: Context) {
   }
 
   fun getAllConsentChoicesWithType(): Map<UUID, ConsentWithType> {
-    return usersConsentsPreferences().all.mapKeys {
-      UUID.fromString(it.key)
-    }.mapValues {
-      val typeValue =
-        consentsTypePreferences().all.filter { item -> UUID.fromString(item.key) == it.key }.values.first()
-      val type = ConsentItem.Type.findTypeByValue(typeValue as String)
-      ConsentWithType(type, it.value as? Boolean ?: false)
-    }
+    return consentsTypePreferences().all.toList().associate {
+      val consented: Boolean = usersConsentsPreferences().all.toList().firstOrNull { const-> const.first == it.first }?.second as? Boolean ?: false
+      UUID.fromString(it.first) to
+          ConsentWithType(Type.findTypeByValue(it.second as String), consented) }
   }
 
   fun resetAllConsentChoices() {
-    getAllConsentChoicesWithType().forEach {
-      usersConsentsPreferences().edit().putBoolean(it.key.toString(), false).apply()
+    val editor =  usersConsentsPreferences().edit()
+    usersConsentsPreferences().all.toList().forEach {
+      editor.putBoolean(it.first, false)
     }
+    editor.commit()
   }
 
   fun resetConsentChoice(consentType: UUID) {
