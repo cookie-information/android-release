@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
@@ -54,6 +55,7 @@ internal class ReadMoreBottomSheet :
       style?.bodyStyle?.typeface?.let {
         typeface = it
       }
+      movementMethod = LinkMovementMethod.getInstance()
       text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         Html.fromHtml(info, Html.FROM_HTML_MODE_COMPACT)
       } else {

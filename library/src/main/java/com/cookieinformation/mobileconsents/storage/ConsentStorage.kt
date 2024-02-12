@@ -64,6 +64,7 @@ internal class ConsentStorage(
   suspend fun storeConsentChoices(purposes: List<ProcessingPurpose>) {
     val writtenValues = writeValues(purposes.associate { it.consentItemId.toString() to it.consentGiven.toString() })
     saveConsentsMutableFlow.emit(writtenValues.toConsents())
+    consentPreferences.consentsTypePreferences().edit().clear().commit()
     writtenValues.toConsents().toMap().forEach {
       consentPreferences.usersConsentsPreferences().edit().putBoolean(it.key.toString(), it.value).commit()
       consentPreferences.consentsTypePreferences().edit()
@@ -127,17 +128,17 @@ internal class ConsentStorage(
   /**
    * Reset all consents to default value.
    */
-  public fun resetAllConsentChoices(choice: UUID) = consentPreferences.resetConsentChoice(choice)
+  fun resetAllConsentChoices(choice: UUID) = consentPreferences.resetConsentChoice(choice)
 
   /**
    * Reset all consents to default value.
    */
-  public fun resetAllConsentChoices() = consentPreferences.resetAllConsentChoices()
+  fun resetAllConsentChoices() = consentPreferences.resetAllConsentChoices()
 
   /**
    * Get all saved consent types
    */
-  public fun getSavedConsentTypes(): Map<UUID, Type> = consentPreferences.consentsTypePreferences().all.mapKeys {
+  fun getSavedConsentTypes(): Map<UUID, Type> = consentPreferences.consentsTypePreferences().all.mapKeys {
     UUID.fromString(it.key)
   }.mapValues {
     Type.findTypeByValue(it.value as String)
@@ -147,13 +148,12 @@ internal class ConsentStorage(
    * Save consent types
    */
   fun saveConsentTypes(types: Map<UUID, Type>) {
-    val editor = consentPreferences.consentsTypePreferences().edit()
-    types.forEach {
-      editor.putString(it.key.toString(), it.value.typeName)
-    }
-    editor.commit()
+    consentPreferences.consentsTypePreferences().edit().apply {
+      types.forEach {
+        putString(it.key.toString(), it.value.typeName)
+      }
+    }.commit()
   }
-
 
   /**
    * Maps key and value read from file to consents map

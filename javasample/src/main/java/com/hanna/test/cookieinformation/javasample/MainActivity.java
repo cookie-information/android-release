@@ -6,15 +6,16 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import com.cookieinformation.mobileconsents.CallListener;
 import com.cookieinformation.mobileconsents.GetConsents;
 import com.cookieinformation.mobileconsents.storage.ConsentWithType;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
+import kotlin.coroutines.EmptyCoroutineContext;
 import kotlin.jvm.functions.Function1;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         .resetAllConsentChoices(
             new Continuation<Unit>() {
               @NonNull @Override public CoroutineContext getContext() {
-                return null;
+                return EmptyCoroutineContext.INSTANCE;
               }
 
               @Override public void resumeWith(@NonNull Object o) {
@@ -53,19 +54,19 @@ public class MainActivity extends AppCompatActivity {
               }
             }));
 
-    findViewById(R.id.reset_all_consents).setOnClickListener(v ->
-        ((MyApplication) getApplication()).getSdk().resetConsentChoice(
-            UUID.randomUUID(),
-            new Continuation<Unit>() {
-              @NonNull @Override public CoroutineContext getContext() {
-                return null;
+    findViewById(R.id.get_with_type).setOnClickListener(v -> ((MyApplication) getApplication()).getSdk()
+        .getSavedConsentsWithType(
+            new CallListener<Map<UUID, ConsentWithType>>() {
+              @Override public void onSuccess(Map<UUID, ConsentWithType> result) {
+                Object[] array = result.values().toArray();
+                for (int i = 0; i < array.length; i++) {
+                  Log.d("TAG", "onSuccess: " + array[i]);
+                }
               }
 
-              @Override public void resumeWith(@NonNull Object o) {
+              @Override public void onFailure(@NonNull IOException error) {
 
               }
-            }
-        )
-    );
+            }));
   }
 }

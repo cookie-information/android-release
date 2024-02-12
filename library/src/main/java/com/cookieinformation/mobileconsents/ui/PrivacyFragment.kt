@@ -1,13 +1,16 @@
 package com.cookieinformation.mobileconsents.ui
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import androidx.annotation.CallSuper
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.ConsentSolution
 import com.cookieinformation.mobileconsents.Consentable
 import com.cookieinformation.mobileconsents.R
@@ -43,7 +46,11 @@ internal class PrivacyFragment : BasePrivacyFragment() {
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     val app = requireContext().applicationContext as Consentable
     val mobileConsentCustomView = app.sdk.getMobileConsentSdk().getConsentsView()
-    val view =  mobileConsentCustomView ?: PrivacyFragmentView(requireContext(), sdkColor = getSdkSetColor(), sdkTextStyle = getCustomSetFont()).also {
+    val view = mobileConsentCustomView ?: PrivacyFragmentView(
+      requireContext(),
+      sdkColor = getSdkSetColor(),
+      sdkTextStyle = getCustomSetFont()
+    ).also {
       it.onReadMore = ::onReadMore
     }
     view.setActivityContext(requireActivity())
@@ -87,7 +94,13 @@ internal class PrivacyFragment : BasePrivacyFragment() {
     }
 
   override fun onReadMore(info: String, poweredBy: String) {
-    ReadMoreBottomSheet.newInstance(info, poweredBy, getSdkSetColor()).show(parentFragmentManager, "tag")
+    val isUrl = URLUtil.isValidUrl(info)
+    if (isUrl) {
+      val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(info))
+      ContextCompat.startActivity(requireContext(), browserIntent, null)
+    } else {
+      ReadMoreBottomSheet.newInstance(info, poweredBy, getSdkSetColor()).show(parentFragmentManager, "tag")
+    }
   }
 
   override fun onConsentsChosen(consentSolution: ConsentSolution, consents: Map<UUID, Boolean>, external: Boolean) {

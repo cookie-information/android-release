@@ -35,18 +35,14 @@ class MainActivity : AppCompatActivity() {
     findViewById<Button>(R.id.reset_all_consents).setOnClickListener {
       lifecycleScope.launchWhenCreated {
         (applicationContext as App).sdk.resetAllConsentChoices()
-        (applicationContext as App).sdk.displayConsents(listener)
       }
     }
 
-    findViewById<Button>(R.id.reset_specific_consent).setOnClickListener {
+    findViewById<Button>(R.id.get_with_type).setOnClickListener {
       lifecycleScope.launchWhenCreated {
-        val storedConsents = (applicationContext as App).sdk.getMobileConsentSdk().getSavedConsents()
+        val storedConsents = (applicationContext as App).sdk.getMobileConsentSdk().getSavedConsentsWithType()
         storedConsents.entries.forEachIndexed { index, entry ->
-          if (index == 1) {
-            (applicationContext as App).sdk.resetConsentChoice(entry.key)
-            (applicationContext as App).sdk.displayConsents(listener)
-          }
+          Log.d("TAG", "onSuccess: " + entry.key +"  "+entry.value)
         }
       }
     }
