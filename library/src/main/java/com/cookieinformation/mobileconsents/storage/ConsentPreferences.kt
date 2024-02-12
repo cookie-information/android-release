@@ -2,7 +2,6 @@ package com.cookieinformation.mobileconsents.storage
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.cookieinformation.mobileconsents.ConsentItem
 import com.cookieinformation.mobileconsents.ConsentItem.Type
 import java.util.UUID
 

@@ -64,6 +64,7 @@ internal class ConsentStorage(
   suspend fun storeConsentChoices(purposes: List<ProcessingPurpose>) {
     val writtenValues = writeValues(purposes.associate { it.consentItemId.toString() to it.consentGiven.toString() })
     saveConsentsMutableFlow.emit(writtenValues.toConsents())
+    consentPreferences.consentsTypePreferences().edit().clear().commit()
     writtenValues.toConsents().toMap().forEach {
       consentPreferences.usersConsentsPreferences().edit().putBoolean(it.key.toString(), it.value).commit()
       consentPreferences.consentsTypePreferences().edit()
