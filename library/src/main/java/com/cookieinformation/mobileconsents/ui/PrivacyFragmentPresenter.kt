@@ -165,6 +165,9 @@ internal class PrivacyFragmentPresenter(
       acceptSelectedButtonEnabled = areAllRequiredAccepted(preferencesItem.items),
       acceptAllButtonText = uiTexts.acceptAllButton.translate().text,
       poweredByLabelText = "<a href=\"$cookieInformationUrl\">${poweredByLabelTranslation.text}</a>",
+      requiredTableSectionHeader = uiTexts.requiredTableSectionHeader.translate().text,
+      optionalTableSectionHeader = uiTexts.optionalTableSectionHeader.translate().text,
+      readMoreScreenHeader = uiTexts.readMoreScreenHeader.translate().text,
       items = items
     )
   }

@@ -21,6 +21,9 @@ internal class PrivacyFragmentListAdapter(
 ) :
   ListAdapter<PrivacyFragmentPreferencesItem, PrivacyFragmentListAdapter.ItemViewHolder>(AdapterConsentItemDiffCallback()) {
 
+  private var requiredHeader: String? = null
+  private var optionalHeader: String? = null
+
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
     PreferencesItemViewHolder(
       LayoutInflater.from(parent.context)
@@ -28,13 +31,21 @@ internal class PrivacyFragmentListAdapter(
       onConsentItemChoiceToggle, sdkColor, sdkTextStyle
     )
 
-  override fun onBindViewHolder(holder: ItemViewHolder, position: Int) = holder.bind(getItem(position))
+  override fun onBindViewHolder(holder: ItemViewHolder, position: Int) =
+    holder.bind(getItem(position), requiredHeader, optionalHeader)
 
-  abstract class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    abstract fun bind(item: PrivacyFragmentPreferencesItem)
+  fun submitList(list: List<PrivacyFragmentPreferencesItem>?, requiredTitle: String?, optionalTitle: String?) {
+    this.requiredHeader = requiredTitle
+    this.optionalHeader = optionalTitle
+    super.submitList(list)
   }
 
-  class PreferencesItemViewHolder(itemView: View, onConsentItemChoiceToggle: (UUID, Boolean) -> Unit,
+  abstract class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    abstract fun bind(item: PrivacyFragmentPreferencesItem, requiredTitle: String?, optionalTitle: String?)
+  }
+
+  inner class PreferencesItemViewHolder(
+    itemView: View, onConsentItemChoiceToggle: (UUID, Boolean) -> Unit,
     sdkColor: Int?,
     sdkTextStyle: SdkTextStyle?,
   ) :
@@ -50,18 +61,24 @@ internal class PrivacyFragmentListAdapter(
       }
     }
 
-    override fun bind(item: PrivacyFragmentPreferencesItem) {
-      val groups = item.items.filter { it.type!= Type.Info }.groupBy { it.required }
+    override fun bind(item: PrivacyFragmentPreferencesItem, requiredTitle: String?, optionalTitle: String?) {
+      val groups = item.items.filter { it.type != Type.Info }.groupBy { it.required }
       val finalList = mutableListOf<ItemizedPreference>().apply {
         groups[true]?.let {
           add(
             0,
-            PrivacyPreferencesItemHeader(itemView.context.getString(R.string.mobileconsents_required_privacy_consents_title))
+            PrivacyPreferencesItemHeader(
+              if (requiredTitle.orEmpty().isNotEmpty()) requiredTitle!! else itemView.context.getString(R.string.mobileconsents_required_privacy_consents_title)
+            )
           )
           addAll(it)
         }
         groups[false]?.let {
-          add(PrivacyPreferencesItemHeader(itemView.context.getString(R.string.mobileconsents_optional_privacy_consents_title)))
+          add(
+            PrivacyPreferencesItemHeader(
+              if(optionalTitle.orEmpty().isNotEmpty()) optionalTitle!! else itemView.context.getString(R.string.mobileconsents_optional_privacy_consents_title)
+            )
+          )
           addAll(it)
         }
       }

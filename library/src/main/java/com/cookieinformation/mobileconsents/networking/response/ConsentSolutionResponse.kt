@@ -30,6 +30,9 @@ internal fun ConsentSolutionResponse.toDomainUiTexts() =
     privacyCenterTitle = templateTexts.privacyCenterTitle.map(TextTranslationResponse::toDomain),
     poweredByLabel = templateTexts.poweredByCoiLabel.map(TextTranslationResponse::toDomain),
     consentPreferencesLabel = templateTexts.consentPreferencesLabel.map(TextTranslationResponse::toDomain),
+    requiredTableSectionHeader = templateTexts.requiredTableSectionHeader?.map(TextTranslationResponse::toDomain).orEmpty(),
+    optionalTableSectionHeader = templateTexts.optionalTableSectionHeader?.map(TextTranslationResponse::toDomain).orEmpty(),
+    readMoreScreenHeader = templateTexts.readMoreScreenHeader?.map(TextTranslationResponse::toDomain).orEmpty(),
   )
 
 internal fun ConsentSolutionResponse.toDomain(): ConsentSolution {

@@ -28,5 +28,9 @@ public data class UiTexts(
   val privacyCenterTitle: List<TextTranslation>,
 
   val poweredByLabel: List<TextTranslation>,
-  val consentPreferencesLabel: List<TextTranslation>
+  val consentPreferencesLabel: List<TextTranslation>,
+
+  val requiredTableSectionHeader: List<TextTranslation>,
+  val optionalTableSectionHeader: List<TextTranslation>,
+  val readMoreScreenHeader: List<TextTranslation>,
 )

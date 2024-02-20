@@ -1,6 +1,5 @@
 package com.cookieinformation.mobileconsents.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PorterDuff
 import android.util.AttributeSet
@@ -146,7 +145,7 @@ public class PrivacyFragmentView @JvmOverloads constructor(
       setTextFromHtml(data.poweredByLabelText, boldLinks = false, underline = true)
     }
 
-    consentListAdapter.submitList(data.items)
+    consentListAdapter.submitList(data.items, data.requiredTableSectionHeader, data.optionalTableSectionHeader)
     showContentViewData()
   }
 

@@ -13,5 +13,8 @@ internal data class TemplateTextsResponse(
   @Json(name = "privacyPreferencesTabLabel") val privacyPreferencesTabLabel: List<TextTranslationResponse>,
   @Json(name = "privacyCenterButton") val privacyCenterButton: List<TextTranslationResponse>,
   @Json(name = "poweredByCoiLabel") val poweredByCoiLabel: List<TextTranslationResponse>,
-  @Json(name = "consentPreferencesLabel") val consentPreferencesLabel: List<TextTranslationResponse>
+  @Json(name = "consentPreferencesLabel") val consentPreferencesLabel: List<TextTranslationResponse>,
+  @Json(name = "requiredTableSectionHeader") val requiredTableSectionHeader: List<TextTranslationResponse>?,
+  @Json(name = "optionalTableSectionHeader") val optionalTableSectionHeader: List<TextTranslationResponse>?,
+  @Json(name = "readMoreScreenHeader") val readMoreScreenHeader: List<TextTranslationResponse>?
 )
