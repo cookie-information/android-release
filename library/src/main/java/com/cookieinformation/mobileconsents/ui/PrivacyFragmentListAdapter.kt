@@ -21,8 +21,8 @@ internal class PrivacyFragmentListAdapter(
 ) :
   ListAdapter<PrivacyFragmentPreferencesItem, PrivacyFragmentListAdapter.ItemViewHolder>(AdapterConsentItemDiffCallback()) {
 
-  private var requiredHeader: String? = null
-  private var optionalHeader: String? = null
+  private var requiredHeader: String = ""
+  private var optionalHeader: String = ""
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
     PreferencesItemViewHolder(
@@ -34,14 +34,14 @@ internal class PrivacyFragmentListAdapter(
   override fun onBindViewHolder(holder: ItemViewHolder, position: Int) =
     holder.bind(getItem(position), requiredHeader, optionalHeader)
 
-  fun submitList(list: List<PrivacyFragmentPreferencesItem>?, requiredTitle: String?, optionalTitle: String?) {
+  fun submitList(list: List<PrivacyFragmentPreferencesItem>, requiredTitle: String, optionalTitle: String) {
     this.requiredHeader = requiredTitle
     this.optionalHeader = optionalTitle
     super.submitList(list)
   }
 
   abstract class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    abstract fun bind(item: PrivacyFragmentPreferencesItem, requiredTitle: String?, optionalTitle: String?)
+    abstract fun bind(item: PrivacyFragmentPreferencesItem, requiredTitle: String, optionalTitle: String)
   }
 
   inner class PreferencesItemViewHolder(
@@ -61,14 +61,14 @@ internal class PrivacyFragmentListAdapter(
       }
     }
 
-    override fun bind(item: PrivacyFragmentPreferencesItem, requiredTitle: String?, optionalTitle: String?) {
+    override fun bind(item: PrivacyFragmentPreferencesItem, requiredTitle: String, optionalTitle: String) {
       val groups = item.items.filter { it.type != Type.Info }.groupBy { it.required }
       val finalList = mutableListOf<ItemizedPreference>().apply {
         groups[true]?.let {
           add(
             0,
             PrivacyPreferencesItemHeader(
-              if (requiredTitle.orEmpty().isNotEmpty()) requiredTitle!! else itemView.context.getString(R.string.mobileconsents_required_privacy_consents_title)
+              requiredTitle.ifEmpty { itemView.context.getString(R.string.mobileconsents_required_privacy_consents_title) }
             )
           )
           addAll(it)
@@ -76,7 +76,7 @@ internal class PrivacyFragmentListAdapter(
         groups[false]?.let {
           add(
             PrivacyPreferencesItemHeader(
-              if(optionalTitle.orEmpty().isNotEmpty()) optionalTitle!! else itemView.context.getString(R.string.mobileconsents_optional_privacy_consents_title)
+              optionalTitle.ifEmpty { itemView.context.getString(R.string.mobileconsents_optional_privacy_consents_title) }
             )
           )
           addAll(it)
