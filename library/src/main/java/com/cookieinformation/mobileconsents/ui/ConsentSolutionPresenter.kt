@@ -1,11 +1,9 @@
 package com.cookieinformation.mobileconsents.ui
 
 import android.content.Context
-import android.util.Log
 import androidx.annotation.MainThread
 import com.cookieinformation.mobileconsents.Consent
 import com.cookieinformation.mobileconsents.ConsentItem
-import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.ConsentSolution
 import com.cookieinformation.mobileconsents.MobileConsentSdk
 import com.cookieinformation.mobileconsents.ProcessingPurpose

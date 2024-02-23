@@ -1,6 +1,5 @@
 package com.cookieinformation.mobileconsents.ui
 
-import android.util.Log
 import com.cookieinformation.mobileconsents.ConsentItem.Type.Info
 import com.cookieinformation.mobileconsents.ConsentSolution
 import com.cookieinformation.mobileconsents.UiTexts

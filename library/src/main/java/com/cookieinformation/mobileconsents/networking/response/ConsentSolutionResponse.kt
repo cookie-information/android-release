@@ -1,6 +1,5 @@
 package com.cookieinformation.mobileconsents.networking.response
 
-import android.util.Log
 import com.cookieinformation.mobileconsents.ConsentSolution
 import com.cookieinformation.mobileconsents.UiTexts
 import com.squareup.moshi.Json
