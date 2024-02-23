@@ -67,17 +67,13 @@ internal class PrivacyFragmentListAdapter(
         groups[true]?.let {
           add(
             0,
-            PrivacyPreferencesItemHeader(
-              requiredTitle.ifEmpty { itemView.context.getString(R.string.mobileconsents_required_privacy_consents_title) }
-            )
+            PrivacyPreferencesItemHeader(requiredTitle)
           )
           addAll(it)
         }
         groups[false]?.let {
           add(
-            PrivacyPreferencesItemHeader(
-              optionalTitle.ifEmpty { itemView.context.getString(R.string.mobileconsents_optional_privacy_consents_title) }
-            )
+            PrivacyPreferencesItemHeader(optionalTitle)
           )
           addAll(it)
         }

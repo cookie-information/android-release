@@ -16,6 +16,7 @@ import com.cookieinformation.mobileconsents.R
 import com.cookieinformation.mobileconsents.models.SdkTextStyle
 import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import com.cookieinformation.mobileconsents.util.setTextFromHtml
+import java.util.Locale
 
 /**
  * The Privacy view implementation. The view is used in [BasePrivacyFragment] and should not be used directly

@@ -16,6 +16,7 @@ import com.cookieinformation.mobileconsents.storage.Preferences
 import com.cookieinformation.mobileconsents.system.getApplicationProperties
 import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import com.cookieinformation.mobileconsents.ui.DefaultLocaleProvider
+import com.cookieinformation.mobileconsents.ui.LabelText
 import com.cookieinformation.mobileconsents.ui.LocaleProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -41,6 +42,7 @@ internal class MobileConsentSdkBuilder constructor(
   private var clientSecret: String? = null
   private var customColor: MobileConsentCustomUI? = null
   private var sdkLocale: LocaleProvider? = null
+  private var localizationOverride: Map<Locale, LabelText>? = null
   private var customConsentView: BaseConsentsView? = null
 
   override fun setCustomConsentView(view: BaseConsentsView?): CallFactory {
@@ -66,6 +68,11 @@ internal class MobileConsentSdkBuilder constructor(
         return locales
       }
     }
+    return this
+  }
+
+  override fun setLocalizationOverride(localizationOverride: Map<Locale, LabelText>?): CallFactory {
+    this.localizationOverride = localizationOverride
     return this
   }
 
@@ -123,6 +130,7 @@ internal class MobileConsentSdkBuilder constructor(
       saveConsentsFlow = consentStorage.saveConsentsFlow,
       uiComponentColor = customColor,
       uiLanguageCode = sdkLocale ?: DefaultLocaleProvider(context.applicationContext),
+      localizationOverride = localizationOverride,
       consentsView =  customConsentView
     )
   }
