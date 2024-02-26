@@ -132,6 +132,7 @@ public class PreferenceItemViewHolder(
     }
     consentSwitch.apply {
       isChecked = data.accepted || data.required
+      contentDescription = data.text
       if (data.required) {
         onConsentItemChanged(data.id, isChecked)
       }

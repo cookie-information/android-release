@@ -1,11 +1,9 @@
 package com.cookieinformation.mobileconsents.ui
 
 import android.content.Context
-import android.util.Log
 import androidx.annotation.MainThread
 import com.cookieinformation.mobileconsents.Consent
 import com.cookieinformation.mobileconsents.ConsentItem
-import com.cookieinformation.mobileconsents.ConsentItem.Type
 import com.cookieinformation.mobileconsents.ConsentSolution
 import com.cookieinformation.mobileconsents.MobileConsentSdk
 import com.cookieinformation.mobileconsents.ProcessingPurpose
@@ -69,7 +67,7 @@ internal abstract class ConsentSolutionPresenter<ViewType, ViewDataType, ViewInt
   private lateinit var consentSdk: MobileConsentSdk
   private lateinit var localeProvider: LocaleProvider
   private lateinit var preferences: Preferences
-  private val locales: List<Locale>
+  protected val locales: List<Locale>
     get() = localeProvider.getLocales()
 
   protected var listener: ConsentSolutionListener? = null
@@ -258,7 +256,7 @@ internal abstract class ConsentSolutionPresenter<ViewType, ViewDataType, ViewInt
       try {
         viewState = ViewState.Fetching
         val consentSolution = consentSdk.fetchConsentSolution()
-        viewState = ViewState.Fetched(createViewData(consentSolution, consentSdk.getSavedConsents()), consentSolution)
+        viewState = ViewState.Fetched(createViewData(consentSolution, consentSdk.getSavedConsents(), consentSdk.localizationOverride()), consentSolution)
       } catch (_: IOException) {
         viewState = ViewState.FetchError
       }
@@ -348,7 +346,8 @@ internal abstract class ConsentSolutionPresenter<ViewType, ViewDataType, ViewInt
 
   protected abstract fun createViewData(
     consentSolution: ConsentSolution,
-    savedConsents: Map<UUID, Boolean>
+    savedConsents: Map<UUID, Boolean>,
+    localizationOverride: Map<Locale, LabelText>?,
   ): ViewDataType
 
   protected abstract fun getGivenConsents(viewData: ViewDataType): GivenConsent

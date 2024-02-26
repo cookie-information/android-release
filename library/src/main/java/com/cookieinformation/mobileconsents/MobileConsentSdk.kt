@@ -16,12 +16,14 @@ import com.cookieinformation.mobileconsents.networking.response.toDomain
 import com.cookieinformation.mobileconsents.storage.ConsentStorage
 import com.cookieinformation.mobileconsents.storage.ConsentWithType
 import com.cookieinformation.mobileconsents.system.ApplicationProperties
+import com.cookieinformation.mobileconsents.ui.LabelText
 import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import com.cookieinformation.mobileconsents.ui.LocaleProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.util.Locale
 import java.util.UUID
 
 /**
@@ -43,6 +45,7 @@ public class MobileConsentSdk internal constructor(
   public val saveConsentsFlow: SharedFlow<Map<UUID, Boolean>>,
   private val uiComponentColor: MobileConsentCustomUI?,
   private val uiLanguageCode: LocaleProvider,
+  private var localizationOverride: Map<Locale, LabelText>? = null,
   private val consentsView: BaseConsentsView?
 ) {
 
@@ -51,6 +54,7 @@ public class MobileConsentSdk internal constructor(
   public fun getConsentSolutionId(): String = consentClient.consentSolutionId.toString()
   public fun getUiComponentColor(): MobileConsentCustomUI? = uiComponentColor
   public fun uiLanguageProvider(): LocaleProvider = uiLanguageCode
+  public fun localizationOverride(): Map<Locale, LabelText>? = localizationOverride
   public fun getConsentsView(): BaseConsentsView? = consentsView
 
   public suspend fun init() {

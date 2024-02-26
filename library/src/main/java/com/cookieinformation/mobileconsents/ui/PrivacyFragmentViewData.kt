@@ -12,5 +12,8 @@ public data class PrivacyFragmentViewData(
   val acceptSelectedButtonEnabled: Boolean,
   val acceptAllButtonText: String,
   val poweredByLabelText: String,
+  val requiredTableSectionHeader: String,
+  val optionalTableSectionHeader: String,
+  val readMoreScreenHeader: String,
   val items: List<PrivacyFragmentPreferencesItem>,
 )

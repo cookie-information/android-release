@@ -1,7 +1,6 @@
 package com.cookieinformation.mobileconsents.ui
 
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.cookieinformation.mobileconsents.ConsentSolution
 import com.cookieinformation.mobileconsents.Consentable
-import com.cookieinformation.mobileconsents.R
 import com.cookieinformation.mobileconsents.models.SdkTextStyle
 import com.cookieinformation.mobileconsents.ui.ConsentSolutionViewModel.Event
 import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
@@ -68,11 +66,6 @@ internal class PrivacyFragment : BasePrivacyFragment() {
       .onEach(::handleEvent)
       .launchIn(viewLifecycleOwner.lifecycleScope)
     viewModel.attachView(view as BaseConsentsView)
-    val isTablet = resources.getBoolean(R.bool.isTablet)
-    if (!isTablet) {
-      // Force the fragments in portrait mode if app is running on a smartphone, since there is only one layout
-      activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-    }
   }
 
   /**
@@ -80,8 +73,6 @@ internal class PrivacyFragment : BasePrivacyFragment() {
    */
   @CallSuper
   override fun onDestroyView() {
-    // Set the orientation as unspecified no matter what, then fragment is destroyed
-    activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     viewModel.detachView()
     super.onDestroyView()
   }

@@ -7,6 +7,7 @@ import com.cookieinformation.mobileconsents.ui.base.BaseConsentsView
 import com.cookieinformation.mobileconsents.ui.base.IntentListener
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import java.util.Locale
 import java.util.UUID
 
 /**
@@ -26,11 +27,12 @@ internal class PrivacyFragmentPresenter(
 
   override fun createViewData(
     consentSolution: ConsentSolution,
-    savedConsents: Map<UUID, Boolean>
+    savedConsents: Map<UUID, Boolean>,
+    localizationOverride: Map<Locale, LabelText>?
   ): PrivacyFragmentViewData {
     preferencesItem = createPreferencesItem(consentSolution, savedConsents)
     infoItem = createInfoItem(consentSolution)
-    return createPrivacyFragmentViewData(consentSolution.uiTexts)
+    return createPrivacyFragmentViewData(localizationOverride, consentSolution.uiTexts)
   }
 
   override fun getGivenConsents(viewData: PrivacyFragmentViewData): GivenConsent =
@@ -150,21 +152,32 @@ internal class PrivacyFragmentPresenter(
   }
 
   private fun createPrivacyFragmentViewData(
+    localizationOverride: Map<Locale, LabelText>?,
     uiTexts: UiTexts
   ): PrivacyFragmentViewData {
     val items = mutableListOf<PrivacyFragmentPreferencesItem>()
     items.add(preferencesItem)
 
+    val code = localizationOverride?.keys?.firstOrNull { it in locales }
+    val overridenTranslations: LabelText? = localizationOverride?.get(code)
+
     val poweredByLabelTranslation = uiTexts.poweredByLabel.translate()
     return PrivacyFragmentViewData(
-      privacyTitleText = uiTexts.privacyCenterTitle.translate().text,
-      privacyDescriptionShortText = infoItem.text,
+      privacyTitleText = overridenTranslations?.title ?: uiTexts.privacyCenterTitle.translate().text,
+      privacyDescriptionShortText = overridenTranslations?.privacyDescription ?: infoItem.text,
       privacyDescriptionLongText = infoItem.details,
-      privacyReadMoreText = uiTexts.privacyCenterButton.translate().text,
-      acceptSelectedButtonText = uiTexts.acceptSelectedButton.translate().text,
+      privacyReadMoreText = overridenTranslations?.readMoreButton ?: uiTexts.privacyCenterButton.translate().text,
+      acceptSelectedButtonText = overridenTranslations?.saveSelectionButtonTitle
+        ?: uiTexts.acceptSelectedButton.translate().text,
       acceptSelectedButtonEnabled = areAllRequiredAccepted(preferencesItem.items),
-      acceptAllButtonText = uiTexts.acceptAllButton.translate().text,
+      acceptAllButtonText = overridenTranslations?.acceptAllButtonTitle ?: uiTexts.acceptAllButton.translate().text,
       poweredByLabelText = "<a href=\"$cookieInformationUrl\">${poweredByLabelTranslation.text}</a>",
+      requiredTableSectionHeader = overridenTranslations?.requiredSectionHeader
+        ?: uiTexts.requiredTableSectionHeader.translate().text.ifEmpty { "Required" },
+      optionalTableSectionHeader = overridenTranslations?.optionalSectionHeader
+        ?: uiTexts.optionalTableSectionHeader.translate().text.ifEmpty { "Optional" },
+      readMoreScreenHeader = overridenTranslations?.readMoreScreenHeader
+        ?: uiTexts.readMoreScreenHeader.translate().text,
       items = items
     )
   }
