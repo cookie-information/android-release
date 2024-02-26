@@ -158,7 +158,7 @@ internal class PrivacyFragmentPresenter(
     val items = mutableListOf<PrivacyFragmentPreferencesItem>()
     items.add(preferencesItem)
 
-    val code = localizationOverride?.keys?.first { it in locales }
+    val code = localizationOverride?.keys?.firstOrNull { it in locales }
     val overridenTranslations: LabelText? = localizationOverride?.get(code)
 
     val poweredByLabelTranslation = uiTexts.poweredByLabel.translate()
