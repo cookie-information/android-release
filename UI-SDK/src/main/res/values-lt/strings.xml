@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="privacy_policy_header">Privatumo politika</string>
+    <string name="read_more">Skaityti daugiau</string>
+    <string name="required_consents_header">Būtini</string>
+    <string name="optional_consents_header">Neprivalomi</string>
+    <string name="accept_all">Priimti visus</string>
+    <string name="accept_selected">Priimti pasirinktus</string>
+    <string name="powered_by">Apdoroja</string>
+    <string name="cookie_information">Cookie Information</string>
+    <string name="item_accepted">priimta</string>
+    <string name="item_rejected">atmesta</string>
+    <string name="device_identifier">Įrenginio identifikatorius</string>
+    <string name="identifier_copied">Nukopijuota</string>
+</resources>

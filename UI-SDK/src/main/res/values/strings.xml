@@ -1,0 +1,15 @@
+<resources>
+    <string name="privacy_policy_header">Privacy Policy</string>
+    <string name="read_more">Read more</string>
+    <string name="required_consents_header">Required</string>
+    <string name="optional_consents_header">Optional</string>
+    <string name="accept_all">Accept All</string>
+    <string name="accept_selected">Accept Selected</string>
+    <string name="powered_by">Powered by</string>
+    <string name="cookie_information">Cookie Information</string>
+    <string name="item_accepted">is on,  </string>
+    <string name="item_rejected">is off,  </string>
+    <string name="device_identifier">Device Identifier</string>
+    <string name="identifier_copied">Copied</string>
+
+</resources>

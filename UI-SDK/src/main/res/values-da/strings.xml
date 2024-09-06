@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="privacy_policy_header">Privatlivspolitik</string>
+    <string name="read_more">Læs mere</string>
+    <string name="required_consents_header">Påkrævet</string>
+    <string name="optional_consents_header">Valgfrit</string>
+    <string name="accept_all">Accepter alle</string>
+    <string name="accept_selected">Accepter valgt</string>
+    <string name="powered_by">Leveret af</string>
+    <string name="cookie_information">Cookie Information</string>
+    <string name="item_accepted">accepteret</string>
+    <string name="item_rejected">afvist</string>
+    <string name="device_identifier">Enhedsidentifikator</string>
+    <string name="identifier_copied">Kopieret</string>
+</resources>
