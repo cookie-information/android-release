@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.0.0 - 2024-09-06
+- Release of a completely new version, built from scratch.
+
 ## v0.2.0 - 2021-04-07
 
 ### Added
