@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="privacy_policy_header">Informativa sulla privacy</string>
+    <string name="read_more">Leggi di più</string>
+    <string name="required_consents_header">Obbligatori</string>
+    <string name="optional_consents_header">Opzionali</string>
+    <string name="accept_all">Accetta tutti</string>
+    <string name="accept_selected">Accetta selezionati</string>
+    <string name="powered_by">Offerto da</string>
+    <string name="cookie_information">Cookie Information</string>
+    <string name="item_accepted">accettato</string>
+    <string name="item_rejected">rifiutato</string>
+    <string name="device_identifier">Identificatore del dispositivo</string>
+    <string name="identifier_copied">Copiato</string>
+</resources>

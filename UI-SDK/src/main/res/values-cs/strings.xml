@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="privacy_policy_header">Zásady ochrany soukromí</string>
+    <string name="read_more">Číst více</string>
+    <string name="required_consents_header">Povinné</string>
+    <string name="optional_consents_header">Nepovinné</string>
+    <string name="accept_all">Přijmout vše</string>
+    <string name="accept_selected">Přijmout vybrané</string>
+    <string name="powered_by">Zajišťuje</string>
+    <string name="cookie_information">Cookie Information</string>
+    <string name="item_accepted">přijato</string>
+    <string name="item_rejected">odmítnuto</string>
+    <string name="device_identifier">Identifikátor zařízení</string>
+    <string name="identifier_copied">Zkopírováno</string>
+</resources>

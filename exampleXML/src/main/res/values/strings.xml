@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Example XML</string>
+    <string name="display_always">Display Always</string>
+    <string name="display_if_needed">Display If Needed</string>
+    <string name="delete_data">Delete Data</string>
+</resources>

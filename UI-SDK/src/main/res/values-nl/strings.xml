@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="privacy_policy_header">Privacybeleid</string>
+    <string name="read_more">Meer informatie</string>
+    <string name="required_consents_header">Vereist</string>
+    <string name="optional_consents_header">Optioneel</string>
+    <string name="accept_all">Alles accepteren</string>
+    <string name="accept_selected">Selectie accepteren</string>
+    <string name="powered_by">Mogelijk gemaakt door</string>
+    <string name="cookie_information">Cookie Information</string>
+    <string name="item_accepted">geaccepteerd</string>
+    <string name="item_rejected">geweigerd</string>
+    <string name="device_identifier">Apparaatidentificator</string>
+    <string name="identifier_copied">Gekopieerd</string>
+</resources>

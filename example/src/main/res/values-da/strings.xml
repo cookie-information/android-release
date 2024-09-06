@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AndroidUiSDK</string>
+    <string name="privacy_policy_header">Privacy Policy Override DA</string>
+    <string name="accept_all">Accept All Override DA</string>
+</resources>

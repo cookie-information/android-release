@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AndroidUiSDK</string>
+    <string name="privacy_policy_header">Privacy Policy Override</string>
+    <string name="accept_all">Accept All Override</string>
+    <string name="display_always">Display Always</string>
+    <string name="display_if_needed">Display If Needed</string>
+    <string name="delete_data">Delete data</string>
+</resources>
