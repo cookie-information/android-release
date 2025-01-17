@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.0.1 - 2025-01-17
+### Fixed
+- Problem with displaying list of consents due to changes on Content Delivery Network.
+
 ## v3.0.0 - 2024-09-06
 - Release of a completely new version, built from scratch.
 
