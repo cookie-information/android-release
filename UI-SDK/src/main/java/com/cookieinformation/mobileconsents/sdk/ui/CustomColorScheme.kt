@@ -1,5 +1,6 @@
 package com.cookieinformation.mobileconsents.sdk.ui
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
@@ -44,7 +45,7 @@ data class CustomColorScheme(
     val divider: Int? = null,
     val checkboxes: Int? = null,
     val readMore: Int? = null,
-){
+) {
     constructor(
         primaryColor: Color? = null,
         onPrimaryColor: Color? = null,
@@ -80,75 +81,39 @@ data class CustomColorScheme(
     )
 }
 
-internal fun CustomColorScheme.toLightColorScheme(): MaterialColorSchemeWithCustom {
-    val lcm = lightColorScheme()
-
-    val pc = primaryColorCode?.let { Color(it) } ?: lcm.primary
-    val opc = onPrimaryColorCode?.let { Color(it) } ?: lcm.onPrimary
-    val pcc = primaryContainerColorCode?.let { Color(it) } ?: lcm.primaryContainer
-    val sc = surfaceColorCode?.let { Color(it) } ?: lcm.surface
-    val osc = onSurfaceColorCode?.let { Color(it) } ?: lcm.onSurface
-    val osvc = onSurfaceVariantColorCode?.let { Color(it) } ?: lcm.onSurfaceVariant
-    val svc = surfaceVariantColorCode?.let { Color(it) } ?: lcm.surfaceVariant
-    val oc = outlineColorCode?.let { Color(it) } ?: lcm.outline
-    val ovc = outlineVariantColorCode?.let { Color(it) } ?: lcm.outlineVariant
+private fun CustomColorScheme.toMaterialColorScheme(baseScheme: ColorScheme): MaterialColorSchemeWithCustom {
+    val primary = primaryColorCode.toColorOrDefault(baseScheme.primary)
+    val onPrimary = onPrimaryColorCode.toColorOrDefault(baseScheme.onPrimary)
+    val primaryContainer = primaryContainerColorCode.toColorOrDefault(baseScheme.primaryContainer)
+    val surface = surfaceColorCode.toColorOrDefault(baseScheme.surface)
+    val onSurface = onSurfaceColorCode.toColorOrDefault(baseScheme.onSurface)
+    val onSurfaceVariant = onSurfaceVariantColorCode.toColorOrDefault(baseScheme.onSurfaceVariant)
+    val surfaceVariant = surfaceVariantColorCode.toColorOrDefault(baseScheme.surfaceVariant)
+    val outline = outlineColorCode.toColorOrDefault(baseScheme.outline)
+    val outlineVariant = outlineVariantColorCode.toColorOrDefault(baseScheme.outlineVariant)
 
     return MaterialColorSchemeWithCustom(
-        materialColorScheme =
-            lightColorScheme(
-                primary = pc,
-                onPrimary = opc,
-                primaryContainer = pcc,
-                surface = sc,
-                onSurface = osc,
-                onSurfaceVariant = osvc,
-                surfaceVariant = svc,
-                outline = oc,
-                outlineVariant = ovc
-            ),
-        primaryButton = primaryButton?.let { Color(it) } ?: pc,
-        secondaryButton = secondaryButton?.let { Color(it) } ?: pc,
-        topBar = topBar?.let { Color(it) } ?: pc,
-        divider = divider?.let { Color(it) } ?: oc,
-        checkbox = checkboxes?.let { Color(it) } ?: pc,
-        readMore = readMore?.let { Color(it) } ?: pc
+        materialColorScheme = baseScheme.copy(
+            primary = primary,
+            onPrimary = onPrimary,
+            primaryContainer = primaryContainer,
+            surface = surface,
+            onSurface = onSurface,
+            onSurfaceVariant = onSurfaceVariant,
+            surfaceVariant = surfaceVariant,
+            outline = outline,
+            outlineVariant = outlineVariant
+        ),
+        primaryButton = primaryButton.toColorOrDefault(primary),
+        secondaryButton = secondaryButton.toColorOrDefault(primary),
+        topBar = topBar.toColorOrDefault(primary),
+        divider = divider.toColorOrDefault(outline),
+        checkbox = checkboxes.toColorOrDefault(primary),
+        readMore = readMore.toColorOrDefault(primary)
     )
-
-
 }
 
-internal fun CustomColorScheme.toDarkColorScheme(): MaterialColorSchemeWithCustom {
-    val dcm = darkColorScheme()
+internal fun CustomColorScheme.toLightColorScheme() = toMaterialColorScheme(lightColorScheme())
+internal fun CustomColorScheme.toDarkColorScheme() = toMaterialColorScheme(darkColorScheme())
+fun Int?.toColorOrDefault(default: Color) = this?.let { Color(it) } ?: default
 
-    val pc = primaryColorCode?.let { Color(it) } ?: dcm.primary
-    val opc = onPrimaryColorCode?.let { Color(it) } ?: dcm.onPrimary
-    val pcc = primaryContainerColorCode?.let { Color(it) } ?: dcm.primaryContainer
-    val sc = surfaceColorCode?.let { Color(it) } ?: dcm.surface
-    val osc = onSurfaceColorCode?.let { Color(it) } ?: dcm.onSurface
-    val osvc = onSurfaceVariantColorCode?.let { Color(it) } ?: dcm.onSurfaceVariant
-    val svc = surfaceVariantColorCode?.let { Color(it) } ?: dcm.surfaceVariant
-    val oc = outlineColorCode?.let { Color(it) } ?: dcm.outline
-    val ovc = outlineVariantColorCode?.let { Color(it) } ?: dcm.outlineVariant
-
-    return MaterialColorSchemeWithCustom(
-        materialColorScheme =
-            darkColorScheme(
-                primary = pc,
-                onPrimary = opc,
-                primaryContainer = pcc,
-                surface = sc,
-                onSurface = osc,
-                onSurfaceVariant = osvc,
-                surfaceVariant = svc,
-                outline = oc,
-                outlineVariant = ovc
-            ),
-        primaryButton = primaryButton?.let { Color(it) } ?: pc,
-        secondaryButton = secondaryButton?.let { Color(it) } ?: pc,
-        topBar = topBar?.let { Color(it) } ?: pc,
-        divider = divider?.let { Color(it) } ?: oc,
-        checkbox = checkboxes?.let { Color(it) } ?: pc,
-        readMore = readMore?.let { Color(it) } ?: pc
-    )
-
-}
