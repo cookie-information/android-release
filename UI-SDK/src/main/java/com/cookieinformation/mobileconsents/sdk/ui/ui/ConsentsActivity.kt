@@ -29,6 +29,7 @@ class ConsentsActivity : ComponentActivity() {
                     viewModel = ConsentsViewModel(application),
                     additionalLightColors = CustomUI.lightColorSchemeWithCustom,
                     additionalDarkColors = CustomUI.darkColorSchemeWithCustom,
+                    additionalTypography = CustomUI.additionalTypography,
                     userId = userId
                 )
             }

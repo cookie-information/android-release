@@ -22,6 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.cookieinformation.mobileconsents.core.domain.entities.ConsentType
+import com.cookieinformation.mobileconsents.sdk.ui.CustomTypography
 import com.cookieinformation.mobileconsents.sdk.ui.toUIConsentItem
 import kotlinx.coroutines.launch
 
@@ -38,7 +39,8 @@ fun ConsentsWrappingScreen(
     navController: NavHostController = rememberNavController(),
     userId: String?,
     additionalLightColors: MaterialColorSchemeWithCustom?,
-    additionalDarkColors: MaterialColorSchemeWithCustom?
+    additionalDarkColors: MaterialColorSchemeWithCustom?,
+    additionalTypography: CustomTypography?
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -99,7 +101,8 @@ fun ConsentsWrappingScreen(
                     showPolicy = {
                         navController.navigate(AppScreen.PrivacyPolicy.name)
                     },
-                    additionalColors = additionalColors
+                    additionalColors = additionalColors,
+                    additionalTypography = additionalTypography
                 )
             }
             composable(route = AppScreen.PrivacyPolicy.name) {

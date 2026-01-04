@@ -1,19 +1,48 @@
 package com.cookieinformation.mobileconsents.sdk.ui
 
-import android.content.Context
-import androidx.annotation.FontRes
 import androidx.compose.material3.Typography
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.TextStyle
+
 
 /**
  * Customizable typography
  *
- * headlineSmall (Privacy policy headline)
- * titleMedium (Privacy policy short, header section text, consent item tile)
- * bodyMedium (consent item body (when no html), privacy policy body (when no html))
- * labelLarge - Read more, Bottom bar button texts
- * labelSmall - Powered by Cookie Information, Device identifier
+ * Core Material3 mappings:
+ * headlineSmall       - Privacy Policy headline
+ * titleMedium         - Privacy Policy short, header section text, consent item title
+ * bodyMedium          - Consent item body (when no HTML), Privacy Policy body (when no HTML)
+ * labelLarge          - "Read more", Bottom bar button texts
+ * labelSmall          - "Powered by Cookie Information", Device identifier
+ *
+ * Additional custom fields:
+ *
+ * readMore
+ *     - Optional override for "Read more" button/label text style.
+ *     - If provided, it replaces `bodyMedium` for "Read more" text.
+ *
+ * requiredTitle
+ *     - Optional override for the "Required" .
+ *     - If provided, it **replaces `titleMedium`**.
+ *
+ * requiredSectionTitle
+ *     - Optional override for the header of the required consents section.
+ *     - If provided, it **replaces `titleMedium`** in SectionHeader for required section.
+ *
+ * requiredSectionBody
+ *     - Optional override for the body text of the required consents section.
+ *     - If provided, it **replaces `bodyMedium`** for the section body.
+ *
+ * optionalTitle
+ *     - Optional override for the "Optional".
+ *     - If provided, it **replaces `titleMedium`** .
+ *
+ * optionalSectionTitle
+ *     - Optional override for the header of the optional consents section.
+ *     - If provided, it **replaces `titleMedium`** in SectionHeader for optional section.
+ *
+ * optionalSectionBody
+ *     - Optional override for the body text of the optional consents section.
+ *     - If provided, it **replaces `bodyMedium`** for the section body.
  */
 
 data class CustomTypography(
@@ -21,8 +50,31 @@ data class CustomTypography(
     val titleMedium: CustomTextStyle? = null,
     val bodyMedium: CustomTextStyle? = null,
     val labelLarge: CustomTextStyle? = null,
-    val labelSmall: CustomTextStyle? = null
-)
+    val labelSmall: CustomTextStyle? = null,
+    //additional
+    val readMore: CustomTextStyle? = null,
+    val requiredTitle: CustomTextStyle? = null,
+    val requiredSectionTitle: CustomTextStyle? = null,
+    val requiredSectionBody: CustomTextStyle? = null,
+    val optionalTitle: CustomTextStyle? = null,
+    val optionalSectionTitle: CustomTextStyle? = null,
+    val optionalSectionBody: CustomTextStyle? = null
+) {
+
+    fun itemTitleStyle(isRequired: Boolean): TextStyle? =
+        if (isRequired) requiredTitle?.toTextStyle()
+        else optionalTitle?.toTextStyle()
+
+    fun sectionHeaderStyle(isRequired: Boolean): TextStyle? =
+        if (isRequired) requiredSectionTitle?.toTextStyle()
+        else optionalSectionTitle?.toTextStyle()
+
+    fun sectionBodyStyle(isRequired: Boolean): TextStyle? =
+        if (isRequired) requiredSectionBody?.toTextStyle()
+        else optionalSectionBody?.toTextStyle()
+
+    fun readMoreStyle(): TextStyle? = readMore?.toTextStyle()
+}
 
 internal fun CustomTypography.toTypography(): Typography {
     val defaultTypography = Typography()
@@ -35,7 +87,7 @@ internal fun CustomTypography.toTypography(): Typography {
 
     return Typography(
         headlineSmall = hs,
-        titleMedium =  tm,
+        titleMedium = tm,
         bodyMedium = bm,
         labelLarge = ll,
         labelSmall = ls

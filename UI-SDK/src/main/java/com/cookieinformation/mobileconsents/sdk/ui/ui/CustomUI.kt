@@ -3,6 +3,8 @@ package com.cookieinformation.mobileconsents.sdk.ui.ui
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Typography
 import androidx.compose.ui.graphics.Color
+import com.cookieinformation.mobileconsents.sdk.ui.CustomTypography
+import com.cookieinformation.mobileconsents.sdk.ui.toTypography
 
 
 data class MaterialColorSchemeWithCustom(
@@ -19,7 +21,8 @@ object CustomUI {
 
     private var customLightColorScheme: MaterialColorSchemeWithCustom? = null
     private var customDarkColorScheme: MaterialColorSchemeWithCustom? = null
-    private var customTypography: Typography? = null
+    private var baseTypography: Typography? = null
+    private var customTypography: CustomTypography? = null
 
 
     fun setCustomUi(
@@ -29,16 +32,17 @@ object CustomUI {
     ) {
         customLightColorScheme = MaterialColorSchemeWithCustom(materialColorScheme = lightScheme)
         customDarkColorScheme = MaterialColorSchemeWithCustom(materialColorScheme = darkScheme)
-        customTypography = typography
+        baseTypography = typography
     }
 
     fun setCustomUi(
         lightScheme: MaterialColorSchemeWithCustom? = null,
         darkScheme: MaterialColorSchemeWithCustom? = null,
-        typography: Typography? = null
+        typography: CustomTypography? = null
     ) {
         customLightColorScheme = lightScheme
         customDarkColorScheme = darkScheme
+        baseTypography = typography?.toTypography()
         customTypography = typography
     }
 
@@ -49,6 +53,9 @@ object CustomUI {
         get() = customDarkColorScheme?.materialColorScheme
 
     val typography: Typography?
+        get() = baseTypography
+
+    val additionalTypography: CustomTypography?
         get() = customTypography
 
     val lightColorSchemeWithCustom: MaterialColorSchemeWithCustom?

@@ -50,6 +50,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.text.HtmlCompat
+import com.cookieinformation.mobileconsents.sdk.ui.CustomTypography
 import com.cookieinformation.mobileconsents.sdk.ui.R
 import com.cookieinformation.mobileconsents.sdk.ui.UIConsentItem
 import com.cookieinformation.mobileconsents.sdk.ui.ui.components.TextViewComposable
@@ -66,7 +67,8 @@ fun ConsentsScreen(
     showPolicy: () -> Unit,
     acceptConsents: (MutableMap<Long, Boolean>) -> Unit,
     modifier: Modifier = Modifier,
-    additionalColors: MaterialColorSchemeWithCustom? = null
+    additionalColors: MaterialColorSchemeWithCustom? = null,
+    additionalTypography: CustomTypography?
 ) {
 
     val selectedValues by rememberSaveable {
@@ -110,20 +112,22 @@ fun ConsentsScreen(
                     .verticalScroll(rememberScrollState())
                     .weight(weight = 1f, fill = true)
             ) {
-                PrivacyPolicySection(privacyPolicy, showPolicy, additionalColors)
+                PrivacyPolicySection(privacyPolicy, showPolicy, additionalColors, additionalTypography)
 
                 val requiredConsents = consents.filter { it.required }
                 val optionalConsents = consents.filter { !it.required }
 
                 if (requiredConsents.isNotEmpty()) {
-                    SectionHeader(requiredSectionHeader, additionalColors)
+                    SectionHeader(requiredSectionHeader, additionalColors, additionalTypography, true)
                     requiredConsents.forEach { item ->
                         ConsentRow(
                             title = item.title,
                             description = item.description,
                             required = item.required,
                             accepted = item.accepted,
-                            additionalColors = additionalColors
+                            additionalColors = additionalColors,
+                            additionalTypography = additionalTypography,
+                            isRequiredSection = true
                         ) { checked ->
                             selectedValues[item.id] = checked
                         }
@@ -132,7 +136,7 @@ fun ConsentsScreen(
                 }
 
                 if (optionalConsents.isNotEmpty()) {
-                    SectionHeader(optionalSectionHeader, additionalColors)
+                    SectionHeader(optionalSectionHeader, additionalColors, additionalTypography, false)
                     optionalConsents.forEach { item ->
                         Column {
                             ConsentRow(
@@ -141,6 +145,8 @@ fun ConsentsScreen(
                                 required = item.required,
                                 accepted = item.accepted,
                                 additionalColors = additionalColors,
+                                additionalTypography = additionalTypography,
+                                isRequiredSection = false,
                                 onChange = { checked ->
                                     selectedValues[item.id] = checked
                                 },
@@ -229,11 +235,19 @@ fun ConsentsScreen(
 }
 
 @Composable
-fun SectionHeader(title: String, additionalColors: MaterialColorSchemeWithCustom?) {
+fun SectionHeader(
+    title: String,
+    additionalColors: MaterialColorSchemeWithCustom?,
+    additionalTypography: CustomTypography?,
+    isRequiredSection: Boolean = false
+) {
+
+    val customTextStyle = additionalTypography?.itemTitleStyle(isRequiredSection)
+
     Text(
         text = title,
         color = MaterialTheme.colorScheme.onSurface,
-        style = MaterialTheme.typography.titleMedium,
+        style = customTextStyle ?: MaterialTheme.typography.titleMedium,
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
@@ -249,6 +263,8 @@ fun ConsentRow(
     required: Boolean,
     accepted: Boolean,
     additionalColors: MaterialColorSchemeWithCustom?,
+    additionalTypography: CustomTypography?,
+    isRequiredSection: Boolean = false,
     onChange: (checked: Boolean) -> Unit
 ) {
     var checked by remember { mutableStateOf(required || accepted) }
@@ -275,9 +291,11 @@ fun ConsentRow(
         ) {
             Text(
                 text = title,
-                modifier = Modifier.weight(1f).clearAndSetSemantics {},
+                modifier = Modifier
+                    .weight(1f)
+                    .clearAndSetSemantics {},
                 color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.titleMedium
+                style = additionalTypography?.sectionHeaderStyle(isRequiredSection) ?: MaterialTheme.typography.titleMedium
             )
             onChange(checked)
 
@@ -311,6 +329,7 @@ fun ConsentRow(
                             ),
                         )
                     }
+
                     else -> {
                         SwitchDefaults.colors(
                             disabledCheckedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
@@ -324,13 +343,12 @@ fun ConsentRow(
         }
         if (containsHtmlTags(description)) {
             TextViewComposable(description = description)
-        }
-        else {
+        } else {
             Text(
                 text = description,
                 modifier = Modifier.clearAndSetSemantics {},
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.bodyMedium
+                style = additionalTypography?.sectionBodyStyle(isRequiredSection) ?: MaterialTheme.typography.bodyMedium
             )
         }
 
@@ -341,7 +359,8 @@ fun ConsentRow(
 fun PrivacyPolicySection(
     policy: UIConsentItem?,
     showPolicy: () -> Unit,
-    additionalColors: MaterialColorSchemeWithCustom?
+    additionalColors: MaterialColorSchemeWithCustom?,
+    additionalTypography: CustomTypography?
 ) {
     policy?.let {
         Column(
@@ -371,12 +390,8 @@ fun PrivacyPolicySection(
                 content = {
                     Text(
                         text = stringResource(id = R.string.read_more),
-
-                        style = MaterialTheme.typography.labelLarge.copy(
-                            platformStyle = PlatformTextStyle(
-                                includeFontPadding = false
-                            )
-                        ),
+                        style = (additionalTypography?.readMoreStyle() ?: MaterialTheme.typography.bodyMedium)
+                            .copy(platformStyle = PlatformTextStyle(includeFontPadding = false)),
                         textAlign = TextAlign.Center,
                         color = additionalColors?.readMore ?: MaterialTheme.colorScheme.onSurface
                     )

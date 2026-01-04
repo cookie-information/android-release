@@ -20,6 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cookieinformation.mobileconsents.sdk.ui.ConsentsUISDK
 import com.cookieinformation.mobileconsents.sdk.ui.CustomColorScheme
+import com.cookieinformation.mobileconsents.sdk.ui.CustomTextStyle
+import com.cookieinformation.mobileconsents.sdk.ui.CustomTypography
 import com.cookieinformation.mobileconsents.ui.ui.theme.BrightOrange
 import com.cookieinformation.mobileconsents.ui.ui.theme.Cyan
 import com.cookieinformation.mobileconsents.ui.ui.theme.ForestGreen
@@ -48,6 +50,20 @@ class MainActivity : ComponentActivity() {
                 divider         = Cyan,
                 checkbox        = BrightOrange,
                 readMore        = Gold
+            ),
+            customTypography = CustomTypography(
+                requiredSectionTitle = CustomTextStyle(
+                    fontResId = R.font.bbh_bogle,
+                    fontSize = 15,
+                ),
+                optionalSectionTitle = CustomTextStyle(
+                    fontResId = R.font.dancing_script,
+                    fontSize = 22
+                ),
+                optionalSectionBody = CustomTextStyle(
+                    fontResId = R.font.dancing_script,
+                    fontSize = 30
+                )
             ),
             languageCode = "en",
         )
