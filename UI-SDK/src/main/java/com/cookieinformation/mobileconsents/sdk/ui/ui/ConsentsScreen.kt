@@ -19,7 +19,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
@@ -63,7 +65,8 @@ fun ConsentsScreen(
     consents: List<UIConsentItem>,
     showPolicy: () -> Unit,
     acceptConsents: (MutableMap<Long, Boolean>) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    additionalColors: MaterialColorSchemeWithCustom? = null
 ) {
 
     val selectedValues by rememberSaveable {
@@ -74,7 +77,6 @@ fun ConsentsScreen(
 
     val requiredSectionHeader = stringResource(R.string.required_consents_header)
     val optionalSectionHeader = stringResource(R.string.optional_consents_header)
-
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
@@ -108,39 +110,42 @@ fun ConsentsScreen(
                     .verticalScroll(rememberScrollState())
                     .weight(weight = 1f, fill = true)
             ) {
-                PrivacyPolicySection(privacyPolicy, showPolicy)
+                PrivacyPolicySection(privacyPolicy, showPolicy, additionalColors)
 
                 val requiredConsents = consents.filter { it.required }
                 val optionalConsents = consents.filter { !it.required }
 
                 if (requiredConsents.isNotEmpty()) {
-                    SectionHeader(requiredSectionHeader)
+                    SectionHeader(requiredSectionHeader, additionalColors)
                     requiredConsents.forEach { item ->
                         ConsentRow(
-                            item.title,
-                            item.description,
-                            item.required,
-                            item.accepted
+                            title = item.title,
+                            description = item.description,
+                            required = item.required,
+                            accepted = item.accepted,
+                            additionalColors = additionalColors
                         ) { checked ->
                             selectedValues[item.id] = checked
                         }
-                        Divider()
+                        Divider(color = additionalColors?.divider ?: DividerDefaults.color)
                     }
                 }
 
                 if (optionalConsents.isNotEmpty()) {
-                    SectionHeader(optionalSectionHeader)
+                    SectionHeader(optionalSectionHeader, additionalColors)
                     optionalConsents.forEach { item ->
                         Column {
                             ConsentRow(
-                                item.title,
-                                item.description,
-                                item.required,
-                                item.accepted
-                            ) { checked ->
-                                selectedValues[item.id] = checked
-                            }
-                            Divider()
+                                title = item.title,
+                                description = item.description,
+                                required = item.required,
+                                accepted = item.accepted,
+                                additionalColors = additionalColors,
+                                onChange = { checked ->
+                                    selectedValues[item.id] = checked
+                                },
+                            )
+                            Divider(color = additionalColors?.divider ?: DividerDefaults.color)
                         }
                     }
                 }
@@ -160,6 +165,11 @@ fun ConsentsScreen(
                         .weight(1f, true),
                     onClick = { acceptConsents(selectedValues) },
                     shape = RoundedCornerShape(20),
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = additionalColors?.primaryButton
+                            ?: MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
                     Text(
                         stringResource(R.string.accept_selected),
@@ -176,6 +186,11 @@ fun ConsentsScreen(
                             .toMutableMap())
                     },
                     shape = RoundedCornerShape(20),
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = additionalColors?.secondaryButton
+                            ?: MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
 
                     val acceptALlText = stringResource(id = R.string.accept_all)
@@ -214,7 +229,7 @@ fun ConsentsScreen(
 }
 
 @Composable
-fun SectionHeader(title: String) {
+fun SectionHeader(title: String, additionalColors: MaterialColorSchemeWithCustom?) {
     Text(
         text = title,
         color = MaterialTheme.colorScheme.onSurface,
@@ -224,7 +239,7 @@ fun SectionHeader(title: String) {
             .padding(16.dp)
             .wrapContentHeight()
     )
-    Divider()
+    Divider(color = additionalColors?.divider ?: DividerDefaults.color)
 }
 
 @Composable
@@ -233,6 +248,7 @@ fun ConsentRow(
     description: String,
     required: Boolean,
     accepted: Boolean,
+    additionalColors: MaterialColorSchemeWithCustom?,
     onChange: (checked: Boolean) -> Unit
 ) {
     var checked by remember { mutableStateOf(required || accepted) }
@@ -242,14 +258,15 @@ fun ConsentRow(
     val itemAccepted = stringResource(id = R.string.item_accepted)
     val itemRejected = stringResource(id = R.string.item_rejected)
 
-    Column(modifier = Modifier
-        .background(MaterialTheme.colorScheme.surface)
-        .fillMaxWidth()
-        .wrapContentHeight()
-        .padding(horizontal = 16.dp, vertical = 8.dp)
-        .semantics(mergeDescendants = true) {
-            contentDescription = "$title \n\n$stringBuilder"
-        })
+    Column(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription = "$title \n\n$stringBuilder"
+            })
     {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -280,10 +297,29 @@ fun ConsentRow(
                     this.stateDescription = "$title $desc"
                 },
                 enabled = !required,
-                colors = SwitchDefaults.colors(
-                    disabledCheckedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                    disabledCheckedThumbColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f),
-                ),
+                colors = when {
+                    additionalColors?.checkbox != null -> {
+                        val checkboxColor = additionalColors.checkbox
+                        SwitchDefaults.colors(
+                            checkedTrackColor = checkboxColor,
+                            checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                            uncheckedTrackColor = checkboxColor.copy(alpha = 0.4f),
+                            uncheckedThumbColor = checkboxColor,
+                            disabledCheckedTrackColor = checkboxColor.copy(alpha = 0.5f),
+                            disabledCheckedThumbColor = MaterialTheme.colorScheme.onPrimary.copy(
+                                alpha = 0.5f
+                            ),
+                        )
+                    }
+                    else -> {
+                        SwitchDefaults.colors(
+                            disabledCheckedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                            disabledCheckedThumbColor = MaterialTheme.colorScheme.onPrimary.copy(
+                                alpha = 0.5f
+                            ),
+                        )
+                    }
+                }
             )
         }
         if (containsHtmlTags(description)) {
@@ -302,11 +338,17 @@ fun ConsentRow(
 }
 
 @Composable
-fun PrivacyPolicySection(policy: UIConsentItem?, showPolicy: () -> Unit) {
+fun PrivacyPolicySection(
+    policy: UIConsentItem?,
+    showPolicy: () -> Unit,
+    additionalColors: MaterialColorSchemeWithCustom?
+) {
     policy?.let {
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
+        ) {
             Text(
                 text = stringResource(id = R.string.privacy_policy_header),
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
@@ -314,10 +356,12 @@ fun PrivacyPolicySection(policy: UIConsentItem?, showPolicy: () -> Unit) {
                 style = MaterialTheme.typography.headlineSmall
 
             )
-            Text(text = policy.title,
+            Text(
+                text = policy.title,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(horizontal = 16.dp),
-                color = MaterialTheme.colorScheme.onSurface)
+                color = MaterialTheme.colorScheme.onSurface
+            )
             OutlinedButton(
                 contentPadding = PaddingValues(0.dp),
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -334,19 +378,21 @@ fun PrivacyPolicySection(policy: UIConsentItem?, showPolicy: () -> Unit) {
                             )
                         ),
                         textAlign = TextAlign.Center,
+                        color = additionalColors?.readMore ?: MaterialTheme.colorScheme.onSurface
                     )
                     // Specify the icon using the icon parameter
                     Image(
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                        colorFilter = ColorFilter.tint(additionalColors?.readMore ?: MaterialTheme.colorScheme.primary),
                         painter = painterResource(R.drawable.navigate_next),
                         contentDescription = null
                     )
                 }
             )
-            Divider()
+            Divider(color = additionalColors?.divider ?: DividerDefaults.color)
         }
     }
 }
+
 fun containsHtmlTags(input: String): Boolean {
     // This regex pattern looks for strings that contain "<" followed by any characters,
     // and then ">", indicating the presence of HTML tags.

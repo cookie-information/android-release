@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -35,10 +36,17 @@ enum class AppScreen {
 fun ConsentsWrappingScreen(
     viewModel: ConsentsViewModel,
     navController: NavHostController = rememberNavController(),
-    userId: String?
+    userId: String?,
+    additionalLightColors: MaterialColorSchemeWithCustom?,
+    additionalDarkColors: MaterialColorSchemeWithCustom?
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+
+    val additionalColors = when {
+        isSystemInDarkTheme() -> additionalDarkColors
+        else -> additionalLightColors
+    }
 
     LaunchedEffect(Unit) {
         viewModel.getConsents(userId).onFailure {
@@ -48,11 +56,12 @@ fun ConsentsWrappingScreen(
 
     BackHandler(enabled = true) {
         coroutineScope.launch {
-            viewModel.canNavigateBack(userId).fold(onFailure = {
-                if (context is Activity) {
-                    context.finish()
-                }
-            },
+            viewModel.canNavigateBack(userId).fold(
+                onFailure = {
+                    if (context is Activity) {
+                        context.finish()
+                    }
+                },
                 onSuccess = {
                     if (it) {
                         if (context is Activity) {
@@ -82,14 +91,15 @@ fun ConsentsWrappingScreen(
                     consents = consentsUiState.consents.filter { consent -> consent.type != ConsentType.PRIVACY_POLICY }.map { it.toUIConsentItem() },
                     acceptConsents = {
                         coroutineScope.launch {
-                           viewModel.saveConsents(userId, it)
+                            viewModel.saveConsents(userId, it)
                         }.invokeOnCompletion {
                             (context as? ComponentActivity)?.finish()
                         }
                     },
                     showPolicy = {
                         navController.navigate(AppScreen.PrivacyPolicy.name)
-                    }
+                    },
+                    additionalColors = additionalColors
                 )
             }
             composable(route = AppScreen.PrivacyPolicy.name) {
