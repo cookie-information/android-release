@@ -3,7 +3,7 @@ import java.util.Properties
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("maven-publish")
+    id("com.vanniktech.maven.publish")
     id("signing")
 }
 
@@ -79,71 +79,39 @@ dependencies {
     implementation("com.cookieinformation:core:0.0.13")
 }
 
-publishing {
-    publications {
+mavenPublishing {
+    coordinates("com.cookieinformation", "dummy", "0.0.7")
 
-        create<MavenPublication>("androidLib") {
-            groupId = "com.cookieinformation"
-            artifactId = "mobileconsents"
-            version = "3.0.1"
+    publishToMavenCentral()
 
-            afterEvaluate {
-                from(components["release"])
+    signAllPublications()
+    pom {
+        name.set("mobileconsents")
+        description.set("SDK for easy user consent management.")
+        url.set("https://cookie-information.github.io/mcs-docs/")
+        licenses {
+            license {
+                name.set("The Apache Software License, Version 2.0")
+                url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
             }
-
-            pom {
-                name.set("mobileconsents")
-                description.set("SDK for easy user consent management.")
-                url.set("https://cookie-information.github.io/mcs-docs/")
-                licenses {
-                    license {
-                        name.set("The Apache Software License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("HannaCookieInformation")
-                        name.set("Hanna Shulman")
-                        email.set("hsc@cookieinformation.com")
-                    }
-                }
-                scm {
-                    connection.set("git@github.com:cookie-information/android-release.git")
-                    developerConnection.set("git@github.com:cookie-information/android-release.git")
-                    url.set("https://github.com/cookie-information/android-release")
-                }
+        }
+        developers {
+            developer {
+                id.set("CookieInformation")
+                name.set("Integration Team")
+                email.set("integrations@piwik.pro")
             }
-
-            repositories {
-                maven {
-                    // The name of the repository (can be anything, for reference only)
-                    name = "Local"
-                    // Specify the file path to the local Maven repository
-                    // Change the path to where you want to publish your library locally
-                    url = uri("file://${System.getProperty("user.home")}/.m2/repository")
-                }
-
-                maven {
-                    name = "Sonatype"
-                    url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                    credentials {
-                        username = sonatypeUsername
-                        password = sonatypePassword
-                    }
-                }
-            }
+        }
+        scm {
+            connection.set("git@github.com:cookie-information/android-release.git")
+            developerConnection.set("git@github.com:cookie-information/android-release.git")
+            url.set("https://github.com/cookie-information/android-release")
         }
     }
 }
 
 signing {
     useGpgCmd()
-    useInMemoryPgpKeys(
-        findProperty("signing.keyId") as String?,
-        findProperty("signing.secretKey") as String?,
-        findProperty("signing.password") as String?,
-    )
     sign(publishing.publications)
 }
 
