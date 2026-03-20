@@ -25,7 +25,7 @@ import com.cookieinformation.mobileconsents.sdk.ui.ui.MaterialColorSchemeWithCus
  * secondaryButton
  * topBar
  * divider
- * checkboxes
+ * checkbox
  * readMore
  */
 
@@ -43,7 +43,7 @@ data class CustomColorScheme(
     val secondaryButton: Int? = null,
     val topBar: Int? = null,
     val divider: Int? = null,
-    val checkboxes: Int? = null,
+    val checkbox: Int? = null,
     val readMore: Int? = null,
 ) {
     constructor(
@@ -76,7 +76,7 @@ data class CustomColorScheme(
         secondaryButton = secondaryButton?.toArgb(),
         topBar = topBar?.toArgb(),
         divider = divider?.toArgb(),
-        checkboxes = checkbox?.toArgb(),
+        checkbox = checkbox?.toArgb(),
         readMore = readMore?.toArgb()
     )
 }
@@ -108,12 +108,12 @@ private fun CustomColorScheme.toMaterialColorScheme(baseScheme: ColorScheme): Ma
         secondaryButton = secondaryButton.toColorOrDefault(primary),
         topBar = topBar.toColorOrDefault(primary),
         divider = divider.toColorOrDefault(outline),
-        checkbox = checkboxes.toColorOrDefault(primary),
+        checkbox = checkbox.toColorOrDefault(primary),
         readMore = readMore.toColorOrDefault(primary)
     )
 }
 
 internal fun CustomColorScheme.toLightColorScheme() = toMaterialColorScheme(lightColorScheme())
 internal fun CustomColorScheme.toDarkColorScheme() = toMaterialColorScheme(darkColorScheme())
-fun Int?.toColorOrDefault(default: Color) = this?.let { Color(it) } ?: default
+internal fun Int?.toColorOrDefault(default: Color) = this?.let { Color(it) } ?: default
 
