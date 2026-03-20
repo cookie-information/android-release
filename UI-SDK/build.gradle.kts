@@ -3,10 +3,12 @@ import java.util.Properties
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
     id("com.vanniktech.maven.publish")
     id("signing")
 }
 
+//TODO REMOVE
 val localProperties = Properties()
 localProperties.load(project.rootProject.file("local.properties").reader())
 
@@ -15,7 +17,7 @@ val sonatypePassword = localProperties.getProperty("sonatypePassword")
 
 android {
     namespace = "com.cookieinformation.mobileconsents.sdk.ui"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -43,13 +45,11 @@ android {
         compose = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.0"
-    }
+}
 
-
-    kotlinOptions {
-        jvmTarget = "1.8"
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
     }
 }
 
@@ -76,11 +76,14 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
-    implementation("com.cookieinformation:core:0.0.13")
+//    implementation("com.cookieinformation:core:0.0.13")
+    implementation("com.cookieinformation:core:1.0.0")
+//    implementation("com.cookieinformation:dummy:0.0.17")
 }
 
 mavenPublishing {
     coordinates("com.cookieinformation", "dummy", "0.0.7")
+//    coordinates("com.cookieinformation", "mobileconsents", "3.0.1")
 
     publishToMavenCentral()
 
