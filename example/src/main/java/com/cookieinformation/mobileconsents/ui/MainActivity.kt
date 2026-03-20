@@ -46,18 +46,8 @@ class MainActivity : ComponentActivity() {
                 readMore        = Gold
             ),
             customTypography = CustomTypography(
-                requiredSectionTitle = CustomTextStyle(
-                    fontResId = R.font.bbh_bogle,
-                    fontSize = 15,
-                ),
-                optionalSectionTitle = CustomTextStyle(
-                    fontResId = R.font.dancing_script,
-                    fontSize = 22
-                ),
-                optionalSectionBody = CustomTextStyle(
-                    fontResId = R.font.dancing_script,
-                    fontSize = 30
-                )
+                requiredSectionTitle = CustomTextStyle(fontResId = R.font.dancing_script, fontSize = 18),
+                optionalSectionTitle = CustomTextStyle(fontResId = R.font.dancing_script, fontSize = 16)
             ),
             languageCode = "en",
         )

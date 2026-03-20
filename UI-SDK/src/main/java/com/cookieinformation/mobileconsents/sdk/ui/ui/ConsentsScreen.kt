@@ -68,7 +68,6 @@ fun ConsentsScreen(
     modifier: Modifier = Modifier
 ) {
     val additionalColors = LocalAdditionalColors.current
-    val additionalTypography = LocalAdditionalTypography.current
 
     val selectedValues by rememberSaveable {
         mutableStateOf<MutableMap<Long, Boolean>>(
