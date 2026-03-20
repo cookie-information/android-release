@@ -1,5 +1,5 @@
 # Android SDK
-[![Maven Central](https://img.shields.io/maven-central/v/com.cookieinformation/mobileconsents.svg?label=latest%20release)](https://search.maven.org/artifact/com.cookieinformation/mobileconsents)
+[![Maven Central](https://img.shields.io/maven-central/v/com.cookieinformation/mobileconsents.svg?label=latest%20release)](https://central.sonatype.com/artifact/com.cookieinformation/mobileconsents)
 
 
 ## Installation
@@ -305,7 +305,7 @@ If you need any additional features, please do not hesitate to reach out to our 
 
 
 ## Custom view using core sdk
-[![Maven Central](https://img.shields.io/maven-central/v/com.cookieinformation/mobileconsents.svg?label=latest%20core%20release)](https://search.maven.org/artifact/com.cookieinformation/core)
+[![Maven Central](https://img.shields.io/maven-central/v/com.cookieinformation/core.svg?label=latest%20core%20release)](https://central.sonatype.com/artifact/com.cookieinformation/core)
 
 
 The core SDK does not include a UI component but offers a convenient way for you to implement your own user interface.
