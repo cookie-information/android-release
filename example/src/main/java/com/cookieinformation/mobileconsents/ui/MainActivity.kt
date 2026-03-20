@@ -22,13 +22,7 @@ import com.cookieinformation.mobileconsents.sdk.ui.ConsentsUISDK
 import com.cookieinformation.mobileconsents.sdk.ui.CustomColorScheme
 import com.cookieinformation.mobileconsents.sdk.ui.CustomTextStyle
 import com.cookieinformation.mobileconsents.sdk.ui.CustomTypography
-import com.cookieinformation.mobileconsents.ui.ui.theme.BrightOrange
-import com.cookieinformation.mobileconsents.ui.ui.theme.Cyan
-import com.cookieinformation.mobileconsents.ui.ui.theme.ForestGreen
-import com.cookieinformation.mobileconsents.ui.ui.theme.Gold
-import com.cookieinformation.mobileconsents.ui.ui.theme.LimeGreen
-import com.cookieinformation.mobileconsents.ui.ui.theme.NavyBlue
-import com.cookieinformation.mobileconsents.ui.ui.theme.SampleAppTheme
+import com.cookieinformation.mobileconsents.ui.ui.theme.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

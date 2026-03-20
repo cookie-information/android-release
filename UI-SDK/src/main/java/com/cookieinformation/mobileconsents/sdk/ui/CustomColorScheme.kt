@@ -8,25 +8,27 @@ import androidx.compose.ui.graphics.toArgb
 import com.cookieinformation.mobileconsents.sdk.ui.ui.MaterialColorSchemeWithCustom
 
 /**
- * Customizable colors (based as much as possible on component colors from https://m3.material.io/components)
+ * Customizable color scheme for the consent screen.
+ * All fields are optional — only override what you need, the rest stays default.
  *
- * primary
- * onPrimary
- * surface
- * onSurface
- * onSurfaceVariant
- * surfaceVariant
- * outline
- * outlineVariant
- * primaryContainer
+ * Material colors (see https://m3.material.io/components for full reference):
+ * - primary          — buttons, active elements
+ * - onPrimary        — text/icons on primary-colored elements
+ * - primaryContainer — toggle/switch backgrounds
+ * - surface          — screen background
+ * - onSurface        — main text color
+ * - onSurfaceVariant — secondary text color
+ * - surfaceVariant   — card/section backgrounds
+ * - outline          — borders, dividers
+ * - outlineVariant   — subtle borders
  *
-//// Additional  ////
- * primaryButton
- * secondaryButton
- * topBar
- * divider
- * checkbox
- * readMore
+ * Per-component colors:
+ * - primaryButton   — "Accept" / main action button
+ * - secondaryButton — "Reject" / secondary action button
+ * - topBar          — top navigation bar background
+ * - divider         — horizontal lines between consent items
+ * - checkbox        — consent checkboxes
+ * - readMore        — "Read more" link text
  */
 
 data class CustomColorScheme(
