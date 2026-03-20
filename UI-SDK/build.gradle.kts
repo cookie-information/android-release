@@ -82,8 +82,7 @@ dependencies {
 }
 
 mavenPublishing {
-    coordinates("com.cookieinformation", "dummy", "0.0.7")
-//    coordinates("com.cookieinformation", "mobileconsents", "3.0.1")
+    coordinates("com.cookieinformation", "mobileconsents", "3.0.1")
 
     publishToMavenCentral()
 
