@@ -50,7 +50,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.text.HtmlCompat
-import com.cookieinformation.mobileconsents.sdk.ui.CustomTypography
 import com.cookieinformation.mobileconsents.sdk.ui.R
 import com.cookieinformation.mobileconsents.sdk.ui.UIConsentItem
 import com.cookieinformation.mobileconsents.sdk.ui.ui.components.TextViewComposable
@@ -66,10 +65,10 @@ fun ConsentsScreen(
     consents: List<UIConsentItem>,
     showPolicy: () -> Unit,
     acceptConsents: (MutableMap<Long, Boolean>) -> Unit,
-    modifier: Modifier = Modifier,
-    additionalColors: MaterialColorSchemeWithCustom? = null,
-    additionalTypography: CustomTypography?
+    modifier: Modifier = Modifier
 ) {
+    val additionalColors = LocalAdditionalColors.current
+    val additionalTypography = LocalAdditionalTypography.current
 
     val selectedValues by rememberSaveable {
         mutableStateOf<MutableMap<Long, Boolean>>(
@@ -112,21 +111,19 @@ fun ConsentsScreen(
                     .verticalScroll(rememberScrollState())
                     .weight(weight = 1f, fill = true)
             ) {
-                PrivacyPolicySection(privacyPolicy, showPolicy, additionalColors, additionalTypography)
+                PrivacyPolicySection(privacyPolicy, showPolicy)
 
                 val requiredConsents = consents.filter { it.required }
                 val optionalConsents = consents.filter { !it.required }
 
                 if (requiredConsents.isNotEmpty()) {
-                    SectionHeader(requiredSectionHeader, additionalColors, additionalTypography, true)
+                    SectionHeader(requiredSectionHeader, true)
                     requiredConsents.forEach { item ->
                         ConsentRow(
                             title = item.title,
                             description = item.description,
                             required = item.required,
                             accepted = item.accepted,
-                            additionalColors = additionalColors,
-                            additionalTypography = additionalTypography,
                             isRequiredSection = true
                         ) { checked ->
                             selectedValues[item.id] = checked
@@ -136,7 +133,7 @@ fun ConsentsScreen(
                 }
 
                 if (optionalConsents.isNotEmpty()) {
-                    SectionHeader(optionalSectionHeader, additionalColors, additionalTypography, false)
+                    SectionHeader(optionalSectionHeader, false)
                     optionalConsents.forEach { item ->
                         Column {
                             ConsentRow(
@@ -144,8 +141,6 @@ fun ConsentsScreen(
                                 description = item.description,
                                 required = item.required,
                                 accepted = item.accepted,
-                                additionalColors = additionalColors,
-                                additionalTypography = additionalTypography,
                                 isRequiredSection = false,
                                 onChange = { checked ->
                                     selectedValues[item.id] = checked
@@ -237,11 +232,10 @@ fun ConsentsScreen(
 @Composable
 fun SectionHeader(
     title: String,
-    additionalColors: MaterialColorSchemeWithCustom?,
-    additionalTypography: CustomTypography?,
     isRequiredSection: Boolean = false
 ) {
-
+    val additionalColors = LocalAdditionalColors.current
+    val additionalTypography = LocalAdditionalTypography.current
     val customTextStyle = additionalTypography?.itemTitleStyle(isRequiredSection)
 
     Text(
@@ -262,11 +256,11 @@ fun ConsentRow(
     description: String,
     required: Boolean,
     accepted: Boolean,
-    additionalColors: MaterialColorSchemeWithCustom?,
-    additionalTypography: CustomTypography?,
     isRequiredSection: Boolean = false,
     onChange: (checked: Boolean) -> Unit
 ) {
+    val additionalColors = LocalAdditionalColors.current
+    val additionalTypography = LocalAdditionalTypography.current
     var checked by remember { mutableStateOf(required || accepted) }
     val stringBuilder =
         SpannableStringBuilder(HtmlCompat.fromHtml(description, HtmlCompat.FROM_HTML_MODE_COMPACT))
@@ -358,10 +352,10 @@ fun ConsentRow(
 @Composable
 fun PrivacyPolicySection(
     policy: UIConsentItem?,
-    showPolicy: () -> Unit,
-    additionalColors: MaterialColorSchemeWithCustom?,
-    additionalTypography: CustomTypography?
+    showPolicy: () -> Unit
 ) {
+    val additionalColors = LocalAdditionalColors.current
+    val additionalTypography = LocalAdditionalTypography.current
     policy?.let {
         Column(
             modifier = Modifier

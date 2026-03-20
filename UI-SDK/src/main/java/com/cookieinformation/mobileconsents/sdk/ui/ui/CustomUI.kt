@@ -2,10 +2,13 @@ package com.cookieinformation.mobileconsents.sdk.ui.ui
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Typography
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import com.cookieinformation.mobileconsents.sdk.ui.CustomTypography
 import com.cookieinformation.mobileconsents.sdk.ui.toTypography
 
+internal val LocalAdditionalColors = staticCompositionLocalOf<MaterialColorSchemeWithCustom?> { null }
+internal val LocalAdditionalTypography = staticCompositionLocalOf<CustomTypography?> { null }
 
 data class MaterialColorSchemeWithCustom(
     val materialColorScheme: ColorScheme?,

@@ -4,7 +4,6 @@ import android.app.Activity
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +21,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.cookieinformation.mobileconsents.core.domain.entities.ConsentType
-import com.cookieinformation.mobileconsents.sdk.ui.CustomTypography
 import com.cookieinformation.mobileconsents.sdk.ui.toUIConsentItem
 import kotlinx.coroutines.launch
 
@@ -37,18 +35,10 @@ enum class AppScreen {
 fun ConsentsWrappingScreen(
     viewModel: ConsentsViewModel,
     navController: NavHostController = rememberNavController(),
-    userId: String?,
-    additionalLightColors: MaterialColorSchemeWithCustom?,
-    additionalDarkColors: MaterialColorSchemeWithCustom?,
-    additionalTypography: CustomTypography?
+    userId: String?
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-
-    val additionalColors = when {
-        isSystemInDarkTheme() -> additionalDarkColors
-        else -> additionalLightColors
-    }
 
     LaunchedEffect(Unit) {
         viewModel.getConsents(userId).onFailure {
@@ -100,9 +90,7 @@ fun ConsentsWrappingScreen(
                     },
                     showPolicy = {
                         navController.navigate(AppScreen.PrivacyPolicy.name)
-                    },
-                    additionalColors = additionalColors,
-                    additionalTypography = additionalTypography
+                    }
                 )
             }
             composable(route = AppScreen.PrivacyPolicy.name) {

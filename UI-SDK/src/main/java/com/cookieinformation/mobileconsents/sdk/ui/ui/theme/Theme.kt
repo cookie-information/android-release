@@ -9,11 +9,15 @@ import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.cookieinformation.mobileconsents.sdk.ui.CustomTypography
+import com.cookieinformation.mobileconsents.sdk.ui.ui.LocalAdditionalColors
+import com.cookieinformation.mobileconsents.sdk.ui.ui.LocalAdditionalTypography
 import com.cookieinformation.mobileconsents.sdk.ui.ui.MaterialColorSchemeWithCustom
 
 /**
@@ -52,6 +56,7 @@ fun AndroidUiSDKTheme(
     customerDarkColorScheme: ColorScheme? = null,
     additionalLightColors: MaterialColorSchemeWithCustom? = null,
     additionalDarkColors: MaterialColorSchemeWithCustom? = null,
+    additionalTypography: CustomTypography? = null,
     typography: Typography? = null,
     content: @Composable () -> Unit
 ) {
@@ -76,10 +81,15 @@ fun AndroidUiSDKTheme(
         }
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = typography ?: Typography(),
-        content = content
-    )
+    CompositionLocalProvider(
+        LocalAdditionalColors provides additionalColors,
+        LocalAdditionalTypography provides additionalTypography
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = typography ?: Typography(),
+            content = content
+        )
+    }
 }
 
