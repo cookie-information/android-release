@@ -19,7 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cookieinformation.mobileconsents.sdk.ui.ConsentsUISDK
-import com.cookieinformation.mobileconsents.ui.ui.theme.SampleAppTheme
+import com.cookieinformation.mobileconsents.sdk.ui.CustomColorScheme
+import com.cookieinformation.mobileconsents.sdk.ui.CustomTextStyle
+import com.cookieinformation.mobileconsents.sdk.ui.CustomTypography
+import com.cookieinformation.mobileconsents.ui.ui.theme.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -28,13 +31,25 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         ConsentsUISDK.init(
             clientID = "91cb67d4-9ebc-4c7e-974f-858d08b7ab7d",
             clientSecret = "a4fe5c7763ef5d8e395c9ef8c358c1f67c0876b6e7465c59ce9421d6ca67d02ba3d3a37f0351f320a2216878e4ddc570bdf6092a351b24067d536ded36a75946",
             solutionId = "a7a95d5e-e99b-44ff-8383-b7f6d1b720a8",
             context = this@MainActivity,
-            languageCode = "en"
+            customLightColorScheme = CustomColorScheme(
+                primaryButton   = NavyBlue,
+                secondaryButton = LimeGreen,
+                topBar          = ForestGreen,
+                divider         = Cyan,
+                checkbox        = BrightOrange,
+                readMore        = Gold
+            ),
+            customTypography = CustomTypography(
+                requiredSectionTitle = CustomTextStyle(fontResId = R.font.dancing_script, fontSize = 18),
+                optionalSectionTitle = CustomTextStyle(fontResId = R.font.dancing_script, fontSize = 16)
+            ),
+            languageCode = "en",
         )
 
         setContent {

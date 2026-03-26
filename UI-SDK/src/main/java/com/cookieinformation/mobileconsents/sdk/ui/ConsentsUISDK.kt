@@ -43,7 +43,7 @@ object ConsentsUISDK {
         CustomUI.setCustomUi(
             customLightColorScheme?.toLightColorScheme(),
             customDarkColorScheme?.toDarkColorScheme(),
-            customTypography?.toTypography()
+            customTypography
         )
     }
 
