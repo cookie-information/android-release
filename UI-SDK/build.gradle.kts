@@ -69,9 +69,7 @@ dependencies {
 }
 
 mavenPublishing {
-    //FIXME debug code
-    coordinates("com.cookieinformation", "dummy", System.getenv("VERSION") ?: "0.0.18")
-//    coordinates("com.cookieinformation", "mobileconsents", System.getenv("VERSION") ?: "3.1.0")
+    coordinates("com.cookieinformation", "mobileconsents", System.getenv("VERSION") ?: "3.1.0")
 
     publishToMavenCentral()
 
