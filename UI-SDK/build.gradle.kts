@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.vanniktech.maven.publish")
+    id("signing")
 }
 
 android {
@@ -71,7 +72,7 @@ dependencies {
 mavenPublishing {
     coordinates("com.cookieinformation", "mobileconsents", System.getenv("VERSION") ?: "3.1.0")
 
-    publishToMavenCentral()
+    publishToMavenCentral(automaticRelease = false)
 
     signAllPublications()
     pom {
@@ -96,5 +97,12 @@ mavenPublishing {
             developerConnection.set("git@github.com:cookie-information/android-release.git")
             url.set("https://github.com/cookie-information/android-release")
         }
+    }
+}
+
+if (System.getenv("CI") == null) {
+    signing {
+        useGpgCmd()
+        sign(publishing.publications)
     }
 }
