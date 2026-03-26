@@ -21,8 +21,9 @@ class ConsentsActivity : ComponentActivity() {
 
         setContent {
             AndroidUiSDKTheme(
-                customerLightColorScheme = CustomUI.lightColorScheme,
-                customerDarkColorScheme = CustomUI.darkColorScheme,
+                additionalLightColors = CustomUI.lightColorSchemeWithCustom,
+                additionalDarkColors = CustomUI.darkColorSchemeWithCustom,
+                additionalTypography = CustomUI.additionalTypography,
                 typography = CustomUI.typography
             ) {
                 ConsentsWrappingScreen(

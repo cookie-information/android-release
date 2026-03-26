@@ -48,11 +48,12 @@ fun ConsentsWrappingScreen(
 
     BackHandler(enabled = true) {
         coroutineScope.launch {
-            viewModel.canNavigateBack(userId).fold(onFailure = {
-                if (context is Activity) {
-                    context.finish()
-                }
-            },
+            viewModel.canNavigateBack(userId).fold(
+                onFailure = {
+                    if (context is Activity) {
+                        context.finish()
+                    }
+                },
                 onSuccess = {
                     if (it) {
                         if (context is Activity) {
@@ -82,7 +83,7 @@ fun ConsentsWrappingScreen(
                     consents = consentsUiState.consents.filter { consent -> consent.type != ConsentType.PRIVACY_POLICY }.map { it.toUIConsentItem() },
                     acceptConsents = {
                         coroutineScope.launch {
-                           viewModel.saveConsents(userId, it)
+                            viewModel.saveConsents(userId, it)
                         }.invokeOnCompletion {
                             (context as? ComponentActivity)?.finish()
                         }
