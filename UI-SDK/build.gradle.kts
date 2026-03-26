@@ -1,23 +1,13 @@
-import java.util.Properties
-
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.vanniktech.maven.publish")
-    id("signing")
 }
-
-//TODO REMOVE
-val localProperties = Properties()
-localProperties.load(project.rootProject.file("local.properties").reader())
-
-val sonatypeUsername = localProperties.getProperty("sonatypeUsername")
-val sonatypePassword = localProperties.getProperty("sonatypePassword")
 
 android {
     namespace = "com.cookieinformation.mobileconsents.sdk.ui"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
@@ -57,24 +47,24 @@ dependencies {
 
     //implementation ("androidx.fragment:fragment-ktx:1.6.2")
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.core:core-ktx:1.18.0")
+    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("com.google.android.material:material:1.13.0")
     //  from sdk //
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.ext:junit:1.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
 
-    implementation(platform("androidx.compose:compose-bom:2023.05.01"))
-    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation(platform("androidx.compose:compose-bom:2026.03.00"))
+    implementation("androidx.activity:activity-compose:1.13.0")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.runtime:runtime")
     implementation("androidx.compose.runtime:runtime-livedata")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.navigation:navigation-compose:2.9.7")
 
 //    implementation("com.cookieinformation:core:0.0.13")
     implementation("com.cookieinformation:core:1.0.0")
@@ -82,7 +72,7 @@ dependencies {
 }
 
 mavenPublishing {
-    coordinates("com.cookieinformation", "mobileconsents", "3.0.1")
+    coordinates("com.cookieinformation", "dummy", System.getenv("VERSION") ?: "3.0.1")
 
     publishToMavenCentral()
 
@@ -111,11 +101,3 @@ mavenPublishing {
         }
     }
 }
-
-signing {
-    useGpgCmd()
-    sign(publishing.publications)
-}
-
-
- 
