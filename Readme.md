@@ -1,5 +1,5 @@
 # Android SDK
-[![Maven Central](https://img.shields.io/maven-central/v/com.cookieinformation/mobileconsents.svg?label=latest%20release)](https://search.maven.org/artifact/com.cookieinformation/mobileconsents)
+[![Maven Central](https://img.shields.io/maven-central/v/com.cookieinformation/mobileconsents.svg?label=latest%20release)](https://central.sonatype.com/artifact/com.cookieinformation/mobileconsents)
 
 
 ## Installation
@@ -200,32 +200,71 @@ Error logs are also available. If the popup does not appear, check the logs and 
 ### Theming & Styling
 
 
-The UI theme and font can be customized in the SDKs initializer, make sure you have [Jetpack Compose](https://developer.android.com/develop/ui/compose/documentation) dependencies in you project:
+The UI theme and font can be customized in the SDKs initializer, make sure you have [Jetpack Compose](https://developer.android.com/develop/ui/compose/documentation) dependencies in you project.
+
+#### Basic (Material Theme)
+You can pass standard Material3 color schemes and typography:
 ```kotlin
-   ConsentsUISDK.init(
-       clientID = "<CLIENT_ID>",
-       clientSecret = "<CLIENT_SECRET>",
-       solutionId = "<SOLUTION ID>",
-       languageCode = "FR",
-       typography = defaultTypography.copy(bodyMedium = TextStyle.Default),
-       customDarkColorScheme = darkColorScheme(
-           primary = Color.Yellow,
-           secondary = Color.Green,
-           tertiary = Color.Black
-       ),
-       customLightColorScheme = lightColorScheme(
-           primary = Color.Red,
-           secondary = Color.Yellow,
-           tertiary = Pink40
-       ),
-       context = this@MainActivity
+ConsentsUISDK.init(
+    clientID = "<CLIENT_ID>",
+    clientSecret = "<CLIENT_SECRET>",
+    solutionId = "<SOLUTION ID>",
+    languageCode = "FR",
+    typography = defaultTypography.copy(bodyMedium = TextStyle.Default),
+    customDarkColorScheme = darkColorScheme(
+        primary = Color.Yellow,
+        secondary = Color.Green,
+        tertiary = Color.Black
+    ),
+    customLightColorScheme = lightColorScheme(
+        primary = Color.Red,
+        secondary = Color.Yellow,
+        tertiary = Pink40
+    ),
+    context = this@MainActivity
 )
 ```
 
+#### Per-component styling
+You can override colors and typography for specific UI elements using `CustomColorScheme` and `CustomTypography`. All fields are optional — only set what you need, the rest stays default.
 
+**Colors:**
+```kotlin
+ConsentsUISDK.init(
+    clientID = "<CLIENT_ID>",
+    clientSecret = "<CLIENT_SECRET>",
+    solutionId = "<SOLUTION ID>",
+    context = this@MainActivity,
+    customLightColorScheme = CustomColorScheme(
+        primaryButton = Color.Red,
+        secondaryButton = Color.Gray,
+        topBar = Color.White,
+        divider = Color.LightGray,
+        checkbox = Color.Blue,
+        readMore = Color.DarkGray
+    )
+)
+```
+
+**Typography:**
+```kotlin
+ConsentsUISDK.init(
+    clientID = "<CLIENT_ID>",
+    clientSecret = "<CLIENT_SECRET>",
+    solutionId = "<SOLUTION ID>",
+    context = this@MainActivity,
+    customTypography = CustomTypography(
+        requiredSectionTitle = CustomTextStyle(fontResId = R.font.my_font, fontSize = 18),
+        optionalSectionTitle = CustomTextStyle(fontSize = 16)
+    )
+)
+```
+
+See all available fields: [`CustomColorScheme`](UI-SDK/src/main/java/com/cookieinformation/mobileconsents/sdk/ui/CustomColorScheme.kt) | [`CustomTypography`](UI-SDK/src/main/java/com/cookieinformation/mobileconsents/sdk/ui/CustomTypography.kt)
+
+#### HTML support in consent texts
 Consent solution description and consent item texts can leverage HTML tags for basic text styling.
 Supported tags include:
-
 
 - `<b>` for bolding text
 - `<i>` and `<em>` for emphasizing text
@@ -266,7 +305,7 @@ If you need any additional features, please do not hesitate to reach out to our 
 
 
 ## Custom view using core sdk
-[![Maven Central](https://img.shields.io/maven-central/v/com.cookieinformation/mobileconsents.svg?label=latest%20core%20release)](https://search.maven.org/artifact/com.cookieinformation/core)
+[![Maven Central](https://img.shields.io/maven-central/v/com.cookieinformation/core.svg?label=latest%20core%20release)](https://central.sonatype.com/artifact/com.cookieinformation/core)
 
 
 The core SDK does not include a UI component but offers a convenient way for you to implement your own user interface.
