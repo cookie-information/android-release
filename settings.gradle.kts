@@ -19,3 +19,4 @@ rootProject.name = "AndroidUiSDK"
 include(":UI-SDK")
 include(":example")
 include(":exampleXML")
+include(":customExample")

@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Cookie Custom UI</string>
+
+    <!-- Demo home screen -->
+    <string name="home_title">Cookie consent demo</string>
+    <string name="label_dark_mode">Dark mode</string>
+    <string name="action_show_consents">Show consent screen</string>
+    <string name="action_show_if_needed">Show if needed</string>
+    <string name="action_delete_data">Delete local data</string>
+    <string name="msg_data_deleted">Local consent data deleted</string>
+    <string name="msg_delete_failed">Could not delete consent data</string>
+
+    <!-- Consent screen -->
+    <string name="consent_title">Cookie settings</string>
+    <string name="button_only_necessary">Only Necessary</string>
+    <string name="button_save_choices">Save choices</string>
+</resources>
