@@ -33,7 +33,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.LinkInteractionListener
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -45,29 +54,34 @@ import com.cookieinformation.mobileconsents.custom.R
 private val CATEGORY_SPACING = 32.dp // vertical gap between categories
 
 /**
- * Consent screen: a title, one row per category (title, description, toggle) and two
- * action buttons pinned to the bottom.
+ * Consent screen: an intro with policy links, one row per category (title, description,
+ * toggle) and two action buttons pinned to the bottom while the list scrolls.
  *
  * Colors come from [consentColors] (Color.kt); text lives in strings.xml.
  *
  * Button behaviour:
- *  - Only Necessary: accept required categories, reject every optional one.
- *  - Save choices:   persist exactly what the user toggled.
+ *  - Secondary is always "Only Necessary": accept the required categories, reject the rest.
+ *  - Primary is "Accept All" (accept every category) until the user enables an optional
+ *    category, at which point it becomes "Save choices" and persists the current selection.
  */
 @Composable
 fun ConsentScreen(
     isLoading: Boolean,
     items: List<ConsentItem>,
-    onSaveChoices: (List<ConsentItemOption>) -> Unit,
-    onOnlyNecessary: (List<ConsentItemOption>) -> Unit,
+    onSave: (List<ConsentItemOption>) -> Unit,
+    onOpenPolicy: (String) -> Unit,
+    privacyPolicy: String? = null,
+    cookiePolicyUrl: String? = null,
     darkTheme: Boolean = false,
     colors: ConsentColors = consentColors(darkTheme),
 ) {
-    // Current position of each toggle, seeded from the loaded items.
+    // Toggle state. Optional categories start off; only required ones are on by default.
     val selection = remember { mutableStateMapOf<Long, Boolean>() }
     LaunchedEffect(items) {
-        items.forEach { selection[it.id] = it.required || it.accepted }
+        items.forEach { selection[it.id] = it.required }
     }
+
+    val anyOptionalEnabled = items.any { !it.required && selection[it.id] == true }
 
     Box(
         modifier = Modifier
@@ -84,12 +98,15 @@ fun ConsentScreen(
                     .padding(horizontal = 24.dp, vertical = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(CATEGORY_SPACING),
             ) {
-                Text(
-                    text = stringResource(R.string.consent_title),
-                    color = colors.title,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        text = stringResource(R.string.consent_title),
+                        color = colors.title,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    PolicyIntro(colors, privacyPolicy, cookiePolicyUrl, onOpenPolicy)
+                }
 
                 items.forEach { item ->
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -135,7 +152,6 @@ fun ConsentScreen(
             }
 
             HorizontalDivider(color = colors.divider)
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -143,7 +159,7 @@ fun ConsentScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 OutlinedButton(
-                    onClick = { onOnlyNecessary(items.map { ConsentItemOption(it.id, it.required) }) },
+                    onClick = { onSave(items.map { ConsentItemOption(it.id, it.required) }) },
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(8.dp),
                     border = BorderStroke(1.dp, colors.secondary),
@@ -151,11 +167,22 @@ fun ConsentScreen(
                 ) { Text(stringResource(R.string.button_only_necessary)) }
 
                 Button(
-                    onClick = { onSaveChoices(items.map { ConsentItemOption(it.id, selection[it.id] ?: it.accepted) }) },
+                    onClick = {
+                        val options = if (anyOptionalEnabled) {
+                            // Save choices: exactly what the user toggled.
+                            items.map { ConsentItemOption(it.id, selection[it.id] ?: it.required) }
+                        } else {
+                            // Accept all: consent to every category.
+                            items.map { ConsentItemOption(it.id, true) }
+                        }
+                        onSave(options)
+                    },
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = colors.accent, contentColor = colors.onAccent),
-                ) { Text(stringResource(R.string.button_save_choices)) }
+                ) {
+                    Text(stringResource(if (anyOptionalEnabled) R.string.button_save_choices else R.string.button_accept_all))
+                }
             }
         }
 
@@ -167,6 +194,53 @@ fun ConsentScreen(
                 CircularProgressIndicator(color = colors.accent)
             }
         }
+    }
+}
+
+/**
+ * Intro paragraph with tappable Privacy Policy and Cookie Policy links. The privacy policy URL
+ * comes from the panel; the cookie policy URL is set in [CookieConsent.configure]. A label whose
+ * URL is missing is shown as plain (non-tappable) text.
+ */
+@Composable
+private fun PolicyIntro(
+    colors: ConsentColors,
+    privacyPolicy: String?,
+    cookiePolicyUrl: String?,
+    onOpenPolicy: (String) -> Unit,
+) {
+    val intro = stringResource(R.string.consent_intro)
+    val and = stringResource(R.string.policy_and)
+    val privacyLabel = stringResource(R.string.policy_privacy_label)
+    val cookieLabel = stringResource(R.string.policy_cookie_label)
+
+    val openPolicy = LinkInteractionListener { link ->
+        (link as? LinkAnnotation.Url)?.let { onOpenPolicy(it.url) }
+    }
+
+    val linkStyle = SpanStyle(color = colors.secondary, fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline)
+    val text = buildAnnotatedString {
+        append(intro)
+        append(" ")
+        appendPolicyLink(privacyLabel, privacyPolicy, linkStyle, openPolicy)
+        append(" $and ")
+        appendPolicyLink(cookieLabel, cookiePolicyUrl, linkStyle, openPolicy)
+        append(".")
+    }
+    Text(text = text, color = colors.description, fontSize = 14.sp, lineHeight = 20.sp)
+}
+
+/** Appends [label] as a tappable link when [url] is set, otherwise as styled plain text. */
+private fun AnnotatedString.Builder.appendPolicyLink(
+    label: String,
+    url: String?,
+    style: SpanStyle,
+    onClick: LinkInteractionListener,
+) {
+    if (url != null) {
+        withLink(LinkAnnotation.Url(url, TextLinkStyles(style), onClick)) { append(label) }
+    } else {
+        withStyle(style) { append(label) }
     }
 }
 

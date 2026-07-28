@@ -35,6 +35,7 @@ class MainActivity : ComponentActivity() {
             clientSecret = CLIENT_SECRET,
             solutionId = SOLUTION_ID,
             language = "EN",
+            cookiePolicyUrl = "https://example.com/cookie-policy",
         )
 
         enableEdgeToEdge()

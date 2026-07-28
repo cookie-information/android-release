@@ -30,6 +30,7 @@ object CookieConsent {
     private lateinit var clientSecret: String
     private lateinit var solutionId: String
     private var language: String? = null
+    private var cookiePolicyUrl: String? = null
 
     // Emits the saved consents (or an error) once the screen closes.
     private var resultFlow = MutableSharedFlow<Result<List<ConsentItem>>>(extraBufferCapacity = 1)
@@ -39,11 +40,13 @@ object CookieConsent {
         clientSecret: String,
         solutionId: String,
         language: String? = null,
+        cookiePolicyUrl: String? = null,
     ) {
         this.clientId = clientId
         this.clientSecret = clientSecret
         this.solutionId = solutionId
         this.language = language
+        this.cookiePolicyUrl = cookiePolicyUrl
     }
 
     /**
@@ -132,6 +135,7 @@ object CookieConsent {
     private fun intent(context: Context, userId: String?, darkTheme: Boolean?) =
         Intent(context, ConsentActivity::class.java).apply {
             putExtra(ConsentActivity.EXTRA_USER_ID, userId)
+            putExtra(ConsentActivity.EXTRA_COOKIE_POLICY_URL, cookiePolicyUrl)
             if (darkTheme != null) putExtra(ConsentActivity.EXTRA_DARK_THEME, darkTheme)
         }
 }

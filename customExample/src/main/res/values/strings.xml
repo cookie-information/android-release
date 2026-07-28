@@ -12,6 +12,14 @@
 
     <!-- Consent screen -->
     <string name="consent_title">Cookie settings</string>
+    <string name="button_accept_all">Accept All</string>
     <string name="button_only_necessary">Only Necessary</string>
-    <string name="button_save_choices">Save choices</string>
+    <string name="button_save_choices">Save Choices</string>
+
+    <!-- Intro + policy link labels. The privacy policy URL comes from the panel; the cookie policy
+         URL is passed to CookieConsent.configure(). -->
+    <string name="consent_intro">To give you the best possible Freetrailer experience, we\'d like to collect the following data. You can change your preferences at any time in profile settings. To learn more about how we process your personal data and use cookies, please read our</string>
+    <string name="policy_and">and</string>
+    <string name="policy_privacy_label">Privacy Policy</string>
+    <string name="policy_cookie_label">Cookie Policy</string>
 </resources>

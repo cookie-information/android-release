@@ -19,8 +19,11 @@ internal class ConsentViewModel(application: Application) : AndroidViewModel(app
     data class State(
         val isLoading: Boolean = true,
         val items: List<ConsentItem> = emptyList(),
+        val privacyPolicy: String? = null,
         val finished: Boolean = false,
     )
+
+    private data class Loaded(val categories: List<ConsentItem>, val privacyPolicy: String?)
 
     private val _state = MutableStateFlow(State())
     val state: StateFlow<State> = _state.asStateFlow()
@@ -34,17 +37,41 @@ internal class ConsentViewModel(application: Application) : AndroidViewModel(app
                     sdk.init().getOrThrow()
                     sdk.resendAllFailedSaveConsentsRequests()
                     sdk.cacheLatestConsentSolution().getOrThrow()
-                    sdk.getLatestSavedUserConsents(userId).getOrThrow()
+                    val all = sdk.getLatestSavedUserConsents(userId).getOrThrow()
+                    // Categories, ordered Necessary, Functional, Statistical, Marketing, then the rest.
+                    val categories = all
+                        .filter { it.type != ConsentType.PRIVACY_POLICY }
+                        .sortedBy { categoryOrder(it.type) }
+                    check(categories.isNotEmpty()) { "No consent categories available" }
+                    // Privacy policy content comes from the panel (same source the built-in UI uses):
+                    // the description of the PRIVACY_POLICY entry (a URL or HTML). It is opened as-is
+                    // in the in-app WebView.
+                    val privacyPolicy = all
+                        .firstOrNull { it.type == ConsentType.PRIVACY_POLICY }
+                        ?.description
+                        ?.takeIf { it.isNotBlank() }
+                    Loaded(categories, privacyPolicy)
                 }
             }
-            _state.value = result.fold(
-                // The privacy policy is a separate entry, not a toggleable category.
-                onSuccess = { items ->
-                    State(isLoading = false, items = items.filter { it.type != ConsentType.PRIVACY_POLICY })
+            result.fold(
+                onSuccess = {
+                    _state.value = State(isLoading = false, items = it.categories, privacyPolicy = it.privacyPolicy)
                 },
-                onFailure = { State(isLoading = false) },
+                onFailure = { error ->
+                    // Nothing to show: report the error to the caller and close, like the built-in UI.
+                    CookieConsent.publishResult(Result.failure(error))
+                    _state.value = _state.value.copy(isLoading = false, finished = true)
+                },
             )
         }
+    }
+
+    private fun categoryOrder(type: ConsentType): Int = when (type) {
+        ConsentType.NECESSARY -> 0
+        ConsentType.FUNCTIONAL -> 1
+        ConsentType.STATISTICS -> 2
+        ConsentType.MARKETING -> 3
+        else -> 4
     }
 
     fun save(userId: String?, options: List<ConsentItemOption>) {
