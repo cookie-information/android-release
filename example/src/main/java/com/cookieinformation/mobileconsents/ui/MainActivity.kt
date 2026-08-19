@@ -20,11 +20,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cookieinformation.mobileconsents.sdk.ui.ConsentsUISDK
 import com.cookieinformation.mobileconsents.sdk.ui.CustomColorScheme
-import com.cookieinformation.mobileconsents.sdk.ui.CustomTextStyle
-import com.cookieinformation.mobileconsents.sdk.ui.CustomTypography
 import com.cookieinformation.mobileconsents.ui.ui.theme.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+
+/**
+ * Prototype theme endpoint. Change this if the Netlify site is renamed.
+ *
+ * To point at a locally running "netlify dev" instead, use http://10.0.2.2:8888/api/theme
+ * (10.0.2.2 is the host machine as seen from the emulator) and add
+ * android:usesCleartextTraffic="true" to the manifest, because plain HTTP is blocked by default.
+ */
+private const val THEME_URL = "https://cookiepanel.netlify.app/api/theme"
 
 class MainActivity : ComponentActivity() {
     private val TAG = "Cookie Example"
@@ -37,6 +44,7 @@ class MainActivity : ComponentActivity() {
             clientSecret = "a4fe5c7763ef5d8e395c9ef8c358c1f67c0876b6e7465c59ce9421d6ca67d02ba3d3a37f0351f320a2216878e4ddc570bdf6092a351b24067d536ded36a75946",
             solutionId = "a7a95d5e-e99b-44ff-8383-b7f6d1b720a8",
             context = this@MainActivity,
+            // Button colors come from themeUrl; these are the fallback when it is unreachable.
             customLightColorScheme = CustomColorScheme(
                 primaryButton   = NavyBlue,
                 secondaryButton = LimeGreen,
@@ -45,10 +53,12 @@ class MainActivity : ComponentActivity() {
                 checkbox        = BrightOrange,
                 readMore        = Gold
             ),
-            customTypography = CustomTypography(
-                requiredSectionTitle = CustomTextStyle(fontResId = R.font.dancing_script, fontSize = 18),
-                optionalSectionTitle = CustomTextStyle(fontResId = R.font.dancing_script, fontSize = 16)
-            ),
+            // Left out on purpose - the custom font made it hard to judge the colors.
+            // customTypography = CustomTypography(
+            //     requiredSectionTitle = CustomTextStyle(fontResId = R.font.dancing_script, fontSize = 18),
+            //     optionalSectionTitle = CustomTextStyle(fontResId = R.font.dancing_script, fontSize = 16)
+            // ),
+            themeUrl = THEME_URL,
             languageCode = "en",
         )
 

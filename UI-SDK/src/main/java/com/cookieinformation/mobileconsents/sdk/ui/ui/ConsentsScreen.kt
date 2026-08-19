@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
@@ -164,11 +165,14 @@ fun ConsentsScreen(
                     modifier = Modifier
                         .weight(1f, true),
                     onClick = { acceptConsents(selectedValues) },
-                    shape = RoundedCornerShape(20),
+                    // Falls back to the built-in percent based shape when not customised.
+                    shape = additionalColors?.buttonCornerRadius?.let { RoundedCornerShape(it.dp) }
+                        ?: RoundedCornerShape(20),
                     colors = IconButtonDefaults.filledIconButtonColors(
                         containerColor = additionalColors?.primaryButton
                             ?: MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
+                        contentColor = additionalColors?.primaryButtonText
+                            ?: MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
                     Text(
@@ -185,11 +189,13 @@ fun ConsentsScreen(
                         acceptConsents(consents.associate { it.id to true }
                             .toMutableMap())
                     },
-                    shape = RoundedCornerShape(20),
+                    shape = additionalColors?.buttonCornerRadius?.let { RoundedCornerShape(it.dp) }
+                        ?: RoundedCornerShape(20),
                     colors = IconButtonDefaults.filledIconButtonColors(
                         containerColor = additionalColors?.secondaryButton
                             ?: MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
+                        contentColor = additionalColors?.secondaryButtonText
+                            ?: MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
 

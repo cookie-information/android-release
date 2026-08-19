@@ -23,12 +23,14 @@ import com.cookieinformation.mobileconsents.sdk.ui.ui.MaterialColorSchemeWithCus
  * - outlineVariant   — subtle borders
  *
  * Per-component colors:
- * - primaryButton   — "Accept" / main action button
- * - secondaryButton — "Reject" / secondary action button
- * - topBar          — top navigation bar background
- * - divider         — horizontal lines between consent items
- * - checkbox        — consent checkboxes
- * - readMore        — "Read more" link text
+ * - primaryButton       — "Accept Selected" / main action button background
+ * - secondaryButton     — "Accept All" / secondary action button background
+ * - primaryButtonText   — label on the primary button, falls back to onPrimary
+ * - secondaryButtonText — label on the secondary button, falls back to onPrimary
+ * - topBar              — top navigation bar background
+ * - divider             — horizontal lines between consent items
+ * - checkbox            — consent checkboxes
+ * - readMore            — "Read more" link text
  */
 
 data class CustomColorScheme(
@@ -43,10 +45,14 @@ data class CustomColorScheme(
     val outlineVariantColorCode: Int? = null,
     val primaryButton: Int? = null,
     val secondaryButton: Int? = null,
+    val primaryButtonText: Int? = null,
+    val secondaryButtonText: Int? = null,
     val topBar: Int? = null,
     val divider: Int? = null,
     val checkbox: Int? = null,
     val readMore: Int? = null,
+    /** Corner radius of the bottom bar buttons in dp. Null keeps the built-in shape. */
+    val buttonCornerRadius: Int? = null,
 ) {
     constructor(
         primaryColor: Color? = null,
@@ -60,10 +66,13 @@ data class CustomColorScheme(
         outlineVariantColor: Color? = null,
         primaryButton: Color? = null,
         secondaryButton: Color? = null,
+        primaryButtonText: Color? = null,
+        secondaryButtonText: Color? = null,
         topBar: Color? = null,
         divider: Color? = null,
         checkbox: Color? = null,
-        readMore: Color? = null
+        readMore: Color? = null,
+        buttonCornerRadius: Int? = null
     ) : this(
         primaryColorCode = primaryColor?.toArgb(),
         onPrimaryColorCode = onPrimaryColor?.toArgb(),
@@ -76,10 +85,13 @@ data class CustomColorScheme(
         outlineVariantColorCode = outlineVariantColor?.toArgb(),
         primaryButton = primaryButton?.toArgb(),
         secondaryButton = secondaryButton?.toArgb(),
+        primaryButtonText = primaryButtonText?.toArgb(),
+        secondaryButtonText = secondaryButtonText?.toArgb(),
         topBar = topBar?.toArgb(),
         divider = divider?.toArgb(),
         checkbox = checkbox?.toArgb(),
-        readMore = readMore?.toArgb()
+        readMore = readMore?.toArgb(),
+        buttonCornerRadius = buttonCornerRadius
     )
 }
 
@@ -108,10 +120,13 @@ private fun CustomColorScheme.toMaterialColorScheme(baseScheme: ColorScheme): Ma
         ),
         primaryButton = primaryButton.toColorOrDefault(primary),
         secondaryButton = secondaryButton.toColorOrDefault(primary),
+        primaryButtonText = primaryButtonText.toColorOrDefault(onPrimary),
+        secondaryButtonText = secondaryButtonText.toColorOrDefault(onPrimary),
         topBar = topBar.toColorOrDefault(primary),
         divider = divider.toColorOrDefault(outline),
         checkbox = checkbox.toColorOrDefault(primary),
-        readMore = readMore.toColorOrDefault(primary)
+        readMore = readMore.toColorOrDefault(primary),
+        buttonCornerRadius = buttonCornerRadius
     )
 }
 

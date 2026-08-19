@@ -14,10 +14,14 @@ data class MaterialColorSchemeWithCustom(
     val materialColorScheme: ColorScheme?,
     val primaryButton: Color? = null,
     val secondaryButton: Color? = null,
+    val primaryButtonText: Color? = null,
+    val secondaryButtonText: Color? = null,
     val topBar: Color? = null,
     val divider: Color? = null,
     val checkbox: Color? = null,
-    val readMore: Color? = null
+    val readMore: Color? = null,
+    /** Corner radius of the bottom bar buttons in dp. Null keeps the built-in shape. */
+    val buttonCornerRadius: Int? = null
 )
 
 object CustomUI {
